@@ -10,18 +10,17 @@ const Card = () => {
       try {
         const data = await getPokemonCards();
         console.log("useeffect card");
-        if (data) {
-          let sortedData = data.data.sort(
-            (a, b) => a.nationalPokedexNumbers[0] - b.nationalPokedexNumbers[0]
-          );
-          setPokemonCards(sortedData);
-        }
+
+        setPokemonCards(data);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
     fetchData();
   }, []);
+  const handleCardClick = (pokemonCard) => {
+    console.log(pokemonCard);
+  };
 
   return (
     <>
@@ -34,6 +33,7 @@ const Card = () => {
                 margin: { xs: 0.5, sm: 2, m: 3 },
               }}
               textAlign="center"
+              onClick={() => handleCardClick(pokemonCard)}
             >
               <CardMedia
                 sx={{

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Post from "./post/Post";
 const allPosts = [
   {
@@ -192,11 +192,11 @@ const MainPosts = () => {
   const [postIndex, setPostIndex] = useState(5); // Keep track of the last post index
 
   // Function to load more posts
-  const loadMorePosts = () => {
-    const morePosts = allPosts.slice(postIndex, postIndex + 5); // Get next 10 posts
+  const loadMorePosts = useCallback(() => {
+    const morePosts = allPosts.slice(postIndex, postIndex + 5); // Get next 5 posts
     setDisplayedPosts((prevPosts) => [...prevPosts, ...morePosts]); // Add the new posts to the existing ones
     setPostIndex((prevIndex) => prevIndex + 5); // Update the last post index
-  };
+  }, [postIndex]); // add postIndex to dependencies array
 
   // Handle the scroll event
   useEffect(() => {
@@ -215,7 +215,7 @@ const MainPosts = () => {
 
     // Cleanup function to remove the event listener when the component unmounts
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loadMorePosts]); // Empty dependencies array means this effect runs once on mount and cleanup on unmount
+  }, [loadMorePosts]); // Now loadMorePosts is stable and won't change on every render
 
   return (
     <div>

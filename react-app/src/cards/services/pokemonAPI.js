@@ -1,22 +1,14 @@
+import axios from "axios";
 const pokemonTCGapiURL =
-  "https://api.pokemontcg.io/v2/cards?q=set.id:base1 nationalPokedexNumbers:[1 TO 151]";
+  process.env.REACT_APP_API_URL || "http://localhost:8181";
 
 export const getPokemonCards = async () => {
   try {
-    const response = await fetch(pokemonTCGapiURL, {
-      headers: {
-        "X-Api-Key": "3485fea1-443a-4f5d-9082-4889d05b238e",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Network response failed");
-    }
-    const data = await response.json();
-    return data;
+    const { data } = await axios.get(`${pokemonTCGapiURL}/pokemontcg`);
+    return Promise.resolve(data);
   } catch (error) {
-    console.error(
-      `There has been a problem with your fetch operation: ${error.message}`
-    );
-    return undefined;
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    // return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
   }
 };
