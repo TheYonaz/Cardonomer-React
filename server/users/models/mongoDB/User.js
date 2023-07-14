@@ -60,7 +60,7 @@ const nameSchema = new mongoose.Schema({
   last: DEFAULT_VALIDATION,
 });
 const postSchema = new mongoose.Schema({
-  post_id: String,
+  author: String,
   createdAt: {
     type: Date,
     default: Date.now,

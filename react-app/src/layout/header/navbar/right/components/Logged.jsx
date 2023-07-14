@@ -17,17 +17,20 @@ import useHandleUsers from "../../../../../users/hooks/useHandleUsers";
 const Logged = ({ userImage }) => {
   const { user } = useUser();
   const { handleLogout } = useHandleUsers();
-  console.log(123, user);
-  if (user) return <Navigate replace to={ROUTES.ROOT} />;
+
+  console.log("Logged userImage", userImage);
+  if (!user) return <Navigate replace to={ROUTES.ROOT} />;
   return (
     <Box>
       <IconButton color="inherit">
-        <Avatar src={userImage} />
+        <Avatar src={userImage} alt="User Avatar" />
       </IconButton>
       <IconButton color="inherit">
         <Notifications />
       </IconButton>
-      <Button onClick={handleLogout}></Button>
+      <Button onClick={handleLogout} sx={{ color: "red" }}>
+        LOG OUT
+      </Button>
     </Box>
   );
 };

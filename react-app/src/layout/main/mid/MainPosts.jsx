@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import React, { useState, useEffect, useCallback } from "react";
+import Poster from "../../../posts/components/Poster";
 import Post from "./post/Post";
 const allPosts = [
   {
@@ -220,6 +221,7 @@ const MainPosts = () => {
   return (
     <div>
       <Box display="flex" flexDirection="column" alignItems="center">
+        <Poster />
         {displayedPosts.map((post) => (
           <Post
             key={post.id}

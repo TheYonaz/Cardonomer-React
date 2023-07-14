@@ -8,12 +8,18 @@ import Logged from "./components/Logged.jsx";
 const RightNavBar = () => {
   const { user } = useUser();
   // const { handleLogout } = useHandleUsers();
-  console.log(12314, user);
+  console.log("RightNavBarUser", user);
   return (
     <>
       <Box sx={{ display: { xs: "none", md: "inline-flex" } }}>
-        {!user && <NotLogged />}
-        {user && <Logged />}
+        {!user ? (
+          <NotLogged />
+        ) : (
+          <Logged
+            userImage={user?.image?.url ? user?.image?.url : user?.image?.alt}
+          />
+        )}
+        {/* {user && } */}
       </Box>
     </>
   );

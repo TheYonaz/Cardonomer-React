@@ -8,6 +8,7 @@ import Form from "../../forms/components/Form";
 import Input from "../../forms/components/Input";
 import FormLink from "../../forms/components/FormLink";
 import ROUTES from "../../router/routesModel";
+import { Navigate } from "react-router-dom";
 const LoginPage = () => {
   const {
     handleLogin,
@@ -20,6 +21,9 @@ const LoginPage = () => {
   );
   const { handleInputChange, handleReset, onSubmit, validateForm } = rest;
   const { data, errors } = value;
+  if (user) {
+    return <Navigate replace to={ROUTES.ROOT} />;
+  }
   return (
     <Container
       sx={{

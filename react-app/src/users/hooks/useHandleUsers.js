@@ -11,9 +11,10 @@ import {
   setTokenInLocalStorage,
   getUserFromLocalStorage,
 } from "../service/localStorage";
-import { login, signup, GetUser } from "../service/userApi";
+import { login, signup, GetUser, publishPost } from "../service/userApi";
 
 const useHandleUsers = () => {
+  const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [usersData, setUsersData] = useState(null);
@@ -39,8 +40,9 @@ const useHandleUsers = () => {
         setTokenInLocalStorage(token);
         setToken(token);
         const userFromLocalStorage = getUserFromLocalStorage();
-        console.log(1, userFromLocalStorage);
+        console.log("handleLogin", userFromLocalStorage);
         requestStatus(false, null, null, userFromLocalStorage);
+        snack("primary", "Logged Successfully!");
         navigate(ROUTES.CARDS);
       } catch (error) {
         if (typeof error === "string") requestStatus(false, error, null);
@@ -59,11 +61,12 @@ const useHandleUsers = () => {
         setLoading(true);
         const normalizedUser = normalizeUser(user);
         await signup(normalizedUser);
-        console.log(2, normalizedUser);
+        console.log("handleSignUp", normalizedUser);
         await handleLogin({
           email: user.email,
           password: user.password,
         });
+        snack("Logged Successfully!");
       } catch (error) {
         if (typeof error === "string") requestStatus(false, error, null);
       }
@@ -75,7 +78,7 @@ const useHandleUsers = () => {
       try {
         setLoading(false);
         const userFromClient = await GetUser(userId);
-        console.log(3, userFromClient);
+        console.log("handleGET user", userFromClient);
         if (userFromClient) {
           requestStatus(false, null, user, userFromClient);
           return userFromClient;
@@ -85,6 +88,23 @@ const useHandleUsers = () => {
       }
     },
     [usersData]
+  );
+  const handlePublish = useCallback(
+    async (post) => {
+      try {
+        setLoading(true);
+        console.log("post", post);
+        const publishedPost = await publishPost(post);
+        console.log("handlePublish", publishedPost);
+        setPosts((prevPosts) => [...prevPosts, publishedPost]);
+        snack("primary", "Post Published Successfully!");
+      } catch (error) {
+        if (typeof error === "string") requestStatus(false, error, null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [requestStatus]
   );
 
   const value = useMemo(() => {
@@ -97,6 +117,7 @@ const useHandleUsers = () => {
     handleLogout,
     handleSignup,
     handelGetUser,
+    handlePublish,
   };
 };
 

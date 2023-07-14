@@ -35,3 +35,12 @@ export const GetUser = async (userId) => {
     return Promise.reject("An unexpected error occurred!");
   }
 };
+export const publishPost = async (post) => {
+  try {
+    const response = await axios.post("/api/posts", post);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

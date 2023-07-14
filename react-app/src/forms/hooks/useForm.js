@@ -47,6 +47,12 @@ const useForm = (initialForm, schema, handleSubmit) => {
     handleSubmit(data);
   }, [handleSubmit, data]);
 
+  const handlePublish = () => {
+    const error = validateForm();
+    if (error) setErrors((prev) => ({ ...prev, ...error }));
+    else handleSubmit(data);
+  };
+
   const value = useMemo(() => {
     return { data, errors };
   }, [data, errors]);
@@ -58,6 +64,7 @@ const useForm = (initialForm, schema, handleSubmit) => {
     handleReset,
     validateForm,
     setData,
+    handlePublish,
   };
 };
 useForm.propTypes = {

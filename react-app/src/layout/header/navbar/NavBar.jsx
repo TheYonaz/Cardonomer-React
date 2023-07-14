@@ -12,9 +12,8 @@ import MoreButton from "../navbar/right/components/MoreButton";
 import RightNavBar from "./right/RightNavBar";
 import { useUser } from "../../../users/providers/UserProvider";
 
-export default function TopNavbar() {
+const TopNavbar = () => {
   // const setOpen = useMenu();
-  const { user } = useUser();
   return (
     <>
       <AppBar position="static">
@@ -23,10 +22,11 @@ export default function TopNavbar() {
           <MoreButton />
           <MidNav />
           <Box>
-            <RightNavBar userImage={user?.image} />
+            <RightNavBar />
           </Box>
         </Toolbar>
       </AppBar>
     </>
   );
-}
+};
+export default TopNavbar;
