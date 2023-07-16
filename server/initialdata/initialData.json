@@ -1,0 +1,173 @@
+{
+  "users": [
+    {
+      "name": { "first": "regular", "last": "user" },
+      "isBusiness": false,
+      "phone": "050-0000000",
+      "email": "regular@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://media.istockphoto.com/id/1395474771/photo/portrait-of-middle-aged-woman-sitting-at-dinning-with-laptop-working-at-home.jpg?b=1&s=170667a&w=0&k=20&c=H7rJkTxi9yU6YT-io3svAXp4qNOr6g0JfCQo8zzyMb8=", "alt": "" }
+    },
+    {
+      "name": { "first": "regular1", "last": "user1" },
+      "isBusiness": false,
+      "phone": "050-0000000",
+      "email": "regular1@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2017/05/10/19/29/robot-2301646_640.jpg", "alt": "" }
+    },
+    {
+      "name": { "first": "regular2", "last": "user2" },
+      "isBusiness": false,
+      "phone": "050-0000000",
+      "email": "regular2@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "", "alt": "" }
+    },
+    {
+      "name": { "first": "regular3", "last": "user3" },
+      "isBusiness": false,
+      "phone": "050-0000000",
+      "email": "regular3@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "", "alt": "" }
+    },
+    {
+      "name": { "first": "regular4", "last": "user4" },
+      "isBusiness": false,
+      "phone": "050-0000000",
+      "email": "regular4@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2018/08/28/13/29/avatar-3637561_640.png", "alt": "" }
+    },
+    {
+      "name": { "first": "regular5", "last": "user5" },
+      "isBusiness": false,
+      "phone": "050-0000000",
+      "email": "regular5@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2017/03/01/22/18/avatar-2109804_640.png", "alt": "" }
+    },
+    {
+      "name": { "first": "business", "last": "user" },
+      "isBusiness": true,
+      "phone": "050-0000000",
+      "email": "business@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2013/07/12/19/01/user-154199_640.png", "alt": "" }
+    },
+    {
+      "name": { "first": "business1", "last": "user1" },
+      "isBusiness": true,
+      "phone": "050-0000000",
+      "email": "business1@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "", "alt": "" }
+    },
+    {
+      "name": { "first": "business2", "last": "user2" },
+      "isBusiness": true,
+      "phone": "050-0000000",
+      "email": "business2@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2016/08/15/08/35/woman-1594711_640.jpg", "alt": "" }
+    },
+    {
+      "name": { "first": "business3", "last": "user3" },
+      "isBusiness": true,
+      "phone": "050-0000000",
+      "email": "business3@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2018/01/26/09/06/people-3108155_640.jpg", "alt": "" }
+    },
+    {
+      "name": { "first": "business4", "last": "user4" },
+      "isBusiness": true,
+      "phone": "050-0000000",
+      "email": "business4@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2013/07/12/15/24/woman-149861_640.png", "alt": "" }
+    },
+    {
+      "name": { "first": "admin", "last": "user" },
+      "isBusiness": true,
+      "isAdmin": true,
+      "phone": "050-0000000",
+      "email": "admin@gmail.com",
+      "password": "Aa1234!",
+      "address": {
+        "country": "israel",
+        "city": "tel-aviv",
+        "street": "magnive",
+        "houseNumber": "5"
+      },
+      "image": { "url": "https://cdn.pixabay.com/photo/2016/07/15/12/18/skull-and-crossbones-1518822_640.jpg", "alt": "" }
+    }
+  ]
+}

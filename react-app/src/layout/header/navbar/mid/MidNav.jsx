@@ -4,7 +4,6 @@ import ROUTES from "../../../../router/routesModel";
 import NavItem from "../../../components/NavItem";
 
 const MidNav = () => {
-  console.log(ROUTES.POKEMON_CARDS);
   return (
     <>
       <Box

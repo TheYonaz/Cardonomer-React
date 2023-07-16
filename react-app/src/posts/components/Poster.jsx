@@ -1,43 +1,49 @@
-import { Button, TextField } from "@mui/material";
-import Joi from "joi";
-import React from "react";
-import useForm from "../../forms/hooks/useForm";
-import useHandleUsers from "../../users/hooks/useHandleUsers";
+import { Button, Container, TextField, Box } from "@mui/material";
+import React, { useState } from "react";
+import useHandlePosts from "../../posts/hooks/useHandlePosts";
 import { useUser } from "../../users/providers/UserProvider";
 
-const initialForm = { postContent: "" };
-
-const schema = {
-  postContent: Joi.string().min(1).required(),
-};
-
-const Poster = () => {
+const Poster = ({ onPublish }) => {
+  const [content, setcontent] = useState("");
   const { user } = useUser();
-  const { handlePublish } = useHandleUsers();
-  const { value, ...rest } = useForm(initialForm, schema, handlePublish);
-  const { handleInputChange } = rest;
+  const { handlePublish } = useHandlePosts();
+
+  const handleSubmit = async () => {
+    const post = await handlePublish({ content, user_id: user._id });
+    setcontent("");
+    onPublish(post);
+  };
+
   return (
-    <div>
-      <TextField
-        name="postContent"
-        value={value.postContent}
-        onChange={handleInputChange}
-        label="Write a new post"
-        multiline
-        rows={4}
-        variant="outlined"
-        fullWidth
-        error={value.errors}
-        helperText={value.errors && value.errors.message}
-      />
-      <Button
-        onClick={() => handlePublish(value.data)}
-        variant="contained"
-        color="primary"
+    <Container maxWidth="sm" style={{ marginTop: "20px" }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: "5px",
+          p: 2,
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+        }}
       >
-        Publish
-      </Button>
-    </div>
+        <TextField
+          multiline
+          fullWidth
+          rows={4}
+          variant="outlined"
+          placeholder="What's on your mind?"
+          value={content}
+          onChange={(e) => setcontent(e.target.value)}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginTop: "10px" }}
+          onClick={handleSubmit}
+          disabled={content.trim() === ""}
+        >
+          Publish
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

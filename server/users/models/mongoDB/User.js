@@ -11,6 +11,11 @@ const DEFAULT_VALIDATION = {
   lowercase: true,
   required: true,
 };
+const RefUserId = {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  required: true,
+};
 
 const regexType = (regex, required = true, unique = false) => {
   return {
@@ -93,6 +98,15 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  bizNumber: {
+    type: Number,
+    minLength: 7,
+    maxLength: 7,
+    required: function () {
+      return this.isBusiness;
+    },
+    trim: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -119,12 +133,14 @@ const userSchema = new mongoose.Schema({
   friends: {
     type: [
       {
-        name: {
-          first: { type: String, required: true },
-          middle: { type: String },
-          last: { type: String, required: true },
-        },
-        user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+        user_id: RefUserId,
+        name:nameSchema,
+        image: imageSchema,
+        email: regexType(
+          /^([a-zA-Z0-9._-]+)@([a-zA-Z0-9_-]+)\.([a-zA-Z]{2,5})$/,
+          true,
+          true
+        ),
         startOfFriendship: { type: Date, default: Date.now },
       },
     ],
@@ -133,7 +149,8 @@ const userSchema = new mongoose.Schema({
   friendRequestsSent: {
     type: [
       {
-        user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+        user_id: RefUserId,
+        image: imageSchema,
         date: { type: Date, default: Date.now },
       },
     ],
@@ -143,14 +160,14 @@ const userSchema = new mongoose.Schema({
   friendRequests: {
     type: [
       {
-        user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+        user_id: RefUserId,
+        image: imageSchema,
         date: { type: Date, default: Date.now },
       },
     ],
     default: [],
   },
 });
-
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

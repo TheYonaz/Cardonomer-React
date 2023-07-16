@@ -9,8 +9,6 @@ const Card = () => {
     const fetchData = async () => {
       try {
         const data = await getPokemonCards();
-        console.log("useeffect card");
-
         setPokemonCards(data);
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -19,7 +17,6 @@ const Card = () => {
     fetchData();
   }, []);
   const handleCardClick = (pokemonCard) => {
-    console.log(pokemonCard);
   };
 
   return (

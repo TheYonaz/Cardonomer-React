@@ -1,5 +1,7 @@
 const { generateUserPassword } = require("./bcrypt");
-const normalizeUser = (rawUser) => {
+const generateBizNumber = require("./generateBizNumber");
+
+const normalizeUser = async (rawUser) => {
   const name = { ...rawUser.name, middle: rawUser.name.middle || "" };
   const image = {
     ...rawUser.image,
@@ -12,18 +14,28 @@ const normalizeUser = (rawUser) => {
     ...rawUser.address,
     state: rawUser.address.state || "",
   };
+  const bizNumber = rawUser.isBusiness
+    ? rawUser.bizNumber || (await generateBizNumber())
+    : null;
   const likedPosts = rawUser.likedPosts || [];
-  const decks = rawUser.decks || [];
   const publishedPosts = rawUser.publishedPosts || [];
+  const decks = rawUser.decks || [];
+  const friends = rawUser.friends || [];
+  const friendRequestsSent = rawUser.friendRequestsSent || [];
+  const friendRequests = rawUser.friendRequests || [];
   const user = {
     ...rawUser,
     name,
     image,
     address,
     password: generateUserPassword(rawUser.password),
+    bizNumber,
     likedPosts,
     decks,
     publishedPosts,
+    friends,
+    friendRequestsSent,
+    friendRequests,
   };
 
   return user;

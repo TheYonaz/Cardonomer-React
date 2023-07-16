@@ -21,7 +21,6 @@ export const MenuProvider = ({ children }) => {
   useEffect(() => {
     setOpen(false);
   }, [screenSize]);
-  console.log(anchorRef);
 
   return (
     <>

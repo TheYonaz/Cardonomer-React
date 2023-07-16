@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 
-const Post = ({ title, content, author, image }) => (
+const Post = ({ timePublished, content, author, image }) => (
   <Card
     sx={{
       marginBlock: "20px",
@@ -18,12 +18,12 @@ const Post = ({ title, content, author, image }) => (
   >
     <CardContent>
       <Box display="flex" alignItems="center" mb={2}>
-        <Avatar src={image} alt={author} sx={{ mr: 1 }} />
+      <Avatar src={image} alt={author} style={{ marginRight: '1rem' }} />
         <Typography variant="h6">{author}</Typography>
       </Box>
       <Box display="flex" alignItems="flex-start" flexDirection="column">
         <Typography variant="body2" color="text.secondary">
-          {title}
+          {timePublished}
         </Typography>
         <Typography variant="body2">{content}</Typography>
       </Box>
