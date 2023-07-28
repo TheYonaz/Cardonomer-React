@@ -35,3 +35,13 @@ export const GetUser = async (userId) => {
     return Promise.reject("An unexpected error occurred!");
   }
 };
+export const GetUserFriends = async (userId) => {
+  try {
+    const { data } = await axios.get(`${apiUrl}/users/friends/${userId}`);
+    console.log("GetUserFriends-userapi", data, userId);
+    if (data) return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
+  }
+};

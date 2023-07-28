@@ -14,7 +14,8 @@ const config = require("config");
 
 const {
   generateInitialUsers,
-  makeRandomFriends,generateInitialPokemonCards
+  makeRandomFriends,
+  generateInitialPokemonCards,
 } = require("./initialdata/initialDataService");
 
 app.use(setCors);

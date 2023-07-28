@@ -71,7 +71,26 @@ const getUser = async (req, res) => {
     return handleError(res, 401, `Authorization error : could not get user`);
   }
 };
+const getFriends = async (req, res) => {
+  try {
+    const { _id } = req.user; // get user id from req.user
 
+    // Find the user
+    const user = await User.findById(_id);
+    if (!user) throw new Error("User not found in the database");
+
+    // Get user's friends
+    const friends = user.friends;
+
+    // Send the friends
+    res.send(friends);
+  } catch (error) {
+    console.error("getFriends error", error.message);
+    res.status(500).send("An error occurred while retrieving friends.");
+  }
+};
+
+exports.getFriends = getFriends;
 exports.loginUser = loginUser;
 exports.registerUser = registerUser;
 exports.getUser = getUser;

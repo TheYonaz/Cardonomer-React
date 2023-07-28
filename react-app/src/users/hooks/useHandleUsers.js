@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../../hooks/useAxios";
 import { useSnack } from "../../providers/SnackBarProvider";
@@ -11,7 +11,7 @@ import {
   setTokenInLocalStorage,
   getUserFromLocalStorage,
 } from "../service/localStorage";
-import { login, signup, GetUser } from "../service/userApi";
+import { login, signup, GetUser, GetUserFriends } from "../service/userApi";
 
 const useHandleUsers = () => {
   const [error, setError] = useState(null);
@@ -47,7 +47,7 @@ const useHandleUsers = () => {
         if (typeof error === "string") requestStatus(false, error, null);
       }
     },
-    [navigate, requestStatus, setToken]
+    [navigate, requestStatus, setToken, snack]
   );
 
   const handleLogout = useCallback(() => {
@@ -70,7 +70,7 @@ const useHandleUsers = () => {
         if (typeof error === "string") requestStatus(false, error, null);
       }
     },
-    [handleLogin, requestStatus]
+    [handleLogin, requestStatus, snack]
   );
   const handelGetUser = useCallback(
     async (userId) => {
@@ -86,7 +86,21 @@ const useHandleUsers = () => {
         if (typeof error === "string") requestStatus(false, error, null);
       }
     },
-    [usersData]
+    [user, requestStatus]
+  );
+  const handelGetUserFriends = useCallback(
+    async (userId) => {
+      try {
+        const userFromClient = await GetUserFriends(userId);
+        console.log("handleGETFriends user", userFromClient);
+        if (userFromClient) {
+          return userFromClient;
+        }
+      } catch (error) {
+        if (typeof error === "string") requestStatus(false, error, null);
+      }
+    },
+    [user, requestStatus]
   );
 
   const value = useMemo(() => {

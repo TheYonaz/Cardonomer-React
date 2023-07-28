@@ -1,9 +1,10 @@
-import { Box, CardMedia, Grid, Typography } from "@mui/material";
+import { Box, CardMedia, Grid, Typography, Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getPokemonCards } from "../../services/pokemonAPI";
 
 const Card = () => {
   const [pokemonCards, setPokemonCards] = useState([]);
+  const [deck, setDeck] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,11 +17,16 @@ const Card = () => {
     };
     fetchData();
   }, []);
-  const handleCardClick = (pokemonCard) => {
-  };
+  const handleCardClick = (pokemonCard) => {};
 
   return (
-    <>
+    <Paper
+      elevation={3}
+      style={{
+        maxHeight: "50vh",
+        overflow: "auto",
+      }}
+    >
       <Box display="flex" justifyContent="center" flexWrap="wrap">
         {pokemonCards.map((pokemonCard, index) => (
           <Grid key={index} item>
@@ -41,14 +47,22 @@ const Card = () => {
                 image={pokemonCard.images.small}
                 alt={pokemonCard.name}
               />
-              <Typography sx={{ fontSize: { xs: 10, sm: 12, m: 15, lg: 20 } }}>
+              <Typography
+                noWrap
+                sx={{
+                  fontSize: { xs: 10, sm: 12, m: 15, lg: 20 },
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                }}
+              >
                 {pokemonCard.name}
               </Typography>
             </Box>
           </Grid>
         ))}
       </Box>
-    </>
+    </Paper>
   );
 };
 

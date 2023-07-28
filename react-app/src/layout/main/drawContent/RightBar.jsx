@@ -11,9 +11,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import OnlineIcon from "@mui/icons-material/OnlinePrediction";
 import OfflineIcon from "@mui/icons-material/OfflineBolt";
+import { useFriends } from "../../../users/friends/friendsProvider/FriendsProvider";
 
 const RightSidebar = () => {
-  const friends = ["Ash", "Misty", "Brock", "Pikachu", "Charmander"];
+  const { friends } = useFriends();
+  console.log("RightSidebar", friends);
+  // const friends = ["Ash", "Misty", "Brock", "Pikachu", "Charmander"];
   return (
     <>
       <Box
@@ -55,7 +58,7 @@ const RightSidebar = () => {
                     marginLeft: { sm: -5.6, md: 0 },
                   }}
                 >
-                  {friend}
+                  {`${friend.name.first} ${friend.name.last}`}
                 </Typography>
               </ListItem>
             );

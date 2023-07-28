@@ -78,6 +78,21 @@ const cardSchema = new mongoose.Schema({
     ref: "Card",
   },
 });
+const inDeckScehma = new mongoose.Schema({
+  deckName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  cards: {
+    type: [cardSchema],
+    default: [],
+  },
+});
+const deckScehma = new mongoose.Schema({
+  pokemonTCG: { inDeckScehma },
+  yugihoTCG: { inDeckScehma },
+});
 
 const userSchema = new mongoose.Schema({
   name: nameSchema,
@@ -118,14 +133,7 @@ const userSchema = new mongoose.Schema({
       default: [],
     },
   ],
-  decks: [
-    {
-      cards: {
-        type: [cardSchema],
-        default: [],
-      },
-    },
-  ],
+  decks: { deckScehma },
   publishedPosts: {
     type: [postSchema],
     default: [],
@@ -134,7 +142,7 @@ const userSchema = new mongoose.Schema({
     type: [
       {
         user_id: RefUserId,
-        name:nameSchema,
+        name: nameSchema,
         image: imageSchema,
         email: regexType(
           /^([a-zA-Z0-9._-]+)@([a-zA-Z0-9_-]+)\.([a-zA-Z]{2,5})$/,

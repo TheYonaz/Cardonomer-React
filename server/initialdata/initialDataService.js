@@ -4,7 +4,6 @@ const normalizeUser = require("../users/helpers/normalizeUser");
 
 const User = require("../users/models/mongoDB/User");
 const lodash = require("lodash");
-const { registerUser } = require("../users/usersRestController");
 
 const chalk = require("chalk");
 

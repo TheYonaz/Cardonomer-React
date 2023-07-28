@@ -3,15 +3,15 @@ import React, { useState } from "react";
 import useHandlePosts from "../../posts/hooks/useHandlePosts";
 import { useUser } from "../../users/providers/UserProvider";
 
-const Poster = ({ onPublish }) => {
-  const [content, setcontent] = useState("");
+const Poster = ({ handleSubmit, onPostPublished }) => {
+  const [content, setContent] = useState("");
   const { user } = useUser();
-  const { handlePublish } = useHandlePosts();
-
-  const handleSubmit = async () => {
-    const post = await handlePublish({ content, user_id: user._id });
-    setcontent("");
-    onPublish(post);
+  const onSubmit = async () => {
+    console.log("in poster ", user);
+    const post = await handleSubmit({ content, user_id: user._id });
+    setContent("");
+    console.log("in poster ", post);
+    onPostPublished();
   };
 
   return (
@@ -31,13 +31,13 @@ const Poster = ({ onPublish }) => {
           variant="outlined"
           placeholder="What's on your mind?"
           value={content}
-          onChange={(e) => setcontent(e.target.value)}
+          onChange={(e) => setContent(e.target.value)}
         />
         <Button
           variant="contained"
           color="primary"
           style={{ marginTop: "10px" }}
-          onClick={handleSubmit}
+          onClick={onSubmit}
           disabled={content.trim() === ""}
         >
           Publish

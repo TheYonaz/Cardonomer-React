@@ -6,9 +6,11 @@ const {
   getPostsOfFriends,
   addCommentToPost,
   getPost,
+  likePost,
 } = require("../postContoller");
-router.post("/post", publishPost); //need auth when finish
+router.post("/post", auth, publishPost); //need auth when finish
 router.get("/post/", auth, getPostsOfFriends);
-router.put("/post/:postId", auth, addCommentToPost);
-router.get("/post/:postId", getPost);
+router.put("/like/:postId", auth, likePost);
+router.put("/post/comment/:postId", auth, addCommentToPost);
+router.get("/post/:postId", auth, getPost);
 module.exports = router;

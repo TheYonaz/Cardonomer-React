@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo } from "react";
 import Joi from "joi";
-import { string, bool, object, func, node } from "prop-types";
+import { object, func } from "prop-types";
 
 const useForm = (initialForm, schema, handleSubmit) => {
   const [data, setData] = useState(initialForm);
