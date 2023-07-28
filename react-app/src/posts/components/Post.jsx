@@ -12,6 +12,7 @@ import React from "react";
 import { useState } from "react";
 import CommentsBox from "./CommentsBox/CommentsBox";
 import PostActionBar from "./PostActionBar";
+import { useUser } from "../../users/providers/UserProvider";
 
 const Post = ({
   timepublished,
@@ -26,7 +27,7 @@ const Post = ({
   likes,
 }) => {
   const [showComments, setShowComments] = useState(false);
-
+  const { user } = useUser();
   console.log(timepublished);
   return (
     <Card sx={{ marginBottom: "20px" }}>
@@ -46,13 +47,15 @@ const Post = ({
           {content}
         </Typography>
       </CardContent>
-      <PostActionBar
-        onComment={onComment}
-        onLike={onLike}
-        postId={postId}
-        likes={likes}
-        onCommentPublished={onCommentPublished}
-      />
+      {user && (
+        <PostActionBar
+          onComment={onComment}
+          onLike={onLike}
+          postId={postId}
+          likes={likes}
+          onCommentPublished={onCommentPublished}
+        />
+      )}
       {comments[0] && (
         <Box>
           <Box textAlign="left">
