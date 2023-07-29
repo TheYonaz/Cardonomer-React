@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Card from "../cards/components/card/Card";
+import PokemonMain from "../cards/components/Pokemon/PokemonMain";
 import PostsPage from "../posts/PostsPage";
 import LoginPage from "../users/pages/LoginPage";
 import SignUpPage from "../users/pages/SignUpPage";
@@ -9,7 +9,7 @@ const Router = () => {
   return (
     <Routes>
       <Route path={ROOT} element={<PostsPage />} />
-      <Route path={POKEMON_CARDS} element={<Card />} />
+      <Route path={POKEMON_CARDS} element={<PokemonMain />} />
       <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
     </Routes>

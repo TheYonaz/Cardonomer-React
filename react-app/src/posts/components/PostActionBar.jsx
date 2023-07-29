@@ -5,6 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import useHandlePosts from "../hooks/useHandlePosts";
 import { useUser } from "../../users/providers/UserProvider";
+import { useSnack } from "../../providers/SnackBarProvider";
 
 const PostActionBar = ({
   onComment,
@@ -19,9 +20,13 @@ const PostActionBar = ({
     setIsCommenting(!isCommenting);
   };
   const { user } = useUser();
+  const snack = useSnack();
 
   const handleCommentSubmit = () => {
     console.log("comment", { content: commentText, post_id: postId });
+    if (commentText === "" || !commentText) {
+      return snack("warning", "Comment has no content");
+    }
     onComment(postId, { content: commentText, user_id: user._id });
     setCommentText("");
     setIsCommenting(false);

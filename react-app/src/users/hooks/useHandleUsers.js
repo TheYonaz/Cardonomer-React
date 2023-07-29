@@ -113,6 +113,7 @@ const useHandleUsers = () => {
     handleLogout,
     handleSignup,
     handelGetUser,
+    handelGetUserFriends,
   };
 };
 
