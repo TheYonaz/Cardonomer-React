@@ -12,6 +12,10 @@ const useForm = (initialForm, schema, handleSubmit) => {
 
   const validateProperty = useCallback(
     ({ name, value }) => {
+      if (!schema[name]) {
+        console.error(`Invalid schema for property "${name}"`);
+        return null;
+      }
       const obj = { [name]: value };
       const generateSchema = Joi.object({ [name]: schema[name] });
       const { error } = generateSchema.validate(obj);

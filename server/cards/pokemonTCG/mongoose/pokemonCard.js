@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const cardSchema = new mongoose.Schema({
-  name:{type: String,unique:true},
+  name: { type: String, unique: true },
   subtypes: [String],
   nationalPokedexNumbers: [Number],
   images: {
@@ -44,5 +44,6 @@ const cardSchema = new mongoose.Schema({
 });
 
 // Create the model
+
 const PokemonCard = mongoose.model("pokemoncard", cardSchema);
 module.exports = PokemonCard;

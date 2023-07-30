@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../../auth/authService");
-const { getCards, saveDeck } = require("./controllers/pokemonCardsController");
+const {
+  getCards,
+  savePokemonDeck,
+  getPokemonDecks,
+} = require("./controllers/pokemonCardsController");
 router.get("/pokemontcg", getCards);
-router.put("/pokemontcg/PdeckSave", auth, saveDeck);
+router.put("/pokemontcg/PdeckSave", auth, savePokemonDeck);
+router.get("/pokemontcg/pokemonDecks", auth, getPokemonDecks);
 module.exports = router;

@@ -36,7 +36,7 @@ const useHandleCards = () => {
     try {
       setCardsLoading(true);
       const data = await savePokemonDeck(deck);
-      requestStatus(false, null, null);
+      setCardsLoading(false);
     } catch (error) {
       if (typeof error === "string") requestStatus(false, error, null);
     }

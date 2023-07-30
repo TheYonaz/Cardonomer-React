@@ -1,16 +1,16 @@
 export const scrollbarStyles = {
   scrollbarWidth: "thin",
   scrollbarColor: "#888 #f5f5f5",
-  "&::-webkit-scrollbar": {
+  "&::WebkitScrollbar": {
     width: "8px",
   },
-  "&::-webkit-scrollbar-track": {
+  "&::WebkitScrollbarTrack": {
     background: "#f5f5f5",
   },
-  "&::-webkit-scrollbar-thumb": {
+  "&::WebkitScrollbarThumb": {
     background: "#888",
   },
-  "&::-webkit-scrollbar-thumb:hover": {
+  "&::WebkitScrollbarThumb:hover": {
     background: "#555",
   },
 };

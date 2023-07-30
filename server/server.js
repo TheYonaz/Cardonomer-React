@@ -29,7 +29,7 @@ const PORT = config.get("PORT") || 8181;
 app.listen(PORT, () => {
   console.log(chalk.blueBright(`Listening on: http://localhost:${PORT}`));
   require("./DB/mongoDB/connectToDB");
-  generateInitialUsers();
+  // generateInitialUsers();
   // makeRandomFriends();
   // generateInitialPokemonCards()
 });

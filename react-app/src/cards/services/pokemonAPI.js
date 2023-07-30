@@ -25,3 +25,16 @@ export const savePokemonDeck = async (deck) => {
     return Promise.reject("An unexpected error occurred!");
   }
 };
+
+export const getUserPokemonDecks = async () => {
+  try {
+    const { data } = await axios.get(
+      `${pokemonTCGapiURL}/pokemontcg/pokemonDecks`
+    );
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    // return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
+  }
+};

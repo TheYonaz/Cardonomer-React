@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/;
 const URL_REGEX =
   /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
@@ -72,28 +73,24 @@ const postSchema = new mongoose.Schema({
   },
   content: String,
 });
-const cardSchema = new mongoose.Schema({
-  card_id: {
+const card = new mongoose.Schema({
+  _id: {
+    // if you want it clearer normalize the _id to appear as card_id but it might cuase dupliaction of id in the db
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Card",
+    ref: "pokemonCard",
   },
 });
-const inDeckScehma = new mongoose.Schema({
+const deckSchema = new mongoose.Schema({
   deckName: {
     type: String,
     required: true,
     trim: true,
   },
   cards: {
-    type: [cardSchema],
+    type: [card],
     default: [],
   },
 });
-const deckScehma = new mongoose.Schema({
-  pokemonTCG: { inDeckScehma },
-  yugihoTCG: { inDeckScehma },
-});
-
 const userSchema = new mongoose.Schema({
   name: nameSchema,
   phone: regexType(/0[0-9]{1,2}\-?\s?[0-9]{3}\s?[0-9]{4}/),
@@ -133,7 +130,14 @@ const userSchema = new mongoose.Schema({
       default: [],
     },
   ],
-  decks: { deckScehma },
+  pokemonDecks: {
+    type: [deckSchema],
+    default: [],
+  },
+  yugiohDecks: {
+    type: [deckSchema],
+    default: [],
+  },
   publishedPosts: {
     type: [postSchema],
     default: [],

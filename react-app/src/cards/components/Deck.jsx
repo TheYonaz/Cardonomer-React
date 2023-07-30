@@ -7,7 +7,7 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { scrollbarStyles } from "../../styles/styles";
 import Card from "./card/Card";
 import DeckAction from "./DeckAction";
@@ -18,6 +18,10 @@ const Deck = ({
   onClear,
   setDeckName,
   deckname,
+  handleSave,
+  handleInputChange,
+  validateForm,
+  value,
 }) => {
   const cardCounts = deck.reduce((counts, card) => {
     counts[card._id] = (counts[card._id] || 0) + 1;
@@ -32,17 +36,22 @@ const Deck = ({
     >
       <Box position="sticky" top={0} zIndex={1}>
         <DeckAction
-          // onSave={handleSave}
+          onSave={handleSave}
           // onAddToCart={handleAddToCart}
           onClear={onClear}
           setDeckName={setDeckName}
           deckname={deckname}
+          handleInputChange={handleInputChange}
+          validateForm={validateForm}
+          value={value}
+          deck={deck}
         />
       </Box>
       <Paper
         sx={{
           flexGrow: 1,
           overflow: "auto",
+          height: "30vh",
           maxHeight: "50vh",
           ...scrollbarStyles,
         }}
@@ -58,7 +67,7 @@ const Deck = ({
               <Badge
                 badgeContent={cardCounts[pokemonCard._id]}
                 color="primary"
-                overlap="circle"
+                overlap="circular"
               >
                 <Card
                   pokemonCard={pokemonCard}
