@@ -8,6 +8,7 @@ import PokemonCards from "./Pokemon/PokemonCards";
 import Joi from "joi";
 import useForm from "../../forms/hooks/useForm";
 import { useEffect } from "react";
+import { useDeck } from "../deckProvider/DeckProvider";
 
 const CardFeedBack = ({
   isLoading,
@@ -21,10 +22,12 @@ const CardFeedBack = ({
   const [deckname, setDeckName] = useState("");
   const [isOpen, setDialog] = useState(false);
 
+  const { decksFromDb, handleDeleteDeck, saveDeckData } = useDeck();
+
   const handleSaveDeck = () => {
     const deckToSave = { deckName: deckname, cards: deck };
     console.log("handleSaveDeck0", deckToSave);
-    saveDeck(deckToSave);
+    saveDeckData(deckToSave);
     console.log("handleSaveDeck1");
     setDeck([]);
     setDeckName("");
@@ -39,9 +42,14 @@ const CardFeedBack = ({
     handleSaveDeck
   );
 
+  const handleLoadDecks = (loadDeck) => {
+    setDeck(loadDeck);
+  };
+  console.log("decksFromDb2", decksFromDb);
+
   const handleClear = () => {
     setDeck([]);
-    setDialog((prev) => !prev);
+    setDialog(false);
   };
 
   const handleClearButton = () => {
@@ -70,6 +78,7 @@ const CardFeedBack = ({
         />
         <Deck
           deck={deck}
+          decksFromDb={decksFromDb}
           fontSizeBreakpoints={fontSizeBreakpoints}
           maxHeightBreakpoints={maxHeightBreakpoints}
           onClear={handleClearButton}
@@ -79,6 +88,8 @@ const CardFeedBack = ({
           handleInputChange={handleInputChange}
           validateForm={validateForm}
           value={value}
+          handleLoadDecks={handleLoadDecks}
+          handleDeleteDeck={handleDeleteDeck}
         />
       </Container>
     );

@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { scrollbarStyles } from "../../styles/styles";
 import Card from "./card/Card";
 import DeckAction from "./DeckAction";
+import LoadDeck from "./LoadDeck";
 const Deck = ({
   deck,
   fontSizeBreakpoints,
@@ -22,6 +23,9 @@ const Deck = ({
   handleInputChange,
   validateForm,
   value,
+  decksFromDb,
+  handleLoadDecks,
+  handleDeleteDeck,
 }) => {
   const cardCounts = deck.reduce((counts, card) => {
     counts[card._id] = (counts[card._id] || 0) + 1;
@@ -29,57 +33,69 @@ const Deck = ({
   }, {});
 
   return (
-    <Box
-      sx={{
-        border: "5px solid yellow",
-      }}
-    >
-      <Box position="sticky" top={0} zIndex={1}>
-        <DeckAction
-          onSave={handleSave}
-          // onAddToCart={handleAddToCart}
-          onClear={onClear}
-          setDeckName={setDeckName}
-          deckname={deckname}
-          handleInputChange={handleInputChange}
-          validateForm={validateForm}
-          value={value}
-          deck={deck}
-        />
-      </Box>
-      <Paper
+    <>
+      <Box
         sx={{
-          flexGrow: 1,
-          overflow: "auto",
-          height: "30vh",
-          maxHeight: "50vh",
-          ...scrollbarStyles,
+          border: "5px solid yellow",
         }}
       >
-        <Box
-          display="flex"
-          justifyContent="center"
-          flexWrap="wrap"
-          bgcolor="red"
-        >
-          {Array.from(new Set(deck)).map((pokemonCard, index) => (
-            <Grid key={index} item mt={1}>
-              <Badge
-                badgeContent={cardCounts[pokemonCard._id]}
-                color="primary"
-                overlap="circular"
-              >
-                <Card
-                  pokemonCard={pokemonCard}
-                  fontSizeBreakpoints={fontSizeBreakpoints}
-                  maxHeightBreakpoints={maxHeightBreakpoints}
-                />
-              </Badge>
-            </Grid>
-          ))}
+        <Box position="sticky" top={0} zIndex={1}>
+          <DeckAction
+            onSave={handleSave}
+            // onAddToCart={handleAddToCart}
+            onClear={onClear}
+            setDeckName={setDeckName}
+            deckname={deckname}
+            handleInputChange={handleInputChange}
+            validateForm={validateForm}
+            value={value}
+            deck={deck}
+            // decksFromDb={decksFromDb}
+            handleLoadDecks={handleLoadDecks}
+          />
         </Box>
-      </Paper>
-    </Box>
+        <Paper
+          sx={{
+            flexGrow: 1,
+            overflow: "auto",
+            height: "30vh",
+            maxHeight: "50vh",
+            ...scrollbarStyles,
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="center"
+            flexWrap="wrap"
+            bgcolor="red"
+          >
+            {Array.from(new Set(deck)).map((pokemonCard, index) => (
+              <Grid key={index} item mt={1}>
+                <Badge
+                  badgeContent={cardCounts[pokemonCard._id]}
+                  color="primary"
+                  overlap="circular"
+                >
+                  <Card
+                    pokemonCard={pokemonCard}
+                    fontSizeBreakpoints={fontSizeBreakpoints}
+                    maxHeightBreakpoints={maxHeightBreakpoints}
+                  />
+                </Badge>
+              </Grid>
+            ))}
+          </Box>
+        </Paper>
+      </Box>
+      <Box>
+        {console.log("decksFromDb", decksFromDb)}
+        <LoadDeck
+          decksFromDb={decksFromDb}
+          handleLoadDecks={handleLoadDecks}
+          handleDeleteDeck={handleDeleteDeck}
+        />
+      </Box>
+    </>
   );
 };
 

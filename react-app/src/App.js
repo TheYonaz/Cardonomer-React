@@ -8,6 +8,7 @@ import { SnackBarProvider } from "./providers/SnackBarProvider";
 import { UserProvider } from "./users/providers/UserProvider";
 import { CommentProvider } from "./layout/main/mid/commentProvider/CommentProvider";
 import { FriendsProvider } from "./users/friends/friendsProvider/FriendsProvider.jsx";
+import { DeckProvider } from "./cards/deckProvider/DeckProvider";
 function App() {
   return (
     <div className="App">
@@ -15,13 +16,13 @@ function App() {
         <UserProvider>
           <FriendsProvider>
             <SnackBarProvider>
-              <CommentProvider>
-                <MenuProvider>
+              <MenuProvider>
+                <DeckProvider>
                   <Layout>
                     <Router />
                   </Layout>
-                </MenuProvider>
-              </CommentProvider>
+                </DeckProvider>
+              </MenuProvider>
             </SnackBarProvider>
           </FriendsProvider>
         </UserProvider>

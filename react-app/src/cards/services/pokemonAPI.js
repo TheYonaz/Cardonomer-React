@@ -38,3 +38,15 @@ export const getUserPokemonDecks = async () => {
     return Promise.reject("An unexpected error occurred!");
   }
 };
+export const deleteDeck = async (deckID) => {
+  try {
+    const { data } = await axios.delete(
+      `${pokemonTCGapiURL}/pokemontcg/pokemonDecks/${deckID}`
+    );
+    return Promise.resolve("deleted successfully");
+  } catch (error) {
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    // return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
