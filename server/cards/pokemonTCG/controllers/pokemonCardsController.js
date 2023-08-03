@@ -44,6 +44,27 @@ const savePokemonDeck = async (req, res) => {
     handleError(res, 500, `saveDeck :${error.message}`);
   }
 };
+const deleteDeck = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { DeckID } = req.params; // Get DeckId from request body
+    console.log("DeckId", DeckID);
+    const result = await User.updateOne(
+      { _id: _id },
+      { $pull: { pokemonDecks: { _id: DeckID } } }
+    );
+
+    if (!result) {
+      return handleError(res, 400, "No deck found to delete");
+    }
+
+    res.send({ success: true, message: "Deck deleted successfully" });
+  } catch (error) {
+    handleError(res, 500, `deleteDeck :${error.message}`);
+  }
+};
+
 exports.savePokemonDeck = savePokemonDeck;
 exports.getCards = getCards;
 exports.getPokemonDecks = getPokemonDecks;
+exports.deleteDeck = deleteDeck;

@@ -99,13 +99,13 @@ const getPostsOfFriends = async (req, res) => {
     // User's friends IDs including the user himself/herself
     const friendsIds = user.friends.map((friend) => friend.user_id.toString());
     friendsIds.push(_id);
-    // console.log("getPostsOfFriends", friendsIds);
 
     // Find all posts by user and his/her friends
     const posts = await Post.find({ user_id: { $in: friendsIds } })
       .populate("user_id", "image")
       .lean();
 
+    // console.log("getPostsOfFriends", posts);
     // Send the posts
     res.send(posts);
   } catch (error) {
