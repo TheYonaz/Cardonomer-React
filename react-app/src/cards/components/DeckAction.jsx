@@ -12,8 +12,6 @@ const DeckAction = ({
   validateForm,
   value,
   deck,
-  decksFromDb,
-  handleLoadDecks,
 }) => {
   return (
     <>
@@ -71,22 +69,6 @@ const DeckAction = ({
               Save Deck
             </Button>
           </Box>
-          {/* 
-          <Box>
-            {decksFromDb.map((deckDb, index) => {
-              return (
-                <Button
-                  key={index}
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleLoadDecks(deckDb.cards)}
-                >
-                  {/* {console.log(deckDb)} */}
-          {/* {deckDb.deckName}
-                </Button>
-              );
-            })}
-          </Box> */}
         </Box>
       </Box>
     </>

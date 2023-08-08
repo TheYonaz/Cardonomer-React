@@ -1,5 +1,4 @@
 const User = require("./models/mongoDB/User");
-
 const {
   validateRegistration,
   validateLogin,
@@ -14,12 +13,12 @@ const normalizeUser = require("./helpers/normalizeUser");
 const { comparePassword } = require("../users/helpers/bcrypt");
 
 const { generateAuthToken } = require("../auth/providers/jwt");
+const PokemonCard = require("../cards/pokemonTCG/mongoose/pokemonCard");
 
 const registerUser = async (req, res) => {
   try {
     const user = req.body;
     const { error } = validateRegistration(user);
-    // console.log("in user registration");
     if (error)
       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
     const normalizedUser = normalizeUser(user);
@@ -45,7 +44,7 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) throw new Error("Invalid  password”");
     const { _id, isBusiness, isAdmin, image, name } = userInDB;
     const token = generateAuthToken({ _id, isBusiness, isAdmin, image, name });
-    // console.log(token);
+    console.log(token);
     return res.send(token);
   } catch (error) {
     return handleError(res, 500, `mongoose error: ${error.message}`);
@@ -73,20 +72,70 @@ const getUser = async (req, res) => {
 };
 const getFriends = async (req, res) => {
   try {
-    const { _id } = req.user; // get user id from req.user
-
-    // Find the user
+    const { _id } = req.user;
     const user = await User.findById(_id);
     if (!user) throw new Error("User not found in the database");
-
-    // Get user's friends
     const friends = user.friends;
-
-    // Send the friends
     res.send(friends);
   } catch (error) {
     console.error("getFriends error", error.message);
     res.status(500).send("An error occurred while retrieving friends.");
+  }
+};
+const getCart = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const user = await User.findById(_id).populate({
+      path: "cart",
+      model: "PokemonCard", // Assuming the model name for cards is 'PokemonCard'
+    });
+    if (!user) throw new Error("User not found in the database");
+    const cart = user.cart;
+    console.log("cart", cart);
+    res.send(cart);
+  } catch (error) {
+    console.error("getCart error", error.message);
+    res.status(500).send("An error occurred while retrieving Cart.");
+  }
+};
+const addToCart = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { cardId } = req.body;
+    const user = await User.findById(_id);
+    if (!user) throw new Error("User not found in the database");
+    user.cart.push(cardId);
+    await user.save();
+    console.log("cart2", user.cart);
+    res.send(user.cart);
+  } catch (error) {
+    console.error("addToCart error", error.message);
+    res.status(500).send("An error occurred while adding to Cart.");
+  }
+};
+const removeFromCart = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { cardId } = req.body; // Assuming you're sending the card's ID in the request body
+
+    const user = await User.findById(_id);
+    if (!user) throw new Error("User not found in the database");
+
+    // Find the index of the card in the cart
+    const cardIndex = user.cart.indexOf(cardId);
+
+    // If the card is found, remove it
+    if (cardIndex !== -1) {
+      user.cart.splice(cardIndex, 1);
+      await user.save();
+      console.log("cart2", user.cart);
+      res.send(user.cart);
+    } else {
+      res.status(404).send({ message: "Card not found in cart!" });
+    }
+  } catch (error) {
+    console.error("removeFromCart error", error.message);
+    res.status(500).send("An error occurred while removing from Cart.");
   }
 };
 
@@ -94,3 +143,6 @@ exports.getFriends = getFriends;
 exports.loginUser = loginUser;
 exports.registerUser = registerUser;
 exports.getUser = getUser;
+exports.getCart = getCart;
+exports.addToCart = addToCart;
+exports.removeFromCart = removeFromCart;

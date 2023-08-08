@@ -11,6 +11,7 @@ import MidNav from "./mid/MidNav";
 import MoreButton from "../navbar/right/components/MoreButton";
 import RightNavBar from "./right/RightNavBar";
 import { useUser } from "../../../users/providers/UserProvider";
+import CartNav from "./left/CartNav";
 
 const TopNavbar = () => {
   // const setOpen = useMenu();
@@ -18,7 +19,10 @@ const TopNavbar = () => {
     <>
       <AppBar position="static">
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Logo />
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Logo />
+            <CartNav />
+          </Box>
           <MoreButton />
           <MidNav />
           <Box>

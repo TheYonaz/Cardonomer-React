@@ -179,6 +179,12 @@ const userSchema = new mongoose.Schema({
     ],
     default: [],
   },
+  cart: [
+    {
+      type: [card],
+      default: [],
+    },
+  ],
 });
 const User = mongoose.model("User", userSchema);
 

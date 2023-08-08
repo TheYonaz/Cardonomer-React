@@ -31,6 +31,7 @@ const LoginPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        bgcolor: "white",
       }}
     >
       <>

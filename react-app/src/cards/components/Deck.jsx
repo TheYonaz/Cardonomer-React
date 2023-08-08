@@ -31,7 +31,9 @@ const Deck = ({
     counts[card._id] = (counts[card._id] || 0) + 1;
     return counts;
   }, {});
-
+  console.log(Array.from(deck));
+  console.log(typeof deck);
+  console.log(typeof Array.from(deck));
   return (
     <>
       <Box

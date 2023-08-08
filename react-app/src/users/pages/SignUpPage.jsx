@@ -27,6 +27,7 @@ const SignUpPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        bgcolor: "white",
       }}
     >
       <UserForm

@@ -2,6 +2,7 @@ import { Box, Grid, Paper } from "@mui/material";
 import React from "react";
 import { scrollbarStyles } from "../../../styles/styles";
 import Card from "../card/Card";
+import CardAction from "../card/CardAction";
 const PokemonCards = ({
   pokemonCards,
   fontSizeBreakpoints,
@@ -20,12 +21,27 @@ const PokemonCards = ({
       >
         <Box display="flex" justifyContent="center" flexWrap="wrap">
           {pokemonCards.map((pokemonCard, index) => (
-            <Grid key={index} item>
+            <Grid
+              key={index}
+              item
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {console.log(pokemonCard)}
               <Card
                 pokemonCard={pokemonCard}
                 onClick={() => onClick(pokemonCard)}
                 fontSizeBreakpoints={fontSizeBreakpoints}
                 maxHeightBreakpoints={maxHeightBreakpoints}
+              />
+              <CardAction
+                price={pokemonCard.cardmarket.prices.avg30}
+                cardId={pokemonCard._id}
+                onAddToCart={console.log(pokemonCard)}
+                pokemonCard={pokemonCard}
+                fontSizeBreakpoints={fontSizeBreakpoints}
               />
             </Grid>
           ))}

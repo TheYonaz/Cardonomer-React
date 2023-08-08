@@ -16,7 +16,6 @@ import { useFriends } from "../../../users/friends/friendsProvider/FriendsProvid
 const RightSidebar = () => {
   const { friends } = useFriends();
   console.log("RightSidebar", friends);
-  // const friends = ["Ash", "Misty", "Brock", "Pikachu", "Charmander"];
   return (
     <>
       <Box
