@@ -19,10 +19,8 @@ export const DeckProvider = ({ children }) => {
       try {
         const deckFromServer = await getUserPokemonDecks(userId);
         console.log("handleLoadDeck user1", deckFromServer);
-        const normalizedDeck = normalizeDeckData(deckFromServer);
-        console.log("handleLoadDeck user2", normalizedDeck);
         if (deckFromServer) {
-          return setDeck(normalizedDeck);
+          return setDeck(deckFromServer);
         }
       } catch (error) {
         if (typeof error === "string") return setError(error);

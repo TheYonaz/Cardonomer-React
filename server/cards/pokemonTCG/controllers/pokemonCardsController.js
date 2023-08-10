@@ -15,8 +15,12 @@ const getCards = async (req, res) => {
 const getPokemonDecks = async (req, res) => {
   try {
     const { _id } = req.user;
-    console.log(_id);
-    const userDecks = await User.find({ _id }, { pokemonDecks: 1 }).populate({
+    const { userId } = req.params;
+    console.log(userId);
+    const userDecks = await User.find(
+      { _id: userId },
+      { pokemonDecks: 1 }
+    ).populate({
       path: "pokemonDecks.cards._id",
       model: "pokemoncard",
       select: "name images nationalPokedexNumbers subtypes ",

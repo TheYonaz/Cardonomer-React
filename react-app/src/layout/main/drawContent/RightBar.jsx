@@ -12,9 +12,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import OnlineIcon from "@mui/icons-material/OnlinePrediction";
 import OfflineIcon from "@mui/icons-material/OfflineBolt";
 import { useFriends } from "../../../users/friends/friendsProvider/FriendsProvider";
+import { useNavigate } from "react-router-dom";
+import ROUTES from "../../../router/routesModel";
 
 const RightSidebar = () => {
   const { friends } = useFriends();
+  const navigate = useNavigate();
   console.log("RightSidebar", friends);
   return (
     <>
@@ -31,7 +34,11 @@ const RightSidebar = () => {
           {friends.map((friend, index) => {
             const isOnline = Math.random() > 0.5;
             return (
-              <ListItem button key={index}>
+              <ListItem
+                button
+                key={index}
+                onClick={() => navigate(`${ROUTES.PROFILE}/${friend.user_id}`)}
+              >
                 <ListItemIcon>
                   {isOnline ? (
                     <OnlineIcon

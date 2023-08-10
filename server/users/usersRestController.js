@@ -65,6 +65,22 @@ const getUser = async (req, res) => {
     const userInDB = await User.findOne({ _id: userID });
     if (!userInDB)
       return handleError(res, 404, `User with this id was not found`);
+    if (!isAdmin) {
+      const safeKeys = [
+        "address",
+        "bizNumber",
+        "cart",
+        "createdAt",
+        "email",
+        "image",
+        "likedPosts",
+        "name",
+        "phone",
+        "publishedPosts",
+        "_id",
+      ];
+      return res.send(lodash.pick(userInDB, safeKeys));
+    }
     return res.send(userInDB);
   } catch (error) {
     return handleError(res, 401, `Authorization error : could not get user`);

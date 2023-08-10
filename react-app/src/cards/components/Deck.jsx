@@ -31,9 +31,6 @@ const Deck = ({
     counts[card._id] = (counts[card._id] || 0) + 1;
     return counts;
   }, {});
-  console.log(Array.from(deck));
-  console.log(typeof deck);
-  console.log(typeof Array.from(deck));
   return (
     <>
       <Box
@@ -44,7 +41,6 @@ const Deck = ({
         <Box position="sticky" top={0} zIndex={1}>
           <DeckAction
             onSave={handleSave}
-            // onAddToCart={handleAddToCart}
             onClear={onClear}
             setDeckName={setDeckName}
             deckname={deckname}
@@ -52,7 +48,6 @@ const Deck = ({
             validateForm={validateForm}
             value={value}
             deck={deck}
-            // decksFromDb={decksFromDb}
             handleLoadDecks={handleLoadDecks}
           />
         </Box>
@@ -62,7 +57,6 @@ const Deck = ({
             overflow: "auto",
             height: "30vh",
             maxHeight: "50vh",
-            // ...scrollbarStyles,
           }}
         >
           <Box

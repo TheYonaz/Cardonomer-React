@@ -5,7 +5,7 @@ const ROUTES = {
   SIGNUP: "/signup",
   LOGIN: "/login",
   EDIT_USER: "edit_user_page",
-  PROFILE: "profile",
+  PROFILE: "/profile",
   CART: "/cart",
 };
 export default ROUTES;

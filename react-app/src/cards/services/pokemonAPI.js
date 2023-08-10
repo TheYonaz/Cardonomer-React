@@ -1,4 +1,5 @@
 import axios from "axios";
+import { normalizeDeckData } from "../deckProvider/normalizeCard";
 const pokemonTCGapiURL =
   process.env.REACT_APP_API_URL || "http://localhost:8181";
 
@@ -26,12 +27,13 @@ export const savePokemonDeck = async (deck) => {
   }
 };
 
-export const getUserPokemonDecks = async () => {
+export const getUserPokemonDecks = async (userId) => {
   try {
     const { data } = await axios.get(
-      `${pokemonTCGapiURL}/pokemontcg/pokemonDecks`
+      `${pokemonTCGapiURL}/pokemontcg/pokemonDecks/${userId}`
     );
-    return Promise.resolve(data);
+    const normalizedDeck = normalizeDeckData(data);
+    return Promise.resolve(normalizedDeck);
   } catch (error) {
     if (axios.isAxiosError(error)) return Promise.reject(error.message);
     // return Promise.reject(error.message);

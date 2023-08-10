@@ -19,9 +19,7 @@ const PostFeedback = ({
     return (
       <Posts
         posts={posts}
-        onComment={onComment}
         onPublish={onPublish}
-        onLike={onLike}
         onCommentPublished={onCommentPublished}
       />
     );

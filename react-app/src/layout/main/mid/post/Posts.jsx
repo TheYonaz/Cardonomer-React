@@ -2,12 +2,18 @@ import React from "react";
 import { useUser } from "../../../../users/providers/UserProvider";
 import Post from "../../../../posts/components/Post";
 import { Box, Container } from "@mui/material";
-const Posts = ({ posts, onComment, onLike, onCommentPublished }) => {
+import useHandlePosts from "../../../../posts/hooks/useHandlePosts";
+const Posts = ({ posts, onCommentPublished }) => {
   const { user } = useUser();
   console.log("posts", posts);
+  const { handleComment, handleLike } = useHandlePosts();
+  const uniquePosts = posts.filter(
+    (post, index, self) => index === self.findIndex((p) => p._id === post._id)
+  );
+  console.log("posts1", uniquePosts);
   return (
     <Container>
-      {posts
+      {uniquePosts
         .map((post) => (
           <Box m={2} key={post._id}>
             {" "}
@@ -15,9 +21,9 @@ const Posts = ({ posts, onComment, onLike, onCommentPublished }) => {
             {/* Add margin-bottom to each post */}
             <Post
               timepublished={new Date(post.createdAt.toString())}
-              onComment={onComment}
+              onComment={handleComment}
               onCommentPublished={onCommentPublished}
-              onLike={onLike}
+              onLike={handleLike}
               content={post.content}
               author={post.publisher_name}
               image={

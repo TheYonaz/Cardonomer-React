@@ -20,6 +20,9 @@ const publishPost = async (req, res) => {
     console.log("fromPublishPost2", postFromDB);
     const normalizedPost = normalizePost(postFromDB);
     console.log("fromPublishPost3", normalizedPost);
+    let user = await User.findById(_id);
+    user.publishedPosts.push(postFromDB._id);
+    user = await user.save();
     res.send(postFromDB);
   } catch (error) {
     console.log("post error", error.message);
@@ -116,7 +119,9 @@ const getPostsOfFriends = async (req, res) => {
 const getPost = async (req, res) => {
   const { postId } = req.params; // get post id from request parameters
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId)
+      .populate("user_id", "image")
+      .lean();
     if (!post) throw new Error("Could not find this post in the database");
     res.send(post);
   } catch (error) {
