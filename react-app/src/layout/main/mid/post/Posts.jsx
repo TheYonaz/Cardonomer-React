@@ -28,6 +28,7 @@ const Posts = ({ posts, onComment, onLike, onCommentPublished }) => {
               likes={post.likes}
               postId={post._id}
               comments={post.comments}
+              postContent={post}
             />
             {console.log("posts2", post)}
           </Box>

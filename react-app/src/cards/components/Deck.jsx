@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { scrollbarStyles } from "../../styles/styles";
+// import { scrollbarStyles } from "../../styles/styles";
 import Card from "./card/Card";
 import DeckAction from "./DeckAction";
 import LoadDeck from "./LoadDeck";
@@ -62,7 +62,7 @@ const Deck = ({
             overflow: "auto",
             height: "30vh",
             maxHeight: "50vh",
-            ...scrollbarStyles,
+            // ...scrollbarStyles,
           }}
         >
           <Box

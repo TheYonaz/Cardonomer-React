@@ -48,16 +48,24 @@ export const GetUserFriends = async (userId) => {
 export const GetUserCart = async (userId) => {
   try {
     const { data } = await axios.get(`${apiUrl}/cart/${userId}`);
-    console.log("GetUserFriends-userapi", data, userId);
-    if (data) return data;
+    console.log("GetUserCart-userapi", data, userId);
+    let normalizedCart = [].concat(...data);
+    normalizedCart = normalizedCart.map((item) => item._id);
+    console.log("GetUserCart-userapi1", normalizedCart, userId);
+    if (data) return normalizedCart;
   } catch (error) {
     if (axios.isAxiosError(error)) return Promise.reject(error.message);
     return Promise.reject("An unexpected error occurred!");
   }
 };
-export const addToCart = async (userId, cardId) => {
+export const addToCart = async (userId, card_id) => {
   try {
-    const { data } = await axios.post(`${apiUrl}/cart/add/${userId}`, cardId);
+    console.log(card_id);
+    console.log(userId);
+    const { data } = await axios.put(`${apiUrl}/cart/add/${userId}`, {
+      _id: userId,
+      cardId: card_id,
+    });
     console.log("addToCart-userapi", data);
     if (data) return data;
   } catch (error) {
@@ -66,12 +74,19 @@ export const addToCart = async (userId, cardId) => {
   }
 };
 
-export const removeFromCart = async (userId, cardId) => {
+export const removeFromCart = async (userId, card_id) => {
+  console.log("removeFromCart", {
+    _id: userId,
+    cardId: card_id,
+  });
   try {
-    const { data } = await axios.delete(
-      `${apiUrl}/cart/remove/${userId}`,
-      cardId
-    );
+    const { data } = await axios.delete(`${apiUrl}/cart/remove/${userId}`, {
+      data: {
+        _id: userId,
+        cardId: card_id,
+      },
+    });
+
     console.log("removeFromCart-userapi", data);
     if (data) return data;
   } catch (error) {

@@ -17,20 +17,6 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(initialCart);
   const [cartLength, setCartLength] = useState(initialCart.length);
 
-  useEffect(() => {
-    const fetchCartItems = async (userId) => {
-      try {
-        const data = await GetUserCart(userId);
-        setCartItems(data);
-        setCartLength(data.length);
-      } catch (error) {
-        console.error("Error fetching cart items:", error);
-      }
-    };
-
-    if (user) fetchCartItems(user._id);
-  }, [user]);
-
   const addCartItem = async (cardId) => {
     if (!user) {
       const newCart = [...cartItems, cardId];
@@ -48,22 +34,58 @@ export const CartProvider = ({ children }) => {
       console.error("Error adding to cart:", error);
     }
   };
+  useEffect(() => {
+    if (!user) return;
+    const fetchCartItems = async (userId) => {
+      try {
+        const data = await GetUserCart(userId);
+        console.log("fetchCartItems", data);
+        setCartItems(data);
+        setCartLength(data.length);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+
+    const mergeGuestCartWithUserCart = async () => {
+      const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+      for (let cardId of guestCart) {
+        await addCartItem(cardId);
+      }
+      localStorage.removeItem("guestCart");
+    };
+
+    if (user) {
+      fetchCartItems(user._id);
+      mergeGuestCartWithUserCart();
+    }
+    console.log("cartItems", cartItems);
+  }, [user]);
 
   const removeCartItem = async (cardId) => {
     if (!user) {
-      const newCart = cartItems.filter((item) => item.id !== cardId);
-      setCartItems(newCart);
-      localStorage.setItem("guestCart", JSON.stringify(newCart));
-      setCartLength(newCart.length);
+      const indexToRemove = cartItems.findIndex((item) => item._id === cardId);
+
+      if (indexToRemove !== -1) {
+        const newCart = [...cartItems];
+        newCart.splice(indexToRemove, 1);
+        setCartItems(newCart);
+        localStorage.setItem("guestCart", JSON.stringify(newCart));
+        setCartLength(newCart.length);
+      }
       return;
     }
 
     try {
       await removeFromCart(user._id, cardId);
-      setCartItems((prevItems) =>
-        prevItems.filter((item) => item.id !== cardId)
-      );
-      setCartLength((prevLength) => prevLength - 1);
+      const indexToRemove = cartItems.findIndex((item) => item._id === cardId);
+
+      if (indexToRemove !== -1) {
+        const newCartItems = [...cartItems];
+        newCartItems.splice(indexToRemove, 1);
+        setCartItems(newCartItems);
+        setCartLength((prevLength) => prevLength - 1);
+      }
     } catch (error) {
       console.error("Error removing from cart:", error);
     }

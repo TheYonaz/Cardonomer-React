@@ -1,8 +1,7 @@
 import { Box, Button, IconButton, Container } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import React from "react";
-import { scrollbarStyles } from "../../styles/styles";
-import { isJsxOpeningElement } from "typescript";
+// import { scrollbarStyles } from "../../styles/styles";
 import { useState } from "react";
 import Dialogs from "../../utils/Dialogs";
 
@@ -30,7 +29,7 @@ const LoadDeck = ({ decksFromDb, handleLoadDecks, handleDeleteDeck }) => {
         overflowY: "scroll",
         maxHeight: "20vh",
         backgroundColor: "white",
-        ...scrollbarStyles,
+        // ...scrollbarStyles,
       }}
     >
       {" "}

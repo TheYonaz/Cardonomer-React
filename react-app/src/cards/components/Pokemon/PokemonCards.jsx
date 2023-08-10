@@ -1,6 +1,6 @@
 import { Box, Grid, Paper } from "@mui/material";
 import React from "react";
-import { scrollbarStyles } from "../../../styles/styles";
+// import { scrollbarStyles } from "../../../styles/styles";
 import Card from "../card/Card";
 import CardAction from "../card/CardAction";
 const PokemonCards = ({
@@ -16,7 +16,7 @@ const PokemonCards = ({
         style={{
           maxHeight: "50vh",
           overflow: "auto",
-          ...scrollbarStyles,
+          // ...scrollbarStyles,
         }}
       >
         <Box display="flex" justifyContent="center" flexWrap="wrap">
@@ -29,7 +29,6 @@ const PokemonCards = ({
               justifyContent="center"
               alignItems="center"
             >
-              {console.log(pokemonCard)}
               <Card
                 pokemonCard={pokemonCard}
                 onClick={() => onClick(pokemonCard)}
@@ -39,7 +38,6 @@ const PokemonCards = ({
               <CardAction
                 price={pokemonCard.cardmarket.prices.avg30}
                 cardId={pokemonCard._id}
-                onAddToCart={console.log(pokemonCard)}
                 pokemonCard={pokemonCard}
                 fontSizeBreakpoints={fontSizeBreakpoints}
               />

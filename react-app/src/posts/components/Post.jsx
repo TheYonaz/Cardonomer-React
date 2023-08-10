@@ -28,7 +28,6 @@ const Post = ({
 }) => {
   const [showComments, setShowComments] = useState(false);
   const { user } = useUser();
-  console.log(timepublished);
   return (
     <Card sx={{ marginBottom: "20px" }}>
       <CardHeader

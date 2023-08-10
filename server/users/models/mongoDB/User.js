@@ -179,12 +179,14 @@ const userSchema = new mongoose.Schema({
     ],
     default: [],
   },
-  cart: [
-    {
-      type: [card],
-      default: [],
-    },
-  ],
+  cart: {
+    type: [
+      {
+        item_id: card,
+      },
+    ],
+    default: [],
+  },
 });
 const User = mongoose.model("User", userSchema);
 

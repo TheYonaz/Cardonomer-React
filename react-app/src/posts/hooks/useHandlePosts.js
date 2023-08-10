@@ -18,10 +18,6 @@ const useHandlePosts = () => {
   const [isLoading, setLoading] = useState(false);
   const [postsData, setpostsData] = useState([]);
   const [onePostData, setOnePostData] = useState([]);
-  const [publishedData, setPublishedPost] = useState([]);
-  const [lastPublishedPostId, setLastPublishedPostId] = useState(null);
-  const [lastLikedPostId, setLastLikedPostId] = useState(null);
-  const [lastCommentedPostId, setLastCommentedPostId] = useState(null);
   // const { user } = useUser();
   // const navigate = useNavigate();
   const snack = useSnack();

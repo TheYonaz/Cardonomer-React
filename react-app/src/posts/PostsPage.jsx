@@ -43,9 +43,6 @@ const PostsPage = () => {
         onComment={handleComment}
         onCommentPublished={handleCommentPublished}
         onLike={handleLike}
-        onPublish={() => {
-          console.log();
-        }}
         posts={postsData}
       />
     </Container>
