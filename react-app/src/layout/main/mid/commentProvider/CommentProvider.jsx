@@ -45,7 +45,7 @@ export const CommentProvider = ({ children }) => {
           style={{ marginTop: "1rem" }}
           onClick={() => handleSubmit()}
         >
-          Publish Comment
+          Comment
         </Button>
       </Box>
     );

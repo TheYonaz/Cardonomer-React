@@ -14,6 +14,7 @@ import {
 import { getUserPokemonDecks } from "../../cards/services/pokemonAPI";
 import Posts from "../../layout/main/mid/post/Posts";
 import { getPost } from "../../posts/service/PostSystemAPI";
+import UserDecks from "./UserDecks";
 
 const UserProfile = () => {
   const { user_id } = useParams();
@@ -56,6 +57,11 @@ const UserProfile = () => {
     };
     fetchUserData();
     fetchUserDecks();
+    return () => {
+      setUserData(null);
+      setUserDecks([]);
+      setUserPosts([]);
+    };
   }, [user_id]);
 
   return (
@@ -96,7 +102,8 @@ const UserProfile = () => {
           </Paper>
         </Box>
       )}
-      <Posts posts={userPosts} />
+      {userDecks[0] && <UserDecks decks={userDecks} />}
+      {userPosts[0] && <Posts posts={userPosts} />}
     </Container>
   );
 };

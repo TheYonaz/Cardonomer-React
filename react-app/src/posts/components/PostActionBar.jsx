@@ -77,15 +77,15 @@ const PostActionBar = ({
             onChange={handleCommentChange}
             label="Comment"
             variant="outlined"
-            sx={{ marginInline: 2, minWidth: "50vw" }}
+            sx={{ marginInline: 2, minWidth: "48vw", marginBottom: 1 }}
           />
           <Button
             onClick={handleCommentSubmit}
             variant="contained"
             color="primary"
-            sx={{ marginRight: 1 }}
+            sx={{ paddingInline: 2 }}
           >
-            Publish Comment
+            Comment
           </Button>
         </Box>
       )}
