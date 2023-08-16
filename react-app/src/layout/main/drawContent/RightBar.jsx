@@ -14,11 +14,27 @@ import OfflineIcon from "@mui/icons-material/OfflineBolt";
 import { useFriends } from "../../../users/friends/friendsProvider/FriendsProvider";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../../router/routesModel";
+import { useUser } from "../../../users/providers/UserProvider";
 
 const RightSidebar = () => {
   const { friends } = useFriends();
   const navigate = useNavigate();
+  const { user } = useUser();
   console.log("RightSidebar", friends);
+  if (!friends || friends.length === 0 || !user) {
+    return (
+      <Box
+        component="div"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        height="100vh"
+        sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
+      >
+        <Typography>Please log in to view friends</Typography>
+      </Box>
+    );
+  }
   return (
     <>
       <Box

@@ -29,6 +29,7 @@ export const FriendsProvider = ({ children }) => {
     }
     console.log("useFriends", friends);
   }, [user, handleGetUserFriends]);
+
   return (
     <FriendsContext.Provider value={{ friends }}>
       {children}

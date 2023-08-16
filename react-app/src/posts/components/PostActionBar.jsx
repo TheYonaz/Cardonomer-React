@@ -67,7 +67,6 @@ const PostActionBar = ({
             display: "flex",
             alignItems: "center",
             flexGrow: 1,
-            width: "100%",
             marginLeft: 1, // Added left margin
             marginRight: 1, // Added right margin
           }}
@@ -77,7 +76,7 @@ const PostActionBar = ({
             onChange={handleCommentChange}
             label="Comment"
             variant="outlined"
-            sx={{ marginInline: 2, minWidth: "48vw", marginBottom: 1 }}
+            sx={{ marginInline: 2, minWidth: "35vw", marginBottom: 1 }}
           />
           <Button
             onClick={handleCommentSubmit}
