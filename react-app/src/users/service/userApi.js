@@ -37,8 +37,8 @@ export const GetUser = async (userId) => {
 };
 export const GetAllUsers = async (userId) => {
   try {
-    const { data } = await axios.get(`${apiUrl}/allusers/${userId}`);
-    // console.log("GetAllUsers-userapi", data, userId);
+    const { data } = await axios.get(`${apiUrl}/users/allusers/${userId}`);
+    console.log("GetAllUsers-userapi", data, userId);
     if (data) return data;
   } catch (error) {
     if (axios.isAxiosError(error)) return Promise.reject(error.message);

@@ -16,7 +16,7 @@ router.post("/login", loginUser);
 router.get("/:userID", auth, getUser);
 router.get("/friends/:userID", auth, getFriends);
 router.get("/cart/:userID", auth, getCart);
-router.get("/allusers/:adminID", auth, getAllUsers);
+router.get("/allusers/:userID", auth, getAllUsers);
 router.put("/cart/add/:userID", auth, addToCart);
 router.delete("/cart/remove/:userID", auth, removeFromCart);
 module.exports = router;

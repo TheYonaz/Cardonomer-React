@@ -89,8 +89,8 @@ const getUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const { isAdmin, _id } = req.user;
-    const { userId } = req.params;
-    if (!isAdmin || _id !== userId) {
+    const { userID } = req.params;
+    if (!isAdmin || _id !== userID) {
       return handleError(
         res,
         401,

@@ -28,7 +28,8 @@ const RightSidebar = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        height="100vh"
+        overflowY="scroll"
+        height="48vh"
         sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
       >
         <Typography>Please log in to view friends</Typography>
@@ -42,7 +43,8 @@ const RightSidebar = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        height="100vh"
+        overflowY="scroll"
+        height="48vh"
         sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
       >
         <Typography>Friends</Typography>

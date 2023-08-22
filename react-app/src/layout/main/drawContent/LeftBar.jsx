@@ -13,7 +13,7 @@ const LeftSidebar = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        height="100vh"
+        height="48vh"
         sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
       >
         <SidebarItem icon={<CardMarketIcon />} label="Card Market" />
