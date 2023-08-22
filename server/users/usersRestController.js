@@ -86,6 +86,23 @@ const getUser = async (req, res) => {
     return handleError(res, 401, `Authorization error : could not get user`);
   }
 };
+const getAllUsers = async (req, res) => {
+  try {
+    const { isAdmin, _id } = req.user;
+    const { userId } = req.params;
+    if (!isAdmin || _id !== userId) {
+      return handleError(
+        res,
+        401,
+        "Authorization error: only admins can get all users"
+      );
+    }
+    const allUsers = await User.find({});
+    res.send(allUsers);
+  } catch (error) {
+    return handleError(res, 500, "Internal server error");
+  }
+};
 const getFriends = async (req, res) => {
   try {
     const { _id } = req.user;
@@ -162,3 +179,4 @@ exports.getUser = getUser;
 exports.getCart = getCart;
 exports.addToCart = addToCart;
 exports.removeFromCart = removeFromCart;
+exports.getAllUsers = getAllUsers;

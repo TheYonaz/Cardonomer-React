@@ -7,5 +7,6 @@ const ROUTES = {
   EDIT_USER: "edit_user_page",
   PROFILE: "/profile",
   CART: "/cart",
+  ADMIN: "/admin",
 };
 export default ROUTES;
