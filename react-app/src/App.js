@@ -9,6 +9,7 @@ import { FriendsProvider } from "./users/friends/friendsProvider/FriendsProvider
 import { DeckProvider } from "./cards/deckProvider/DeckProvider";
 import { CartProvider } from "./users/providers/CartProvider";
 import ScrollbarStyles from "./styles/styles";
+// import "mapbox-gl/dist/mapbox-gl.css";
 
 function App() {
   return (

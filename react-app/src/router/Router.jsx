@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import PokemonMain from "../cards/components/Pokemon/PokemonMain";
+import MapGame from "../mapBox/components/Map";
 import PostsPage from "../posts/PostsPage";
 import UserProfile from "../users/components/UserProfile";
 import UsersManagment from "../users/components/UsersManagment";
@@ -20,6 +21,7 @@ const Router = () => {
       <Route path={ROUTES.CART} element={<Cart />} />
       <Route path={ROUTES.ADMIN} element={<UsersManagment />} />
       <Route path={`${ROUTES.PROFILE}/:user_id`} element={<UserProfile />} />
+      <Route path={ROUTES.MAP} element={<MapGame />} />
     </Routes>
   );
 };

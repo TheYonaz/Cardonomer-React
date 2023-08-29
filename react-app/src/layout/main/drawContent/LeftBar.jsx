@@ -5,6 +5,7 @@ import GamesIcon from "@mui/icons-material/Games";
 import RecentGamesIcon from "@mui/icons-material/History";
 import RecentFriendsIcon from "@mui/icons-material/People";
 import SidebarItem from "./SideBarItem";
+import ROUTES from "../../../router/routesModel";
 const LeftSidebar = () => {
   return (
     <>
@@ -17,7 +18,7 @@ const LeftSidebar = () => {
         sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
       >
         <SidebarItem icon={<CardMarketIcon />} label="Card Market" />
-        <SidebarItem icon={<GamesIcon />} label="Games" />
+        <SidebarItem icon={<GamesIcon />} label="Games" to={ROUTES.MAP} />
         <SidebarItem icon={<RecentGamesIcon />} label="Recent games" />
         <SidebarItem icon={<RecentFriendsIcon />} label="Recently Played" />
       </Box>

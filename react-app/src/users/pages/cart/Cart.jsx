@@ -51,7 +51,7 @@ const Cart = () => {
             maxHeightBreakpoints={maxHeightBreakpoints}
             // Add other required props for PokemonCards
           />
-          <Box sx={{ maxHeight: "25vh", overflowY: "scroll" }}>
+          <Box sx={{ maxHeight: "50vh", overflowY: "scroll" }}>
             {cartItems.map((item, index) => (
               <Card sx={{ marginBlock: 2 }} key={index}>
                 <Box

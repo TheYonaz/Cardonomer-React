@@ -28,7 +28,6 @@ const RightSidebar = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        overflowY="scroll"
         height="48vh"
         sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
       >
@@ -43,7 +42,6 @@ const RightSidebar = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        overflowY="scroll"
         height="48vh"
         sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
       >

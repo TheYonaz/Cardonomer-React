@@ -29,7 +29,6 @@ const LoadDeck = ({ decksFromDb, handleLoadDecks, handleDeleteDeck }) => {
         overflowY: "scroll",
         maxHeight: "20vh",
         backgroundColor: "white",
-        // ...scrollbarStyles,
       }}
     >
       {" "}

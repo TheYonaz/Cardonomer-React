@@ -8,5 +8,6 @@ const ROUTES = {
   PROFILE: "/profile",
   CART: "/cart",
   ADMIN: "/admin",
+  MAP: "/map",
 };
 export default ROUTES;
