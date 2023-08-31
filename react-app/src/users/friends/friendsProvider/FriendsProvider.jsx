@@ -28,7 +28,8 @@ export const FriendsProvider = ({ children }) => {
       handleGetUserFriends(user._id);
     }
     console.log("useFriends", friends);
-  }, [user, handleGetUserFriends]);
+    return;
+  }, [user]);
 
   return (
     <FriendsContext.Provider value={{ friends }}>

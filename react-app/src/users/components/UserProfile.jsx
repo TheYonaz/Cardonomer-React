@@ -15,12 +15,28 @@ import { getUserPokemonDecks } from "../../cards/services/pokemonAPI";
 import Posts from "../../layout/main/mid/post/Posts";
 import { getPost } from "../../posts/service/PostSystemAPI";
 import UserDecks from "./UserDecks";
+import { useUser } from "../providers/UserProvider";
+import { useFriends } from "../friends/friendsProvider/FriendsProvider";
 
 const UserProfile = () => {
   const { user_id } = useParams();
+  const { user } = useUser();
   const [userData, setUserData] = useState(null);
   const [userDecks, setUserDecks] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
+  const { friends } = useFriends();
+
+  const findFriendshipStartDate = (userId, friendsArray) => {
+    console.log(userId);
+    console.log(friendsArray);
+    console.log(user._id);
+    const friend = friendsArray.find((friend) => friend.user_id === userId);
+    return friend ? friend.startOfFriendship : null;
+  };
+
+  const friendshipStartDate = userData
+    ? findFriendshipStartDate(user_id, friends)
+    : null;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -90,12 +106,16 @@ const UserProfile = () => {
                 <Divider style={{ margin: "20px 0" }} />
                 <Typography variant="body1" paragraph>
                   {/* You can add more user details here */}
-                  Friend since:{" "}
-                  {new Date(userData.startOfFriendship).toLocaleDateString()}
+                  Friend since:{console.log(userData)}
+                  {friendshipStartDate
+                    ? new Date(friendshipStartDate).toLocaleDateString()
+                    : "Not friends"}
                 </Typography>
-                <Button variant="contained" color="primary">
-                  Message
-                </Button>
+                {user._id === user_id && (
+                  <Button variant="contained" color="primary">
+                    Edit
+                  </Button>
+                )}
                 {/* Add more buttons or user actions here */}
               </Grid>
             </Grid>

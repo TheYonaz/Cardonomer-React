@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -13,6 +13,7 @@ const PostsPage = () => {
   const [commented, setComment] = useState(false);
   const { getfriendsPosts, value, handlePublish } = useHandlePosts();
   const { postsData, error, isLoading } = value;
+  const { user } = useUser();
 
   useEffect(() => {
     getfriendsPosts();
@@ -25,6 +26,7 @@ const PostsPage = () => {
   const handleCommentPublished = () => {
     setComment((prev) => !prev);
   };
+  if (!user) return <Typography>Please log in</Typography>;
   return (
     <Container>
       {" "}

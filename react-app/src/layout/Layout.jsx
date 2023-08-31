@@ -8,10 +8,12 @@ import Drawer from "./main/drawContent/Drawer";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import RightSidebar from "./main/drawContent/RightBar";
+import { useUser } from "../users/providers/UserProvider";
 
 const Layout = ({ children }) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm")); // change 'sm' to the desired breakpoint
+  const { user } = useUser();
 
   return (
     <Box display="flex" flexDirection="column">

@@ -6,25 +6,31 @@ import NavBarLink from "../../../components/NavBarLink";
 import { useCart } from "../../../../users/providers/CartProvider";
 import { useUser } from "../../../../users/providers/UserProvider";
 import { useSnack } from "../../../../providers/SnackBarProvider";
+import { useNavigate } from "react-router-dom";
 
 const CartNav = () => {
   const { cartLength } = useCart();
   // const { cartLength } = value;
   const { user } = useUser();
   const snack = useSnack();
+  const navigate = useNavigate();
   return (
     <>
       {" "}
       <Box
-      //    sx={{ display: { xs: "none", md: "inline-flex" } }}
+        onClick={() => {
+          user
+            ? navigate(ROUTES.CART)
+            : snack("error", "please log in to view the cart");
+        }}
+        //    sx={{ display: { xs: "none", md: "inline-flex" } }}
       >
         <Divider>
           <NavBarLink
-            to={user ? ROUTES.CART : "#"}
             onClick={() => {
-              if (!user) {
-                snack("error", "please log in to view the cart");
-              }
+              user
+                ? navigate(ROUTES.CART)
+                : snack("error", "please log in to view the cart");
             }}
           >
             <Badge badgeContent={cartLength} color="error">

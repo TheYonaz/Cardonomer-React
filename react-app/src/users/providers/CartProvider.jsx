@@ -60,6 +60,10 @@ export const CartProvider = ({ children }) => {
       mergeGuestCartWithUserCart();
     }
     console.log("cartItems", cartItems);
+    return () => {
+      setCartItems([]);
+      setCartLength(0);
+    };
   }, [user]);
 
   const removeCartItem = async (cardId) => {
