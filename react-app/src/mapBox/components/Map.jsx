@@ -12,15 +12,19 @@ import { point } from "@turf/helpers";
 
 const MapGame = () => {
   const [viewport, setViewport] = useState(null);
+
   console.log(
     "process.env.REACT_APP_MAPBOX_TOKEN",
     process.env.REACT_APP_MAPBOX_TOKEN
   );
+
   const [userLocation, setUserLocation] = useState(null);
   const [points, setPoints] = useState([]);
   const [enteredCircles, setEnteredCircles] = useState([]);
   const [discountApplied, setDiscountApplied] = useState(false);
+
   const { user } = useUser();
+
   useEffect(() => {
     const watchUser = navigator.geolocation.watchPosition((position) => {
       const userLat = position.coords.latitude;
