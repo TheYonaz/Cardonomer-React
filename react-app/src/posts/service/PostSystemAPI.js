@@ -1,4 +1,5 @@
 import axios from "axios";
+import { normalizePostData } from "../helpers/normalizePost";
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8181";
 
 export const publishPost = async (post) => {
@@ -20,6 +21,23 @@ export const getPost = async (postId) => {
     const { data } = await axios.get(`${apiUrl}/posts/post/${postId}`);
     console.log("getPost-postapi", data, postId);
     return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return Promise.reject(error.message);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+export const getUsersPost = async (userId) => {
+  console.log("inPublish", userId);
+
+  try {
+    const { data } = await axios.get(
+      `${apiUrl}/posts/userPosts/${userId}`,
+      userId
+    );
+    console.log("getUsersPost-postapi", data, userId);
+    return data.map(normalizePostData);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return Promise.reject(error.message);
@@ -58,8 +76,7 @@ export const publishComment = async (postId, commentOBJ) => {
 export const getFriendsPosts = async () => {
   try {
     const { data } = await axios.get(`${apiUrl}/posts/post`);
-    console.log("getFriendsPosts-postapi", data);
-    return data;
+    return data.map(normalizePostData);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.message);

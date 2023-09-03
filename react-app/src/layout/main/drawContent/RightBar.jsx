@@ -42,8 +42,13 @@ const RightSidebar = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        height="48vh"
-        sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
+        maxHeight="100vh"
+        sx={{
+          position: "sticky",
+          top: 0,
+          width: { md: "12vw", sm: "13vw" },
+          overflowY: "scroll",
+        }}
       >
         <Typography>Friends</Typography>
         <List>

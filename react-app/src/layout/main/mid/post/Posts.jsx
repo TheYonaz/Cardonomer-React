@@ -16,7 +16,7 @@ const Posts = ({ posts, onCommentPublished }) => {
       {uniquePosts
         .map((post) => (
           <Box m={2} key={post._id}>
-            {" "}
+            {console.log(post)}{" "}
             {console.log("posts", new Date(post.createdAt.toString()))}
             {/* Add margin-bottom to each post */}
             <Post
@@ -26,15 +26,12 @@ const Posts = ({ posts, onCommentPublished }) => {
               onLike={handleLike}
               content={post.content}
               author={post.publisher_name}
-              image={
-                post.user_id.image
-                  ? post.user_id.image.url
-                  : "default_image_url_here"
-              }
+              image={post.image ? post.image.url : "default_image_url_here"}
               likes={post.likes}
               postId={post._id}
               comments={post.comments}
               postContent={post}
+              user_id={post.user_id}
             />
             {console.log("posts2", post)}
           </Box>

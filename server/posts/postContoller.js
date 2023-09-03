@@ -2,6 +2,7 @@ const normalizePost = require("./helpers/normalizePost");
 const Post = require("./mongoose/Post");
 const User = require("../users/models/mongoDB/User");
 const normalizeComment = require("./helpers/normalizeComment");
+const { handleError } = require("../utils/errorHandling");
 
 const publishPost = async (req, res) => {
   let post = req.body;
@@ -26,6 +27,7 @@ const publishPost = async (req, res) => {
     res.send(postFromDB);
   } catch (error) {
     console.log("post error", error.message);
+    handleError(res, 500, "An error occurred while publishing the post.");
   }
 };
 const addCommentToPost = async (req, res) => {
@@ -38,7 +40,7 @@ const addCommentToPost = async (req, res) => {
     image: image,
     name: {
       first: name.first,
-      middle: "",
+      middle: name.middle || "",
       last: name.last,
     },
   };
@@ -56,7 +58,7 @@ const addCommentToPost = async (req, res) => {
     res.send(post);
   } catch (error) {
     console.log("addComment error", error.message);
-    res.status(500).send("An error occurred while adding comment to post.");
+    handleError(res, 500, "An error occurred while adding comment to post.");
   }
 };
 const likePost = async (req, res) => {
@@ -86,7 +88,7 @@ const likePost = async (req, res) => {
     res.send(postFromDB);
   } catch (error) {
     console.error("likePost error", error.message);
-    res.status(500).send("An error occurred while liking the post.");
+    handleError(res, 500, "An error occurred while liking the post.");
   }
 };
 
@@ -113,7 +115,7 @@ const getPostsOfFriends = async (req, res) => {
     res.send(posts);
   } catch (error) {
     console.error("getPostsOfFriends error", error.message);
-    res.status(500).send("An error occurred while retrieving posts.");
+    handleError(res, 500, "An error occurred while retrieving posts.");
   }
 };
 const getPost = async (req, res) => {
@@ -126,7 +128,39 @@ const getPost = async (req, res) => {
     res.send(post);
   } catch (error) {
     console.error("get Post error:", error.message);
-    res.status(500).send("An error occurred while getting post.");
+    handleError(res, 500, "An error occurred while getting post.");
+  }
+};
+const getUserPosts = async (req, res) => {
+  const { isAdmin, _id } = req.user;
+  const { userId } = req.params;
+
+  console.log("getUserPosts1", {
+    isAdmin: isAdmin,
+    _id: _id,
+    userId: userId,
+  });
+
+  if (isAdmin) {
+    try {
+      const posts = await Post.find({ user_id: userId })
+        .populate("user_id", "image")
+        .lean();
+      if (!posts || posts.length === 0) {
+        throw new Error("Could not find the specified posts in the database");
+      }
+      console.log("getUserPosts2", posts);
+      res.send(posts);
+    } catch (error) {
+      console.error("get Post error:", error.message);
+      handleError(res, 500, "An error occurred while getting post.");
+    }
+  } else {
+    return handleError(
+      res,
+      403,
+      "You do not have permission to access these posts."
+    );
   }
 };
 
@@ -136,4 +170,5 @@ module.exports = {
   addCommentToPost,
   getPost,
   likePost,
+  getUserPosts,
 };

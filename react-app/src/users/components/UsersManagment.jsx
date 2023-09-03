@@ -12,10 +12,12 @@ import {
   Button,
 } from "@mui/material";
 import Posts from "../../layout/main/mid/post/Posts";
+import { getUsersPost } from "../../posts/service/PostSystemAPI";
 
 const UsersManagment = () => {
   const [users, setUsers] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]);
+  const [userPosts, setUserPosts] = useState({});
   const { user } = useUser();
 
   useEffect(() => {
@@ -26,7 +28,7 @@ const UsersManagment = () => {
     if (user) fetchData();
   }, [user]);
 
-  const toggleRowExpansion = (userId, dataType) => {
+  const toggleRowExpansion = async (userId, dataType) => {
     const currentExpanded = expandedRows.find(
       (row) => row.userId === userId && row.dataType === dataType
     );
@@ -35,6 +37,10 @@ const UsersManagment = () => {
         prev.filter((row) => row.userId !== userId || row.dataType !== dataType)
       );
     } else {
+      if (dataType === "posts") {
+        const posts = await getUsersPost(userId);
+        setUserPosts((prevPosts) => ({ ...prevPosts, [userId]: posts }));
+      }
       setExpandedRows((prev) => [...prev, { userId, dataType }]);
     }
   };
@@ -91,9 +97,7 @@ const UsersManagment = () => {
                 ) && (
                   <TableRow>
                     <TableCell colSpan={5}>
-                      <Posts
-                        posts={user.publishedPosts ? user.publishedPosts : null}
-                      />
+                      <Posts posts={userPosts[user._id] || []} />
                     </TableCell>
                   </TableRow>
                 )}

@@ -9,8 +9,6 @@ const PostFeedback = ({
   error,
   posts,
   onPublish,
-  onComment,
-  onLike,
   onCommentPublished,
 }) => {
   if (isLoading) return <Spinner />;

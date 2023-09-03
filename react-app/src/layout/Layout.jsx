@@ -9,6 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import RightSidebar from "./main/drawContent/RightBar";
 import { useUser } from "../users/providers/UserProvider";
+import Footer from "./foooter/Footer";
 
 const Layout = ({ children }) => {
   const theme = useTheme();
@@ -25,6 +26,7 @@ const Layout = ({ children }) => {
           {matches && <RightSidebar />}
         </DrawerProvider>
       </Box>
+      <Footer />
     </Box>
   );
 };

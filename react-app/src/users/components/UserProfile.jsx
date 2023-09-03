@@ -104,13 +104,15 @@ const UserProfile = () => {
                   {userData.email}
                 </Typography>
                 <Divider style={{ margin: "20px 0" }} />
-                <Typography variant="body1" paragraph>
-                  {/* You can add more user details here */}
-                  Friend since:{console.log(userData)}
-                  {friendshipStartDate
-                    ? new Date(friendshipStartDate).toLocaleDateString()
-                    : "Not friends"}
-                </Typography>
+                {user._id !== user_id && (
+                  <Typography variant="body1" paragraph>
+                    {/* You can add more user details here */}
+                    Friend since:{console.log(userData)}
+                    {friendshipStartDate
+                      ? new Date(friendshipStartDate).toLocaleDateString()
+                      : "Not friends"}
+                  </Typography>
+                )}
                 {user._id === user_id && (
                   <Button variant="contained" color="primary">
                     Edit

@@ -100,10 +100,12 @@ const useHandlePosts = () => {
     try {
       setLoading(true);
       const friendsPosts = await getFriendsPosts();
-      // const posts = setpostsData((prevPosts) =>
-      //   normalizePostData([...prevPosts, friendsPosts])
-      // );
-      console.log("getfriendsPosts", friendsPosts);
+      // try {
+      //   const normalizedPosts = friendsPosts.map(normalizePostData);
+      //   console.log("getfriendsPosts", normalizedPosts);
+      // } catch (error) {
+      //   console.log(error.message);
+      // }
       postStatus(false, null, friendsPosts);
       console.log("getfriendsPosts1", postsData);
       snack("success", "Posts Retrieved Successfully!");
