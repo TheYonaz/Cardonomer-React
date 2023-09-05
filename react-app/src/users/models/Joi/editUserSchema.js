@@ -21,6 +21,6 @@ const EditUserSchema = {
   zip: Joi.number().min(2).max(256).required(),
 
   isBusiness: Joi.boolean(),
-  user_id: Joi.string(),
+  _id: Joi.string(),
 };
 export default EditUserSchema;

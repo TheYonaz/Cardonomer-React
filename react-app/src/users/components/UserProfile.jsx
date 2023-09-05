@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GetUser } from "../service/userApi";
 import {
   Avatar,
@@ -13,10 +13,11 @@ import {
 } from "@mui/material";
 import { getUserPokemonDecks } from "../../cards/services/pokemonAPI";
 import Posts from "../../layout/main/mid/post/Posts";
-import { getPost } from "../../posts/service/PostSystemAPI";
+import { getPost, getUsersPost } from "../../posts/service/PostSystemAPI";
 import UserDecks from "./UserDecks";
 import { useUser } from "../providers/UserProvider";
 import { useFriends } from "../friends/friendsProvider/FriendsProvider";
+import ROUTES from "../../router/routesModel";
 
 const UserProfile = () => {
   const { user_id } = useParams();
@@ -25,6 +26,7 @@ const UserProfile = () => {
   const [userDecks, setUserDecks] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const { friends } = useFriends();
+  const navigate = useNavigate();
 
   const findFriendshipStartDate = (userId, friendsArray) => {
     console.log(userId);
@@ -39,40 +41,25 @@ const UserProfile = () => {
     : null;
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserDataAndPosts = async () => {
       try {
-        const data = await GetUser(user_id);
-        console.log("fetchUserData", data);
-        setUserData(data);
-        const fetchUserPosts = async () => {
-          if (data.publishedPosts) {
-            console.log(data.publishedPosts);
-            data.publishedPosts.forEach(async (post) => {
-              console.log("post", post);
-              try {
-                const postData = await getPost(post._id);
-                console.log("fetchUserPosts", postData);
-                setUserPosts((prev) => [...prev, postData]);
-              } catch (error) {}
-            });
-          }
-        };
-        fetchUserPosts();
+        const [userDataResponse, userDecksResponse, userPostsResponse] =
+          await Promise.all([
+            GetUser(user_id),
+            getUserPokemonDecks(user_id),
+            getUsersPost(user_id), // using the provided getUsersPost function
+          ]);
+
+        setUserData(userDataResponse);
+        setUserDecks(userDecksResponse);
+        setUserPosts(userPostsResponse);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    const fetchUserDecks = async () => {
-      try {
-        const data = await getUserPokemonDecks(user_id);
-        console.log("fetchUserDecks", data);
-        setUserDecks(data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchUserData();
-    fetchUserDecks();
+
+    fetchUserDataAndPosts();
+
     return () => {
       setUserData(null);
       setUserDecks([]);
@@ -114,7 +101,11 @@ const UserProfile = () => {
                   </Typography>
                 )}
                 {user._id === user_id && (
-                  <Button variant="contained" color="primary">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate(ROUTES.EDIT_USER)}
+                  >
                     Edit
                   </Button>
                 )}

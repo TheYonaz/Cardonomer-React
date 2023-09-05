@@ -39,7 +39,7 @@ const LoginPage = () => {
           title="Login"
           onSubmit={onSubmit}
           onReset={handleReset}
-          onFormChange={validateForm}
+          hasFormErrors={validateForm}
           spacing={1}
           styles={{ maxWidth: "450px" }}
         >

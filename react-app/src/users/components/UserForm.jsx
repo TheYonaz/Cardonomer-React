@@ -10,7 +10,7 @@ import FormLink from "../../forms/components/FormLink";
 const UserForm = ({
   onSubmit,
   onReset,
-  onFormChange,
+  hasFormErrors,
   title,
   errors,
   data,
@@ -21,7 +21,7 @@ const UserForm = ({
     <Form
       onSubmit={onSubmit}
       onReset={onReset}
-      onFormChange={onFormChange}
+      hasFormErrors={hasFormErrors}
       styles={{ maxWidth: "800px" }}
       title={title}
       to={ROUTES.CARDS}

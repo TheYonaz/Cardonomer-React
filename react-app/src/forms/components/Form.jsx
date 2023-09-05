@@ -11,7 +11,7 @@ const Form = ({
   title = "",
   onSubmit,
   onReset,
-  onFormChange,
+  hasFormErrors,
   to = "/",
   color = "inherit",
   spacing = 1,
@@ -19,7 +19,6 @@ const Form = ({
   children,
 }) => {
   const navigate = useNavigate();
-
   return (
     <Box
       component="form"
@@ -63,7 +62,7 @@ const Form = ({
             node="Submit"
             onClick={onSubmit}
             component="button"
-            disabled={!!onFormChange()}
+            disabled={!!hasFormErrors()}
             size="large"
             variant="contained"
             color="primary"
@@ -80,7 +79,7 @@ Form.propTypes = {
   to: string.isRequired,
   spacing: number.isRequired,
   onReset: func.isRequired,
-  onFormChange: func.isRequired,
+  hasFormErrors: func.isRequired,
   title: string.isRequired,
   styles: object.isRequired,
 };

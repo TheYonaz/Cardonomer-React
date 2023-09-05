@@ -9,7 +9,7 @@ import ROUTES from "../../router/routesModel";
 const UserEdit = ({
   onSubmit,
   onReset,
-  onFormChange,
+  hasFormErrors,
   title,
   errors,
   data,
@@ -20,7 +20,7 @@ const UserEdit = ({
     <Form
       onSubmit={onSubmit}
       onReset={onReset}
-      onFormChange={onFormChange}
+      hasFormErrors={hasFormErrors}
       styles={{ maxWidth: "800px" }}
       title={title}
       to={ROUTES.CARDS}
@@ -144,6 +144,7 @@ const UserEdit = ({
         onInputChange={onInputChange}
         data={data}
         breakPoints={{ sm: 6 }}
+        required={false}
       />
       <Grid item>
         <FormControlLabel
@@ -164,4 +165,4 @@ const UserEdit = ({
   );
 };
 
-export default UserEdit;
+export default React.memo(UserEdit);

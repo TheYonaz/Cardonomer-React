@@ -2,6 +2,7 @@ const User = require("./models/mongoDB/User");
 const {
   validateRegistration,
   validateLogin,
+  validateEdit,
 } = require("./models/JOI/userValidationService");
 
 const { handleError } = require("../utils/errorHandling");
@@ -14,6 +15,7 @@ const { comparePassword } = require("../users/helpers/bcrypt");
 
 const { generateAuthToken } = require("../auth/providers/jwt");
 const PokemonCard = require("../cards/pokemonTCG/mongoose/pokemonCard");
+const modelUserToServer = require("./helpers/modelUserToServer");
 
 const registerUser = async (req, res) => {
   try {
@@ -78,6 +80,33 @@ const getUser = async (req, res) => {
     return res.send(userInDB);
   } catch (error) {
     return handleError(res, 401, `Authorization error : could not get user`);
+  }
+};
+
+const editUser = async (req, res) => {
+  try {
+    const { userID } = req.params;
+    const userToUpdate = req.body;
+    const { _id, isAdmin } = req.user;
+    const normalizedUserToUpdate = modelUserToServer(userToUpdate);
+    console.log("userToUpdate", userToUpdate);
+    console.log("userToUpdate1", normalizedUserToUpdate);
+    if (userID !== _id && !isAdmin)
+      return handleError(
+        res,
+        403,
+        "Authorization Error: You must be the registered user to update its  details"
+      );
+    const { error } = validateEdit(normalizedUserToUpdate);
+    if (error)
+      return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
+
+    const user = await User.findByIdAndUpdate(userID, normalizedUserToUpdate, {
+      new: true,
+    });
+    return res.send(user);
+  } catch (error) {
+    return handleError(res, error.status || 500, error.message);
   }
 };
 const getAllUsers = async (req, res) => {
@@ -174,3 +203,4 @@ exports.getCart = getCart;
 exports.addToCart = addToCart;
 exports.removeFromCart = removeFromCart;
 exports.getAllUsers = getAllUsers;
+exports.editUser = editUser;

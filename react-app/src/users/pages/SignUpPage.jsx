@@ -34,7 +34,7 @@ const SignUpPage = () => {
         title="register user"
         data={value.data}
         errors={value.errors}
-        onFormChange={validateForm}
+        hasFormErrors={validateForm}
         onInputChange={handleInputChange}
         onReset={handleReset}
         onSubmit={onSubmit}

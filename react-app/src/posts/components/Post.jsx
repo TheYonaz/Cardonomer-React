@@ -47,6 +47,7 @@ const Post = ({
       setAnchorEl(null);
       handleDeletePost(postId, user_id);
     }
+    setAnchorEl(null);
   };
 
   return (

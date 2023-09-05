@@ -13,11 +13,14 @@ import {
 } from "@mui/material";
 import Posts from "../../layout/main/mid/post/Posts";
 import { getUsersPost } from "../../posts/service/PostSystemAPI";
+import { getUserPokemonDecks } from "../../cards/services/pokemonAPI";
+import UserDecks from "./UserDecks";
 
 const UsersManagment = () => {
   const [users, setUsers] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]);
   const [userPosts, setUserPosts] = useState({});
+  const [userDecks, setUserDecks] = useState({});
   const { user } = useUser();
 
   useEffect(() => {
@@ -40,6 +43,9 @@ const UsersManagment = () => {
       if (dataType === "posts") {
         const posts = await getUsersPost(userId);
         setUserPosts((prevPosts) => ({ ...prevPosts, [userId]: posts }));
+      } else if (dataType === "decks") {
+        const decks = await getUserPokemonDecks(userId);
+        setUserDecks((prevDecks) => ({ ...prevDecks, [userId]: decks }));
       }
       setExpandedRows((prev) => [...prev, { userId, dataType }]);
     }
@@ -66,7 +72,7 @@ const UsersManagment = () => {
                 <TableRow>
                   <TableCell>{`${user.name.first} ${user.name.last}`}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.decks?.length || 0}</TableCell>
+                  <TableCell>{user.pokemonDecks?.length || 0}</TableCell>
                   <TableCell>{user.publishedPosts?.length || 0}</TableCell>
                   <TableCell>
                     <Button
@@ -88,10 +94,11 @@ const UsersManagment = () => {
                 ) && (
                   <TableRow>
                     <TableCell colSpan={5}>
-                      {/* Display user's decks here */}
+                      <UserDecks decks={userDecks[user._id] || []} />
                     </TableCell>
                   </TableRow>
                 )}
+
                 {expandedRows.find(
                   (row) => row.userId === user._id && row.dataType === "posts"
                 ) && (

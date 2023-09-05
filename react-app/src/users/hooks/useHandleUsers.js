@@ -11,7 +11,13 @@ import {
   setTokenInLocalStorage,
   getUserFromLocalStorage,
 } from "../service/localStorage";
-import { login, signup, GetUser, GetUserFriends } from "../service/userApi";
+import {
+  login,
+  signup,
+  GetUser,
+  GetUserFriends,
+  EditUser,
+} from "../service/userApi";
 
 const useHandleUsers = () => {
   const [error, setError] = useState(null);
@@ -86,7 +92,24 @@ const useHandleUsers = () => {
         if (typeof error === "string") requestStatus(false, error, null);
       }
     },
-    [user, requestStatus]
+    [user]
+  );
+  const handelEditUser = useCallback(
+    async (user, user_id) => {
+      try {
+        setLoading(false);
+        // const normalize_User = normalizeEditUser(user);
+        const normalize_User = user;
+        normalize_User._id = user._id;
+        await EditUser(normalize_User);
+        requestStatus(false, null, null);
+        snack("success", "The user has been successfully updated");
+        navigate(ROUTES.ROOT);
+      } catch (error) {
+        if (typeof error === "string") requestStatus(false, error, null);
+      }
+    },
+    [user]
   );
   const handelGetUserFriends = useCallback(
     async (userId) => {
@@ -114,6 +137,7 @@ const useHandleUsers = () => {
     handleSignup,
     handelGetUser,
     handelGetUserFriends,
+    handelEditUser,
   };
 };
 

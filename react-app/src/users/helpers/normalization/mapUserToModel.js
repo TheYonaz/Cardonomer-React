@@ -9,13 +9,12 @@ const mapUserToModel = (user) => {
     country: user.address.country,
     city: user.address.country,
     state: user.address.state,
-    street: user.address.state,
+    street: user.address.street,
     houseNumber: String(user.address.houseNumber),
     zip: String(user.address.zip),
     url: user.image.url,
     alt: user.image.alt,
     isBusiness: user.isBusiness,
-    isAdmin: user.isAdmin,
   };
 };
 
