@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import { useUser } from "../../users/providers/UserProvider";
+import useHandlePosts from "../hooks/useHandlePosts";
 
 const Post = ({
   timepublished,
@@ -34,14 +35,18 @@ const Post = ({
   const [showComments, setShowComments] = useState(false);
   const { user } = useUser();
   const [anchorEl, setAnchorEl] = useState(null);
+  const { handleDeletePost } = useHandlePosts();
 
   console.log("author", author);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = (action) => {
+    if (action === "delete") {
+      setAnchorEl(null);
+      handleDeletePost(postId, user_id);
+    }
   };
 
   return (
@@ -57,8 +62,10 @@ const Post = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
+                <MenuItem onClick={() => handleClose("delete")}>
+                  Delete
+                </MenuItem>
                 <MenuItem onClick={handleClose}>Edit</MenuItem>
-                <MenuItem onClick={handleClose}>Delete</MenuItem>
               </Menu>
             </Box>
           )

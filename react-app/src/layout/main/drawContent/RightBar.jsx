@@ -42,7 +42,7 @@ const RightSidebar = () => {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        maxHeight="100vh"
+        maxHeight="90vh"
         sx={{
           position: "sticky",
           top: 0,
@@ -56,7 +56,6 @@ const RightSidebar = () => {
             const isOnline = Math.random() > 0.5;
             return (
               <ListItem
-                button
                 key={index}
                 onClick={() => navigate(`${ROUTES.PROFILE}/${friend.user_id}`)}
               >

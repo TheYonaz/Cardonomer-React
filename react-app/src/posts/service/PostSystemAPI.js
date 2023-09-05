@@ -84,3 +84,19 @@ export const getFriendsPosts = async () => {
     throw new Error("An unexpected error occurred!");
   }
 };
+
+export const deletePost = async (postId, userId) => {
+  console.log("inDelete", postId);
+  try {
+    const { data } = await axios.delete(
+      `${apiUrl}/posts/post/${postId}/${userId}`
+    );
+    console.log("deletePost-postapi", data);
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return Promise.reject(error.message);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};

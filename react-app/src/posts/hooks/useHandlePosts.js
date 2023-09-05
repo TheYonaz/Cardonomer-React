@@ -5,6 +5,7 @@ import {
   publishComment,
   getPost,
   likePost,
+  deletePost,
 } from "../service/PostSystemAPI";
 import { useSnack } from "../../providers/SnackBarProvider";
 import { normalizePostData } from "../../layout/main/mid/post/postNormalization/postNormalization";
@@ -89,7 +90,7 @@ const useHandlePosts = () => {
       // );
       console.log("hhandleLike2", updatedPost);
       postStatus(false, null, updatedPost);
-      snack("success", "Comment Published Successfully!");
+      snack("success", "Liked Successfully!");
       console.log("handleLike3", postsData);
     } catch (error) {
       if (typeof error === "string") postStatus(false, error, null);
@@ -100,12 +101,6 @@ const useHandlePosts = () => {
     try {
       setLoading(true);
       const friendsPosts = await getFriendsPosts();
-      // try {
-      //   const normalizedPosts = friendsPosts.map(normalizePostData);
-      //   console.log("getfriendsPosts", normalizedPosts);
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
       postStatus(false, null, friendsPosts);
       console.log("getfriendsPosts1", postsData);
       snack("success", "Posts Retrieved Successfully!");
@@ -113,6 +108,21 @@ const useHandlePosts = () => {
       if (typeof error === "string") postStatus(false, error, null);
     }
   }, []);
+
+  const handleDeletePost = useCallback(
+    async (postId, userId) => {
+      try {
+        setLoading(true);
+        await deletePost(postId, userId); // Assuming the method is from the PostSystemAPI service
+        const updatedPosts = postsData.filter((post) => post._id !== postId);
+        postStatus(false, null, updatedPosts);
+        snack("success", "Post Deleted Successfully!");
+      } catch (error) {
+        if (typeof error === "string") postStatus(false, error, null);
+      }
+    },
+    [postsData]
+  );
 
   const value = useMemo(
     () => ({
@@ -130,6 +140,7 @@ const useHandlePosts = () => {
     handleComment,
     handleLike,
     fetchSinglePost,
+    handleDeletePost,
   };
 };
 

@@ -56,12 +56,6 @@ const getUser = async (req, res) => {
     const { _id, isAdmin } = req.user;
     const { userID } = req.params;
     console.log(userID);
-    if (userID !== _id && !isAdmin)
-      return handleError(
-        res,
-        401,
-        `Authorization error : unauthorized access to user`
-      );
     const userInDB = await User.findOne({ _id: userID });
     if (!userInDB)
       return handleError(res, 404, `User with this id was not found`);

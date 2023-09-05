@@ -163,6 +163,20 @@ const getUserPosts = async (req, res) => {
     );
   }
 };
+const deletePost = async (req, res) => {
+  const { postId, userId } = req.params; // get post id from request parameters
+  const { isAdmin, _id } = req.user;
+  try {
+    if (userId !== _id && !isAdmin)
+      throw new Error("You do not have permission to delete this post");
+    const post = await Post.findByIdAndDelete(postId);
+    if (!post) throw new Error("Could not find this post in the database");
+    res.send("success");
+  } catch (error) {
+    console.error("get Post error:", error.message);
+    handleError(res, 500, "An error occurred while getting post.");
+  }
+};
 
 module.exports = {
   getPostsOfFriends,
@@ -171,4 +185,5 @@ module.exports = {
   getPost,
   likePost,
   getUserPosts,
+  deletePost,
 };
