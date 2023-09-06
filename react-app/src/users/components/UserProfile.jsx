@@ -10,6 +10,8 @@ import {
   Button,
   Grid,
   Container,
+  Card,
+  CardHeader,
 } from "@mui/material";
 import { getUserPokemonDecks } from "../../cards/services/pokemonAPI";
 import Posts from "../../layout/main/mid/post/Posts";
@@ -18,6 +20,7 @@ import UserDecks from "./UserDecks";
 import { useUser } from "../providers/UserProvider";
 import { useFriends } from "../friends/friendsProvider/FriendsProvider";
 import ROUTES from "../../router/routesModel";
+import { Announcement } from "@mui/icons-material";
 
 const UserProfile = () => {
   const { user_id } = useParams();
@@ -115,8 +118,28 @@ const UserProfile = () => {
           </Paper>
         </Box>
       )}
-      {userDecks[0] && <UserDecks decks={userDecks} />}
-      {userPosts[0] && <Posts posts={userPosts} />}
+      {userDecks.length > 0 ? (
+        <UserDecks decks={userDecks} />
+      ) : (
+        <Card variant="outlined" style={{ marginTop: "20px" }}>
+          <CardHeader
+            avatar={<Announcement color="disabled" />}
+            title="No Decks Available"
+            subheader="User hasn't added any decks yet."
+          />
+        </Card>
+      )}
+      {userPosts.length > 0 ? (
+        <Posts posts={userPosts} />
+      ) : (
+        <Card variant="outlined" style={{ marginTop: "20px" }}>
+          <CardHeader
+            avatar={<Announcement color="disabled" />}
+            title="No Posts Available"
+            subheader="User hasn't posted anything yet."
+          />
+        </Card>
+      )}
     </Container>
   );
 };

@@ -118,3 +118,24 @@ export const removeFromCart = async (userId, card_id) => {
     return Promise.reject("An unexpected error occurred!");
   }
 };
+
+export const addDiscountToUser = async (userID) => {
+  try {
+    const response = await axios.put(
+      `${apiUrl}/cart/addDiscountToPrizes/${userID}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+export const getPrizes = async (userID) => {
+  try {
+    const response = await axios.get(`${apiUrl}/cart/prizes/${userID}`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
+  }
+};

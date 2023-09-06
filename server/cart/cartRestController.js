@@ -72,6 +72,56 @@ const removeFromCart = async (req, res) => {
     res.status(500).send("An error occurred while removing from Cart.");
   }
 };
+const addDiscount = async (req, res) => {
+  try {
+    const { _id, isAdmin } = req.user;
+    const { userID } = req.params;
+
+    // Check if the user is trying to add a discount to their own cart or if they are an admin
+    if (_id !== userID && !isAdmin) {
+      throw new Error(
+        "Authorization Error: You are not allowed to add a discount to this user's cart."
+      );
+    }
+
+    const user = await User.findById(userID);
+    if (!user) throw new Error("User not found in the database");
+
+    // Add the discount to the user's prizes array
+    user.prizes.push("10%");
+
+    await user.save();
+    res.send({ message: "Discount added to cart!" });
+  } catch (error) {
+    console.log("addDiscount error", error.message);
+    res.status(500).send(`An error occurred: ${error.message}`);
+  }
+};
+const getPrizes = async (req, res) => {
+  try {
+    const { _id, isAdmin } = req.user;
+    const { userID } = req.params;
+
+    // Check if the user is trying to get prizes from their own cart or if they are an admin
+    if (_id !== userID && !isAdmin) {
+      throw new Error(
+        "Authorization Error: You are not allowed to view this user's prizes."
+      );
+    }
+
+    const user = await User.findById(userID);
+    if (!user) throw new Error("User not found in the database");
+
+    // Return the user's prizes array
+    res.send({ prizes: user.prizes });
+  } catch (error) {
+    console.error("getPrizes error", error.message);
+    res.status(500).send(`An error occurred: ${error.message}`);
+  }
+};
+
 exports.getCart = getCart;
 exports.addToCart = addToCart;
 exports.removeFromCart = removeFromCart;
+exports.addDiscount = addDiscount;
+exports.getPrizes = getPrizes;

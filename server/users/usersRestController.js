@@ -138,69 +138,10 @@ const getFriends = async (req, res) => {
     res.status(500).send("An error occurred while retrieving friends.");
   }
 };
-const getCart = async (req, res) => {
-  try {
-    const { _id } = req.user;
-    const user = await User.findById(_id).populate({
-      path: "cart",
-      model: "PokemonCard", // Assuming the model name for cards is 'PokemonCard'
-    });
-    if (!user) throw new Error("User not found in the database");
-    const cart = user.cart;
-    console.log("cart", cart);
-    res.send(cart);
-  } catch (error) {
-    console.error("getCart error", error.message);
-    res.status(500).send("An error occurred while retrieving Cart.");
-  }
-};
-const addToCart = async (req, res) => {
-  try {
-    const { _id } = req.user;
-    const { cardId } = req.body;
-    const user = await User.findById(_id);
-    if (!user) throw new Error("User not found in the database");
-    user.cart.push(cardId);
-    await user.save();
-    console.log("cart2", user.cart);
-    res.send(user.cart);
-  } catch (error) {
-    console.error("addToCart error", error.message);
-    res.status(500).send("An error occurred while adding to Cart.");
-  }
-};
-const removeFromCart = async (req, res) => {
-  try {
-    const { _id } = req.user;
-    const { cardId } = req.body; // Assuming you're sending the card's ID in the request body
-
-    const user = await User.findById(_id);
-    if (!user) throw new Error("User not found in the database");
-
-    // Find the index of the card in the cart
-    const cardIndex = user.cart.indexOf(cardId);
-
-    // If the card is found, remove it
-    if (cardIndex !== -1) {
-      user.cart.splice(cardIndex, 1);
-      await user.save();
-      console.log("cart2", user.cart);
-      res.send(user.cart);
-    } else {
-      res.status(404).send({ message: "Card not found in cart!" });
-    }
-  } catch (error) {
-    console.error("removeFromCart error", error.message);
-    res.status(500).send("An error occurred while removing from Cart.");
-  }
-};
 
 exports.getFriends = getFriends;
 exports.loginUser = loginUser;
 exports.registerUser = registerUser;
 exports.getUser = getUser;
-exports.getCart = getCart;
-exports.addToCart = addToCart;
-exports.removeFromCart = removeFromCart;
 exports.getAllUsers = getAllUsers;
 exports.editUser = editUser;

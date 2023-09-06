@@ -9,21 +9,25 @@ import { useUser } from "../../users/providers/UserProvider";
 import Spinner from "../../layout/components/Spinner";
 import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
 import { point } from "@turf/helpers";
+import { freeToken, createGeoJSONCircle } from "../../utils/mapBoxService";
+import { addDiscountToUser } from "../../users/service/userApi";
 
 const MapGame = () => {
   const [viewport, setViewport] = useState(null);
-
-  console.log(
-    "process.env.REACT_APP_MAPBOX_TOKEN",
-    process.env.REACT_APP_MAPBOX_TOKEN
-  );
-
   const [userLocation, setUserLocation] = useState(null);
   const [points, setPoints] = useState([]);
   const [enteredCircles, setEnteredCircles] = useState([]);
   const [discountApplied, setDiscountApplied] = useState(false);
 
   const { user } = useUser();
+  // console.log(
+  //   "process.env.REACT_APP_MAPBOX_TOKEN",
+  //   process.env.REACT_APP_MAPBOX_TOKEN
+  // );
+  const circles = points.map((point) =>
+    createGeoJSONCircle([point.longitude, point.latitude], 0.415)
+  );
+  // 0.005 km is equal to 5 meters.
 
   useEffect(() => {
     const watchUser = navigator.geolocation.watchPosition((position) => {
@@ -57,40 +61,17 @@ const MapGame = () => {
 
     return () => navigator.geolocation.clearWatch(watchUser);
   }, [points]);
-  const createGeoJSONCircle = (center, radiusInKm, points = 64) => {
-    const coords = {
-      latitude: center[1],
-      longitude: center[0],
-    };
 
-    const km = radiusInKm;
-    const ret = [];
-    const distanceX =
-      km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180));
-    const distanceY = km / 110.574;
-
-    for (let i = 0; i < points; i++) {
-      const theta = (i / points) * (2 * Math.PI);
-      const x = distanceX * Math.cos(theta);
-      const y = distanceY * Math.sin(theta);
-      ret.push([coords.longitude + x, coords.latitude + y]);
+  const activateDiscount = async () => {
+    // This function gets activated when the user enters any circle.
+    console.log("User entered the circle!");
+    try {
+      await addDiscountToUser(user._id);
+      console.log("Discount added to user's cart!");
+    } catch (error) {
+      console.error("Error adding discount to cart:", error);
     }
-    ret.push(ret[0]);
-
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Polygon",
-        coordinates: [ret],
-      },
-    };
   };
-
-  const circles = points.map((point) =>
-    createGeoJSONCircle([point.longitude, point.latitude], 0.05)
-  );
-
-  // 0.005 km is equal to 5 meters.
   useEffect(() => {
     if (userLocation && circles.length) {
       const userPoint = point([userLocation.longitude, userLocation.latitude]);
@@ -100,19 +81,13 @@ const MapGame = () => {
           !enteredCircles.includes(index) &&
           booleanPointInPolygon(userPoint, circle)
         ) {
-          activateFunction();
+          activateDiscount();
           setEnteredCircles((prevState) => [...prevState, index]);
           break; // Break after the first match
         }
       }
     }
   }, [userLocation, circles]);
-
-  const activateFunction = () => {
-    // This function gets activated when the user enters any circle.
-    console.log("User entered the circle!");
-    // Add any other logic you want to run here.
-  };
 
   if (!user)
     return (
@@ -133,7 +108,7 @@ const MapGame = () => {
       initialViewState={viewport}
       mapStyle="mapbox://styles/mapbox/streets-v12"
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
-      mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+      mapboxAccessToken={freeToken}
     >
       {" "}
       {userLocation && (

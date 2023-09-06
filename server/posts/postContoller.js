@@ -140,29 +140,19 @@ const getUserPosts = async (req, res) => {
     _id: _id,
     userId: userId,
   });
+  try {
+    const posts = await Post.find({ user_id: userId })
+      .populate("user_id", "image")
+      .lean();
 
-  if (isAdmin) {
-    try {
-      const posts = await Post.find({ user_id: userId })
-        .populate("user_id", "image")
-        .lean();
-      if (!posts || posts.length === 0) {
-        throw new Error("Could not find the specified posts in the database");
-      }
-      console.log("getUserPosts2", posts);
-      res.send(posts);
-    } catch (error) {
-      console.error("get Post error:", error.message);
-      handleError(res, 500, "An error occurred while getting post.");
-    }
-  } else {
-    return handleError(
-      res,
-      403,
-      "You do not have permission to access these posts."
-    );
+    console.log("getUserPosts2", posts);
+    res.send(posts || []);
+  } catch (error) {
+    console.log("get Post error:", error.message);
+    handleError(res, 500, "An error occurred while getting post.");
   }
 };
+
 const deletePost = async (req, res) => {
   const { postId, userId } = req.params; // get post id from request parameters
   const { isAdmin, _id } = req.user;

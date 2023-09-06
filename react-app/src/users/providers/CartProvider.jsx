@@ -1,6 +1,11 @@
 import React, { useContext, useState, useEffect, useMemo } from "react";
 import { node } from "prop-types";
-import { removeFromCart, GetUserCart, addToCart } from "../service/userApi";
+import {
+  removeFromCart,
+  GetUserCart,
+  addToCart,
+  getPrizes,
+} from "../service/userApi";
 import { useUser } from "./UserProvider";
 
 // Create the context
@@ -15,6 +20,7 @@ export const CartProvider = ({ children }) => {
     : JSON.parse(localStorage.getItem("guestCart") || "[]");
 
   const [cartItems, setCartItems] = useState(initialCart);
+  const [prizes, setPrizes] = useState([]);
   const [cartLength, setCartLength] = useState(initialCart.length);
 
   const addCartItem = async (cardId) => {
@@ -47,6 +53,16 @@ export const CartProvider = ({ children }) => {
       }
     };
 
+    const fetchPrizes = async (userId) => {
+      try {
+        const data = await getPrizes(userId);
+        console.log("Prizes:", data);
+        setPrizes(data);
+      } catch (error) {
+        console.error("Error fetching prizes:", error);
+      }
+    };
+
     const mergeGuestCartWithUserCart = async () => {
       const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
       for (let cardId of guestCart) {
@@ -57,12 +73,14 @@ export const CartProvider = ({ children }) => {
 
     if (user) {
       fetchCartItems(user._id);
+      fetchPrizes(user._id);
       mergeGuestCartWithUserCart();
     }
     console.log("cartItems", cartItems);
     return () => {
       setCartItems([]);
       setCartLength(0);
+      setPrizes([]);
     };
   }, [user]);
 
@@ -96,8 +114,8 @@ export const CartProvider = ({ children }) => {
   };
 
   const value = useMemo(() => {
-    return { cartItems, cartLength, removeCartItem, addCartItem };
-  }, [cartItems, cartLength]);
+    return { cartItems, cartLength, removeCartItem, addCartItem, prizes };
+  }, [cartItems, cartLength, prizes]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

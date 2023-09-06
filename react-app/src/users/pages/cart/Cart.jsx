@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -14,9 +14,27 @@ import FormLink from "../../../forms/components/FormLink";
 import ROUTES from "../../../router/routesModel";
 
 const Cart = () => {
-  const { cartItems, removeCartItem } = useCart();
+  const { cartItems, removeCartItem, prizes } = useCart();
+  const [selectedDiscount, setSelectedDiscount] = useState(""); // State to hold the selected discount
   const fontSizeBreakpoints = { xs: 5, sm: 10, m: 12, lg: 15 };
   const maxHeightBreakpoints = { xs: 75, sm: 100, m: 150, lg: 200 };
+
+  const handleDiscountChange = (event) => {
+    setSelectedDiscount(event.target.value);
+  };
+
+  const calculateTotalWithDiscount = () => {
+    let discount = 0;
+    if (selectedDiscount === "10%") {
+      discount = 0.1;
+    }
+    // Add more conditions if you have other discounts
+    const total = cartItems.reduce(
+      (acc, item) => acc + item.cardmarket.prices.avg30,
+      0
+    );
+    return total * (1 - discount);
+  };
 
   const handleBuyNow = (pokemonCard) => {
     // Implement your buy now logic here
