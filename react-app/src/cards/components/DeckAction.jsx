@@ -4,7 +4,6 @@ import { useDeck } from "../deckProvider/DeckProvider";
 
 const DeckAction = ({
   onSave,
-  onAddToCart,
   onClear,
   setDeckName,
   deckname,
@@ -12,6 +11,7 @@ const DeckAction = ({
   validateForm,
   value,
   deck,
+  handleAddAllToCart,
 }) => {
   return (
     <>
@@ -26,7 +26,7 @@ const DeckAction = ({
             <Button
               variant="contained"
               color="secondary"
-              onClick={onAddToCart}
+              onClick={handleAddAllToCart}
               sx={{ marginInline: 1 }}
               disabled={deck.length ? false : true}
             >

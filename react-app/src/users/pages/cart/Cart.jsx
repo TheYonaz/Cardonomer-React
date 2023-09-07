@@ -7,18 +7,24 @@ import {
   CardHeader,
   Typography,
   CardMedia,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
+import TextField from "@mui/material/TextField";
+
 import { useCart } from "../../providers/CartProvider";
 import PokemonCards from "../../../cards/components/Pokemon/PokemonCards";
 import FormLink from "../../../forms/components/FormLink";
 import ROUTES from "../../../router/routesModel";
 
 const Cart = () => {
-  const { cartItems, removeCartItem, prizes } = useCart();
+  const { cartItems, removeCartItem, prizes: discountPrizes } = useCart();
   const [selectedDiscount, setSelectedDiscount] = useState(""); // State to hold the selected discount
   const fontSizeBreakpoints = { xs: 5, sm: 10, m: 12, lg: 15 };
   const maxHeightBreakpoints = { xs: 75, sm: 100, m: 150, lg: 200 };
-
+  console.log("discountPrizes", discountPrizes.prizes);
   const handleDiscountChange = (event) => {
     setSelectedDiscount(event.target.value);
   };
@@ -45,22 +51,20 @@ const Cart = () => {
     // Implement your buy all logic here
     console.log("Buying all items in the cart");
   };
-  console.log(cartItems);
-  const total = cartItems.reduce(
-    (acc, item) => acc + item.cardmarket.prices.avg30,
-    0
-  );
+  const resetDiscount = () => {
+    setSelectedDiscount("");
+  };
 
   return (
     <Box padding={2}>
       <Typography variant="h4">Your Cart</Typography>
-      {!cartItems[0] && (
+      {!cartItems.length && (
         <>
           <Typography variant="h4">Cart is empty, please add cards</Typography>
           <FormLink to={ROUTES.POKEMON_CARDS} text={"to the cards"} />
         </>
       )}
-      {cartItems[0] && (
+      {cartItems.length > 0 && (
         <>
           <PokemonCards
             pokemonCards={cartItems}
@@ -82,7 +86,6 @@ const Cart = () => {
                   justifyContent="space-between"
                   bgcolor="white"
                 >
-                  {console.log(item)}
                   <Box display="flex" alignItems="center">
                     <CardMedia
                       component="img"
@@ -107,9 +110,37 @@ const Cart = () => {
               </Card>
             ))}
           </Box>
+          <Box display="flex" alignItems="center" marginTop={2}>
+            <FormControl sx={{ minWidth: "10vw", marginInline: 2 }}>
+              <InputLabel>Available Discounts</InputLabel>
+              <Select value={selectedDiscount} onChange={handleDiscountChange}>
+                {discountPrizes.prizes && discountPrizes.prizes.length ? (
+                  discountPrizes.prizes.map((prize, index) => (
+                    <MenuItem key={index} value={prize}>
+                      {prize}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                )}
+              </Select>
+            </FormControl>
+            <Button
+              onClick={resetDiscount}
+              variant="outlined"
+              color="primary"
+              style={{ margin: "10px 0" }}
+            >
+              Reset Discount
+            </Button>
+          </Box>
 
           <Box display="flex" justifyContent="space-between" marginTop={2}>
-            <Typography variant="h5">Total: ${total.toFixed(2)}</Typography>
+            <Typography variant="h5">
+              Total: ${calculateTotalWithDiscount().toFixed(2)}
+            </Typography>
             <Button variant="contained" color="primary" onClick={handleBuyAll}>
               Buy All
             </Button>

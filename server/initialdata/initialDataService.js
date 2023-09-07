@@ -11,21 +11,21 @@ const data = require("./initialData.json");
 
 const registerValidation = require("../users/models/JOI/registerValidation");
 const normalizeUserToFriends = require("../users/helpers/normalizeUserToFriends");
-const  pokemonData = require("./initialPkemonTCGdata.json");
+const pokemonData = require("./initialPkemonTCGdata.json");
 const PokemonCard = require("../cards/pokemonTCG/mongoose/pokemonCard");
 const generateInitialPokemonCards = async () => {
-  const {pokemonCards} = pokemonData
-  pokemonCards.forEach(async (card)=>{
-    try{
-    const newCard = delete card._id
-    const pokeCardsToDB = new PokemonCard(card)
-    await pokeCardsToDB.save()
-    console.log("card uploaded succesfully");}catch(error){
+  const { pokemonCards } = pokemonData;
+  pokemonCards.forEach(async (card) => {
+    try {
+      const newCard = delete card._id;
+      const pokeCardsToDB = new PokemonCard(card);
+      await pokeCardsToDB.save();
+      console.log("card uploaded succesfully");
+    } catch (error) {
       console.log(error.message);
-
     }
-  })
-}
+  });
+};
 
 const generateInitialUsers = async () => {
   const { users } = data;
@@ -50,12 +50,19 @@ const clearFriends = async () => {
 const adminAllFriends = async () => {
   // Fetch the admin user
   const adminUser = await User.findOne({ isAdmin: true });
-  console.log("adminAllFriends", adminUser);
+  if (!adminUser) {
+    console.error("Admin user not found!");
+    return;
+  }
 
   // Fetch all users excluding the admin
   const potentialFriends = await User.find({ isAdmin: { $ne: true } });
 
-  console.log("adminAllFriends", potentialFriends);
+  // Extract existing friend IDs from the admin's friend list for quick lookup
+  const existingFriendIds = new Set(
+    adminUser.friends.map((friend) => friend.user_id.toString())
+  );
+
   // Loop through all potential friends
   for (let i = 0; i < potentialFriends.length; i++) {
     const friend = potentialFriends[i];
@@ -67,22 +74,16 @@ const adminAllFriends = async () => {
     ]);
 
     // Check if this friend is already in the admin's friends list
-    let friendExists;
-    if (adminUser && adminUser.friends) {
-      friendExists = adminUser.friends.find(
-        (object) => friend._id.toString() === object.user_id
-      );
-    }
-
-    // If the friend is not in the admin's friends list, add them
-    if (!friendExists) {
+    if (!existingFriendIds.has(friend._id.toString())) {
       adminUser.friends.push(friendData);
+      existingFriendIds.add(friend._id.toString()); // Update the set with the new friend ID
     }
   }
 
   // Save the admin user with the updated friends list
   await adminUser.save();
 };
+
 const makeRandomFriends = async () => {
   const savedUsers = async (array) => {
     const usersIDS = array.map((item) => item._id.toString());
@@ -91,12 +92,22 @@ const makeRandomFriends = async () => {
   const savedUsersFromDB = await User.find({}, { _id: 1 });
   const SavedUSERS = await savedUsers(savedUsersFromDB);
   await clearFriends();
-  SavedUSERS.forEach(async (savedUser) => {
-    // Select random users (except current one) as friends
-    const potentialFriends = SavedUSERS.filter((user) => user !== savedUser);
-    const friendCount = Math.floor(Math.random() * potentialFriends.length); // Random number of friends
-    // console.log("friendcount", friendCount);
-    for (let i = 0; i < friendCount; i++) {
+
+  for (let i = 0; i < SavedUSERS.length; i++) {
+    const savedUser = SavedUSERS[i];
+    const addFriendToUser = await User.findById(savedUser, { friends: 1 });
+    const existingFriends = addFriendToUser.friends.map((f) =>
+      f.user_id.toString()
+    );
+
+    // Filter out the current user and existing friends
+    const potentialFriends = SavedUSERS.filter(
+      (user) => user !== savedUser && !existingFriends.includes(user)
+    );
+
+    const friendCount = Math.floor(Math.random() * potentialFriends.length);
+
+    for (let j = 0; j < friendCount; j++) {
       const randomIndex = Math.floor(Math.random() * potentialFriends.length);
       const friend = potentialFriends[randomIndex];
       const friendFromDB = await User.findById(friend, {
@@ -105,7 +116,7 @@ const makeRandomFriends = async () => {
         name: 1,
         email: 1,
       });
-      const addFriendToUser = await User.findById(savedUser, { friends: 1 });
+
       let normalizedFriendFromDB = normalizeUserToFriends(friendFromDB);
       normalizedFriendFromDB = lodash.pick(normalizedFriendFromDB, [
         "name",
@@ -113,19 +124,14 @@ const makeRandomFriends = async () => {
         "user_id",
         "image",
       ]);
-      const friendExists = addFriendToUser.friends.find(
-        (object) => friendFromDB._id === object.user_id
-      );
-      console.log("normalizedFriendFromDB", normalizedFriendFromDB);
-      if (!friendExists) addFriendToUser.friends.push(normalizedFriendFromDB);
-      // console.log("addToUser", addFriendToUser);
-      // console.log("friendFromDB", friendFromDB);
-      // console.log("friend", friend);
-      // Save the user with updated friends list
-      const friendUpdatedUser = await addFriendToUser.save();
-      // console.log("friendUpdatedUser", friendUpdatedUser);
+
+      addFriendToUser.friends.push(normalizedFriendFromDB);
+      potentialFriends.splice(randomIndex, 1); // Remove the added friend from potential friends list
     }
-  });
+
+    await addFriendToUser.save();
+  }
+
   await adminAllFriends();
 };
 

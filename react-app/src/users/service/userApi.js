@@ -98,6 +98,19 @@ export const addToCart = async (userId, card_id) => {
   }
 };
 
+export const addAllToCart = async (cartItems, userID) => {
+  try {
+    const { data } = await axios.put(`${apiUrl}/cart/addAll/${userID}`, {
+      cartItems,
+    });
+    console.log("addAllToCart-userapi", data);
+    if (data) return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+
 export const removeFromCart = async (userId, card_id) => {
   console.log("removeFromCart", {
     _id: userId,
