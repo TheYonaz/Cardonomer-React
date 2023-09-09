@@ -4,6 +4,7 @@ const {
   removeFromCart,
   addDiscount,
   getPrizes,
+  addAllToCart,
 } = require("../cartRestController");
 const express = require("express");
 const router = express.Router();
@@ -14,5 +15,6 @@ router.get("/prizes/:userID", auth, getPrizes);
 router.put("/add/:userID", auth, addToCart);
 router.delete("/remove/:userID", auth, removeFromCart);
 router.put("/addDiscountToPrizes/:userID", auth, addDiscount);
+router.put("/addAll/:userID", auth, addAllToCart);
 
 module.exports = router;

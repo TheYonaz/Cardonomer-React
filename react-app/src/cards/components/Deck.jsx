@@ -26,7 +26,6 @@ const Deck = ({
   decksFromDb,
   handleLoadDecks,
   handleDeleteDeck,
-  handleAddAllToCart,
 }) => {
   const cardCounts = deck.reduce((counts, card) => {
     counts[card._id] = (counts[card._id] || 0) + 1;
@@ -50,7 +49,6 @@ const Deck = ({
             value={value}
             deck={deck}
             handleLoadDecks={handleLoadDecks}
-            handleAddAllToCart={handleAddAllToCart}
           />
         </Box>
         <Paper

@@ -40,6 +40,43 @@ const addToCart = async (req, res) => {
     res.status(500).send("An error occurred while adding to Cart.");
   }
 };
+const addAllToCart = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { cartItems } = req.body;
+    const { userID } = req.params;
+    console.log("Received body:", req.body);
+
+    if (!Array.isArray(cartItems)) {
+      throw new Error("The provided cart items are not in the correct format.");
+    }
+    const user = await User.findById(_id);
+    if (!user) throw new Error("User not found in the database");
+
+    user.cart = [...user.cart, ...cartItems];
+
+    await user.save();
+    const cardIds = cartItems.map((item) => item._id);
+    console.log("cardIds", cardIds);
+
+    // Fetch unique cards from the database
+    const uniqueCards = await PokemonCard.find({ _id: { $in: cardIds } });
+
+    // Construct the response array with duplicates
+    const cards = cardIds.map((id) =>
+      uniqueCards.find((card) => card._id.toString() === id)
+    );
+
+    if (!cards || cards.length !== cardIds.length) {
+      throw new Error("Some cards were not found in the database.");
+    }
+    res.send(cards);
+  } catch (error) {
+    console.error("addAllToCart error", error.message);
+    res.status(500).send("An error occurred while adding cards to Cart.");
+  }
+};
+
 const removeFromCart = async (req, res) => {
   try {
     const { _id } = req.user;
@@ -125,3 +162,4 @@ exports.addToCart = addToCart;
 exports.removeFromCart = removeFromCart;
 exports.addDiscount = addDiscount;
 exports.getPrizes = getPrizes;
+exports.addAllToCart = addAllToCart;

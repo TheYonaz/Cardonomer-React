@@ -41,10 +41,6 @@ const CardFeedBack = ({
     },
     handleSaveDeck
   );
-  const handleAddAllToCart = async (cart) => {
-    const formattedCart = cart.map((item) => ({ _id: item._id }));
-    const sentData = await addAllToCart(formattedCart);
-  };
 
   const handleLoadDecks = (loadDeck) => {
     setDeck(loadDeck);
@@ -94,7 +90,6 @@ const CardFeedBack = ({
           value={value}
           handleLoadDecks={handleLoadDecks}
           handleDeleteDeck={handleDeleteDeck}
-          handleAddAllToCart={handleAddAllToCart}
         />
       </Container>
     );

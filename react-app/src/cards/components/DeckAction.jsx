@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Box, TextField } from "@mui/material";
-import { useDeck } from "../deckProvider/DeckProvider";
+import { useUser } from "../../users/providers/UserProvider";
+import { useCart } from "../../users/providers/CartProvider";
 
 const DeckAction = ({
   onSave,
@@ -11,8 +12,9 @@ const DeckAction = ({
   validateForm,
   value,
   deck,
-  handleAddAllToCart,
 }) => {
+  const { user } = useUser();
+  const { handleAddAllToCart } = useCart();
   return (
     <>
       <Box>
@@ -26,7 +28,7 @@ const DeckAction = ({
             <Button
               variant="contained"
               color="secondary"
-              onClick={handleAddAllToCart}
+              onClick={() => handleAddAllToCart(deck, user._id)}
               sx={{ marginInline: 1 }}
               disabled={deck.length ? false : true}
             >

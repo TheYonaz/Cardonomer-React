@@ -5,6 +5,7 @@ import {
   GetUserCart,
   addToCart,
   getPrizes,
+  addAllToCart,
 } from "../service/userApi";
 import { useUser } from "./UserProvider";
 
@@ -38,6 +39,51 @@ export const CartProvider = ({ children }) => {
       setCartLength((prevLength) => prevLength + 1);
     } catch (error) {
       console.error("Error adding to cart:", error);
+    }
+  };
+  const handleAddAllToCart = async (cart, userID) => {
+    if (!Array.isArray(cart)) {
+      console.error("cart is not an array:", cart);
+      return;
+    }
+    const formattedCart = cart.map((item) => ({ _id: item._id }));
+    try {
+      const data = await addAllToCart(formattedCart, userID);
+      if (data) {
+        setCartItems((prevItems) => [...prevItems, ...data]);
+        setCartLength((prevLength) => prevLength + formattedCart.length);
+      }
+    } catch (error) {
+      console.error("Error adding all to cart:", error);
+    }
+  };
+
+  const removeCartItem = async (cardId) => {
+    if (!user) {
+      const indexToRemove = cartItems.findIndex((item) => item._id === cardId);
+
+      if (indexToRemove !== -1) {
+        const newCart = [...cartItems];
+        newCart.splice(indexToRemove, 1);
+        setCartItems(newCart);
+        localStorage.setItem("guestCart", JSON.stringify(newCart));
+        setCartLength(newCart.length);
+      }
+      return;
+    }
+
+    try {
+      await removeFromCart(user._id, cardId);
+      const indexToRemove = cartItems.findIndex((item) => item._id === cardId);
+
+      if (indexToRemove !== -1) {
+        const newCartItems = [...cartItems];
+        newCartItems.splice(indexToRemove, 1);
+        setCartItems(newCartItems);
+        setCartLength((prevLength) => prevLength - 1);
+      }
+    } catch (error) {
+      console.error("Error removing from cart:", error);
     }
   };
   useEffect(() => {
@@ -84,37 +130,15 @@ export const CartProvider = ({ children }) => {
     };
   }, [user]);
 
-  const removeCartItem = async (cardId) => {
-    if (!user) {
-      const indexToRemove = cartItems.findIndex((item) => item._id === cardId);
-
-      if (indexToRemove !== -1) {
-        const newCart = [...cartItems];
-        newCart.splice(indexToRemove, 1);
-        setCartItems(newCart);
-        localStorage.setItem("guestCart", JSON.stringify(newCart));
-        setCartLength(newCart.length);
-      }
-      return;
-    }
-
-    try {
-      await removeFromCart(user._id, cardId);
-      const indexToRemove = cartItems.findIndex((item) => item._id === cardId);
-
-      if (indexToRemove !== -1) {
-        const newCartItems = [...cartItems];
-        newCartItems.splice(indexToRemove, 1);
-        setCartItems(newCartItems);
-        setCartLength((prevLength) => prevLength - 1);
-      }
-    } catch (error) {
-      console.error("Error removing from cart:", error);
-    }
-  };
-
   const value = useMemo(() => {
-    return { cartItems, cartLength, removeCartItem, addCartItem, prizes };
+    return {
+      cartItems,
+      cartLength,
+      removeCartItem,
+      addCartItem,
+      prizes,
+      handleAddAllToCart,
+    };
   }, [cartItems, cartLength, prizes]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
