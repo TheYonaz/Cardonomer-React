@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -8,13 +8,28 @@ import { useSnack } from "../../providers/SnackBarProvider";
 
 import { getPokemonCards, savePokemonDeck } from "./pokemonAPI";
 
+import { useSearchParams } from "react-router-dom";
+
 const useHandleCards = () => {
   const [error, setCardsError] = useState(null);
   const [isLoading, setCardsLoading] = useState(false);
   const [cardData, setCardsData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const snack = useSnack();
   useAxios();
+
+  useEffect(() => {
+    setSearchTerm(searchParams.get("q") || "");
+  }, [searchParams]);
+
+  const filteredCards = useMemo(() => {
+    if (!cardData) return null;
+    return cardData.filter((card) =>
+      card.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [cardData, searchTerm]);
 
   const requestStatus = useCallback((loading, errorMessage, cardData) => {
     setCardsLoading(loading);
@@ -49,6 +64,8 @@ const useHandleCards = () => {
     value,
     fetchPokemonTcgData,
     // saveDeckData,
+    setSearchTerm,
+    filteredCards,
   };
 };
 

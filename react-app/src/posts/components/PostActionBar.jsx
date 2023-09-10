@@ -33,8 +33,8 @@ const PostActionBar = ({
     onCommentPublished();
   };
   const userLikedPost = likes.map((like) => like.user_id).includes(user._id);
-  const handleLikeClick = () => {
-    onLike(postId);
+  const handleLikeClick = async () => {
+    await onLike(postId);
     onCommentPublished();
   };
 

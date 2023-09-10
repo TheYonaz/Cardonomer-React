@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   publishPost,
   getFriendsPosts,
@@ -12,6 +12,7 @@ import { normalizePostData } from "../../layout/main/mid/post/postNormalization/
 // import { useUser } from "../../users/providers/UserProvider";
 // import { useNavigate } from "react-router-dom";
 import useAxios from "../../hooks/useAxios";
+import { useSearchParams } from "react-router-dom";
 
 const useHandlePosts = () => {
   useAxios();
@@ -19,9 +20,29 @@ const useHandlePosts = () => {
   const [isLoading, setLoading] = useState(false);
   const [postsData, setpostsData] = useState([]);
   const [onePostData, setOnePostData] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState(null);
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState("");
   // const { user } = useUser();
   // const navigate = useNavigate();
   const snack = useSnack();
+  useEffect(() => {
+    setQuery(searchParams.get("q") || "");
+  }, [searchParams]);
+  console.log("Posts Data:", postsData);
+
+  useEffect(() => {
+    if (postsData) {
+      setFilteredPosts(
+        postsData.filter(
+          (post) =>
+            post.content.includes(query) ||
+            post.publisher_name.first.includes(query) ||
+            post.publisher_name.last.includes(query)
+        )
+      );
+    }
+  }, [postsData, query]);
 
   const postStatus = useCallback(
     (loading, errorMessage, posts, onePostData) => {
@@ -128,9 +149,9 @@ const useHandlePosts = () => {
     () => ({
       isLoading,
       error,
-      postsData,
+      postsData: filteredPosts || postsData,
     }),
-    [isLoading, error, postsData]
+    [isLoading, error, filteredPosts, postsData]
   );
 
   return {

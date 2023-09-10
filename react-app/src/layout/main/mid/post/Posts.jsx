@@ -1,19 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { useUser } from "../../../../users/providers/UserProvider";
 import Post from "../../../../posts/components/Post";
-import { Box, Container } from "@mui/material";
+import { Box, Container, TextField } from "@mui/material";
 import useHandlePosts from "../../../../posts/hooks/useHandlePosts";
 const Posts = ({ posts, onCommentPublished }) => {
   const { user } = useUser();
-  console.log("posts", posts);
   const { handleComment, handleLike } = useHandlePosts();
+  console.log("posts", posts);
+  const [searchTerm, setSearchTerm] = useState("");
   const uniquePosts = posts.filter(
     (post, index, self) => index === self.findIndex((p) => p._id === post._id)
   );
   console.log("posts1", uniquePosts);
   return (
     <Container>
+      <Box m={2}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Search Posts"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
       {uniquePosts
+        .filter((post) => {
+          return (
+            post.content.includes(searchTerm) ||
+            post.publisher_name.first.includes(searchTerm) ||
+            post.publisher_name.last.includes(searchTerm)
+          );
+        })
         .map((post) => (
           <Box m={2} key={post._id}>
             {console.log(post)}{" "}
