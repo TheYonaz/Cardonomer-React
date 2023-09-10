@@ -46,7 +46,6 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) throw new Error("Invalid  password”");
     const { _id, isBusiness, isAdmin, image, name } = userInDB;
     const token = generateAuthToken({ _id, isBusiness, isAdmin, image, name });
-    console.log(token);
     return res.send(token);
   } catch (error) {
     return handleError(res, 500, `mongoose error: ${error.message}`);
@@ -55,12 +54,13 @@ const loginUser = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const { _id, isAdmin } = req.user;
+    const { isAdmin } = req.user;
     const { userID } = req.params;
-    console.log(userID);
     const userInDB = await User.findOne({ _id: userID });
-    if (!userInDB)
+    if (!userInDB) {
       return handleError(res, 404, `User with this id was not found`);
+    }
+
     if (!isAdmin) {
       const safeKeys = [
         "address",
@@ -79,6 +79,7 @@ const getUser = async (req, res) => {
     }
     return res.send(userInDB);
   } catch (error) {
+    console.error("getUser error:", error.message);
     return handleError(res, 401, `Authorization error : could not get user`);
   }
 };
@@ -88,31 +89,37 @@ const editUser = async (req, res) => {
     const { userID } = req.params;
     const userToUpdate = req.body;
     const { _id, isAdmin } = req.user;
+
     const normalizedUserToUpdate = modelUserToServer(userToUpdate);
-    console.log("userToUpdate", userToUpdate);
-    console.log("userToUpdate1", normalizedUserToUpdate);
-    if (userID !== _id && !isAdmin)
+    if (userID !== _id && !isAdmin) {
       return handleError(
         res,
         403,
-        "Authorization Error: You must be the registered user to update its  details"
+        "Authorization Error: You must be the registered user to update its details"
       );
+    }
+
     const { error } = validateEdit(normalizedUserToUpdate);
-    if (error)
+    if (error) {
+      console.log("editUser - Joi validation error:", error.details[0].message);
       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
+    }
 
     const user = await User.findByIdAndUpdate(userID, normalizedUserToUpdate, {
       new: true,
     });
     return res.send(user);
   } catch (error) {
+    console.error("editUser error:", error.message);
     return handleError(res, error.status || 500, error.message);
   }
 };
+
 const getAllUsers = async (req, res) => {
   try {
     const { isAdmin, _id } = req.user;
     const { userID } = req.params;
+
     if (!isAdmin || _id !== userID) {
       return handleError(
         res,
@@ -120,22 +127,28 @@ const getAllUsers = async (req, res) => {
         "Authorization error: only admins can get all users"
       );
     }
+
     const allUsers = await User.find({});
     res.send(allUsers);
   } catch (error) {
+    console.error("getAllUsers error:", error.message);
     return handleError(res, 500, "Internal server error");
   }
 };
+
 const getFriends = async (req, res) => {
   try {
     const { _id } = req.user;
     const user = await User.findById(_id);
-    if (!user) throw new Error("User not found in the database");
+    if (!user) {
+      throw new Error("User not found in the database");
+    }
+
     const friends = user.friends;
     res.send(friends);
   } catch (error) {
-    console.error("getFriends error", error.message);
-    res.status(500).send("An error occurred while retrieving friends.");
+    console.error("getFriends error:", error.message);
+    return handleError(res, 500, "An error occurred while retrieving friends.");
   }
 };
 

@@ -7,7 +7,6 @@ const auth = (req, res, next) => {
     const tokenFromClient = req.header("x-auth-token");
     if (!tokenFromClient) throw new Error("authentication error: please login");
     const userPayload = verifyToken(tokenFromClient, KEY);
-    console.log("inauth", userPayload);
     if (!userPayload)
       throw new Error("authentication error: unauthorized user");
     req.user = userPayload;

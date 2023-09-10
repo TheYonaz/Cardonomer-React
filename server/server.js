@@ -26,10 +26,10 @@ app.use(router);
 
 const PORT = config.get("PORT") || 8181;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(chalk.blueBright(`Listening on: http://localhost:${PORT}`));
   require("./DB/mongoDB/connectToDB");
-  // generateInitialUsers();
-  // makeRandomFriends();
-  // generateInitialPokemonCards()
+  await generateInitialUsers();
+  await makeRandomFriends();
+  await generateInitialPokemonCards();
 });

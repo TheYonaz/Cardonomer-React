@@ -91,7 +91,13 @@ const makeRandomFriends = async () => {
   };
   const savedUsersFromDB = await User.find({}, { _id: 1 });
   const SavedUSERS = await savedUsers(savedUsersFromDB);
-  await clearFriends();
+
+  // Check the first user for friends
+  const firstUser = await User.findById(SavedUSERS[0], { friends: 1 });
+  if (firstUser.friends.length > 0) {
+    console.log("Users already have friends. Skipping friend assignment.");
+    return; // Exit the function if the first user has friends
+  }
 
   for (let i = 0; i < SavedUSERS.length; i++) {
     const savedUser = SavedUSERS[i];

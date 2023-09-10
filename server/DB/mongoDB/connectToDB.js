@@ -24,7 +24,7 @@ if (ENVIROMENT === "development")
 if (ENVIROMENT === "production")
   mongoose
     .connect(
-      `mongodb://127.0.0.1:27017/${username}:${password}Cardonomer_yon_vannucci`
+      `mongodb://127.0.0.1:27017/${username}:${password}/Cardonomer_yon_vannucci`
     )
     .then(() =>
       console.log(
