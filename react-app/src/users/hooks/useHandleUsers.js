@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useAxios from "../../hooks/useAxios";
 import { useSnack } from "../../providers/SnackBarProvider";
 import ROUTES from "../../router/routesModel";
@@ -17,12 +17,18 @@ import {
   GetUser,
   GetUserFriends,
   EditUser,
+  GetAllUsers,
 } from "../service/userApi";
 
-const useHandleUsers = () => {
+const useHandleUsers = (currentQuery) => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [usersData, setUsersData] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState(null);
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState("");
+
   const { user, setUser, setToken } = useUser();
   const navigate = useNavigate();
   const snack = useSnack();
@@ -31,11 +37,31 @@ const useHandleUsers = () => {
     (loading, errorMessage, userData, user = null) => {
       setLoading(loading);
       setError(errorMessage);
-      setUser(user);
       setUsersData(userData);
+      setUser(user);
     },
     [setUser]
   );
+
+  useEffect(() => {
+    setQuery(currentQuery);
+  }, [currentQuery]);
+  console.log("Users Data:", usersData);
+
+  useEffect(() => {
+    if (query) {
+      setFilteredUsers(
+        allUsers.filter(
+          (user) =>
+            user.name.first.toLowerCase().includes(query.toLowerCase()) ||
+            user.name.last.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredUsers([]); // reset if no query
+    }
+  }, [allUsers, query]);
+
   const handleLogin = useCallback(
     async (user) => {
       try {
@@ -125,10 +151,18 @@ const useHandleUsers = () => {
     },
     [user, requestStatus]
   );
+  const handleGetAllUsers = async (userId) => {
+    try {
+      const allUsers = await GetAllUsers(userId);
+      if (allUsers) setAllUsers(allUsers);
+    } catch (error) {
+      if (typeof error === "string") requestStatus(false, error, null);
+    }
+  };
 
   const value = useMemo(() => {
-    return { isLoading, error, user };
-  }, [isLoading, error, user]);
+    return { isLoading, error, user, allUsers, filteredUsers };
+  }, [isLoading, error, user, allUsers, filteredUsers]);
 
   return {
     value,
@@ -138,6 +172,7 @@ const useHandleUsers = () => {
     handelGetUser,
     handelGetUserFriends,
     handelEditUser,
+    handleGetAllUsers,
   };
 };
 

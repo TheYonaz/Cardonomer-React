@@ -26,13 +26,14 @@ const useHandlePosts = () => {
   // const { user } = useUser();
   // const navigate = useNavigate();
   const snack = useSnack();
+
   useEffect(() => {
     setQuery(searchParams.get("q") || "");
   }, [searchParams]);
   console.log("Posts Data:", postsData);
 
   useEffect(() => {
-    if (postsData) {
+    if (filteredPosts) {
       setFilteredPosts(
         postsData.filter(
           (post) =>
