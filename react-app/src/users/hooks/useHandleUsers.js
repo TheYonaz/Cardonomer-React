@@ -173,6 +173,7 @@ const useHandleUsers = (currentQuery) => {
     handelGetUserFriends,
     handelEditUser,
     handleGetAllUsers,
+    setAllUsers,
   };
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Avatar, Box, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -47,13 +47,13 @@ const RightSidebar = () => {
         <Typography>Friends</Typography>
         <List>
           {friends.map((friend, index) => {
-            const isOnline = Math.random() > 0.5;
+            // const isOnline = Math.random() > 0.5;
             return (
               <ListItem
                 key={index}
                 onClick={() => navigate(`${ROUTES.PROFILE}/${friend.user_id}`)}
               >
-                <ListItemIcon>
+                {/* <ListItemIcon>
                   {isOnline ? (
                     <OnlineIcon
                       sx={{
@@ -71,7 +71,11 @@ const RightSidebar = () => {
                       }}
                     />
                   )}
-                </ListItemIcon>
+                </ListItemIcon> */}
+                <Avatar
+                  src={friend.image.url ? friend.image.url : friend.image.alt}
+                  sx={{ marginRight: 1 }}
+                />
                 <Typography
                   sx={{
                     fontSize: { md: "13px", sm: "11px" },

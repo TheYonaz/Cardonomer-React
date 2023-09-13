@@ -119,16 +119,26 @@ const getAllUsers = async (req, res) => {
   try {
     const { isAdmin, _id } = req.user;
     const { userID } = req.params;
+    const allUsers = await User.find({});
 
     if (!isAdmin || _id !== userID) {
-      return handleError(
-        res,
-        401,
-        "Authorization error: only admins can get all users"
-      );
+      const safeKeys = [
+        "address",
+        "bizNumber",
+        "cart",
+        "createdAt",
+        "email",
+        "image",
+        "likedPosts",
+        "name",
+        "phone",
+        "publishedPosts",
+        "_id",
+      ];
+      const safeUsers = allUsers.map((user) => lodash.pick(user, safeKeys));
+      return res.send(safeUsers);
     }
 
-    const allUsers = await User.find({});
     res.send(allUsers);
   } catch (error) {
     console.error("getAllUsers error:", error.message);
@@ -152,6 +162,42 @@ const getFriends = async (req, res) => {
   }
 };
 
+const followUser = async (req, res) => {
+  try {
+    const targetUserId = req.params.userID; // Get the ID of the user to follow from the request parameters.
+    const currentUserId = req.user._id; // Get the ID of the currently authenticated user from the request user object.
+
+    const currentUser = await User.findById(currentUserId);
+    if (!currentUser) {
+      return handleError(res, 404, "Current user not found");
+    }
+
+    // Check if targetUserId is already in the friends array.
+    const index = currentUser.friends.indexOf(targetUserId);
+    if (index === -1) {
+      // If not found, add it (follow action).
+      currentUser.friends.push(targetUserId);
+    } else {
+      // If found, remove it (unfollow action).
+      currentUser.friends.splice(index, 1);
+    }
+
+    await currentUser.save(); // Save the updated user document.
+    return res.send({
+      message: "Follow/unfollow action was successful",
+      friends: currentUser.friends,
+    });
+  } catch (error) {
+    console.error("followUser error:", error.message);
+    return handleError(
+      res,
+      500,
+      "An error occurred while processing the follow/unfollow action"
+    );
+  }
+};
+
+exports.followUser = followUser;
 exports.getFriends = getFriends;
 exports.loginUser = loginUser;
 exports.registerUser = registerUser;
