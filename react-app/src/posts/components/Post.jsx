@@ -31,6 +31,7 @@ const Post = ({
   onCommentPublished,
   likes,
   user_id,
+  enableActionBar,
 }) => {
   const [showComments, setShowComments] = useState(false);
   const { user } = useUser();
@@ -85,7 +86,7 @@ const Post = ({
           {content}
         </Typography>
       </CardContent>
-      {user && (
+      {user && enableActionBar && (
         <PostActionBar
           onComment={onComment}
           onLike={onLike}

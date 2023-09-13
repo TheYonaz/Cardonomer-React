@@ -6,7 +6,7 @@ import RightSidebar from "./RightBar";
 import { Box } from "@mui/material";
 const buttonStyles = {
   position: "fixed",
-  bottom: 10,
+  bottom: 70,
   borderRadius: "50%",
   minWidth: "50px",
   minHeight: "50px",

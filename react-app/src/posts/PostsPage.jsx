@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PostFeedback from "../layout/main/mid/post/PostFeedback";
+import useScrollLoader from "../layout/main/mid/scroll/ScrollLoader";
 import { useUser } from "../users/providers/UserProvider";
 import Poster from "./components/Poster";
 import useHandlePosts from "./hooks/useHandlePosts";
@@ -11,14 +12,16 @@ import useHandlePosts from "./hooks/useHandlePosts";
 const PostsPage = () => {
   const [refresh, setRefresh] = useState(false);
   const [commented, setComment] = useState(false);
+
   const { getfriendsPosts, value, handlePublish } = useHandlePosts();
   const { postsData, error, isLoading } = value;
   const { user } = useUser();
 
   useEffect(() => {
     getfriendsPosts();
+
     console.log("postsData", postsData);
-  }, [refresh, commented]);
+  }, [refresh, commented, user]);
 
   const handlePostPublished = () => {
     setRefresh((prev) => !prev);

@@ -1,37 +1,47 @@
-import { useCallback, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const useScrollLoader = (
   allPosts,
   displayedPosts,
   setDisplayedPosts,
   postIndex,
-  setPostIndex
+  setPostIndex,
+  isLoadingMore,
+  setIsLoadingMore
 ) => {
-  // Function to load more posts
   const loadMorePosts = useCallback(() => {
-    const morePosts = allPosts.slice(postIndex, postIndex + 5); // Get next 5 posts
-    setDisplayedPosts((prevPosts) => [...prevPosts, ...morePosts]); // Add the new posts to the existing ones
-    setPostIndex((prevIndex) => prevIndex + 5); // Update the last post index
-  }, [postIndex, allPosts, setDisplayedPosts, setPostIndex]); // add postIndex to dependencies array
+    if (isLoadingMore) return;
+    setIsLoadingMore(true);
 
-  // Handle the scroll event
+    const morePosts = allPosts.slice(postIndex, postIndex + 5);
+    setDisplayedPosts((prevPosts) => [...prevPosts, ...morePosts]);
+    setPostIndex((prevIndex) => prevIndex + 5);
+
+    setIsLoadingMore(false);
+  }, [
+    postIndex,
+    allPosts,
+    setDisplayedPosts,
+    setPostIndex,
+    isLoadingMore,
+    setIsLoadingMore,
+  ]);
+
   useEffect(() => {
     const handleScroll = () => {
-      // Load more posts if we're near the bottom of the page
+      const threshold = 100; // pixels from the bottom
       if (
-        window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight
+        window.innerHeight + document.documentElement.scrollTop <
+        document.documentElement.offsetHeight - threshold
       )
         return;
       loadMorePosts();
     };
 
-    // Attach the scroll event handler
     window.addEventListener("scroll", handleScroll);
-
-    // Cleanup function to remove the event listener when the component unmounts
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loadMorePosts]); // Now loadMorePosts is stable and won't change on every render
-};
+  }, [loadMorePosts]);
 
+  return displayedPosts;
+};
 export default useScrollLoader;

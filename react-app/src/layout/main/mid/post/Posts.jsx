@@ -3,7 +3,7 @@ import { useUser } from "../../../../users/providers/UserProvider";
 import Post from "../../../../posts/components/Post";
 import { Box, Container, TextField } from "@mui/material";
 import useHandlePosts from "../../../../posts/hooks/useHandlePosts";
-const Posts = ({ posts, onCommentPublished }) => {
+const Posts = ({ posts, onCommentPublished, enableActionBar = true }) => {
   const { user } = useUser();
   const { handleComment, handleLike } = useHandlePosts();
   console.log("posts", posts);
@@ -49,6 +49,7 @@ const Posts = ({ posts, onCommentPublished }) => {
               comments={post.comments}
               postContent={post}
               user_id={post.user_id}
+              enableActionBar={enableActionBar}
             />
             {console.log("posts2", post)}
           </Box>

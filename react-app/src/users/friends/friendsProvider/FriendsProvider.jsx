@@ -2,8 +2,10 @@ import React, { useCallback, useState } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
 import { useUser } from "../../providers/UserProvider";
-import { GetUserFriends } from "../../service/userApi";
+import { GetUserFriends, toggleFollowUser } from "../../service/userApi";
+
 const FriendsContext = React.createContext(null);
+
 export const FriendsProvider = ({ children }) => {
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState([]);
@@ -23,6 +25,15 @@ export const FriendsProvider = ({ children }) => {
     },
     [user]
   );
+  const handleFollowToggle = async (viewedUserId) => {
+    try {
+      await toggleFollowUser(user._id, viewedUserId);
+      handleGetUserFriends(user._id);
+    } catch (error) {
+      console.error("Error toggling follow:", error);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       handleGetUserFriends(user._id);
@@ -30,9 +41,10 @@ export const FriendsProvider = ({ children }) => {
     console.log("useFriends", friends);
     return;
   }, [user]);
+  // Assuming you pass `viewedUserId` into the FriendsProvider
 
   return (
-    <FriendsContext.Provider value={{ friends }}>
+    <FriendsContext.Provider value={{ friends, handleFollowToggle }}>
       {children}
     </FriendsContext.Provider>
   );

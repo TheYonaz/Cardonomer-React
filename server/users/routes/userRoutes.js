@@ -16,5 +16,5 @@ router.get("/:userID", auth, getUser);
 router.get("/friends/:userID", auth, getFriends);
 router.get("/allusers/:userID", auth, getAllUsers);
 router.put("/edit/:userID", auth, editUser);
-router.post("/follow/:userID", followUser);
+router.put("/follow/:userID", auth, followUser);
 module.exports = router;

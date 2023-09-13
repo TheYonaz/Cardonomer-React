@@ -28,7 +28,9 @@ const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [userDecks, setUserDecks] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
-  const { friends } = useFriends();
+  const { friends, handleFollowToggle } = useFriends();
+  const [isFollowing, setIsFollowing] = useState(false);
+
   const navigate = useNavigate();
 
   const findFriendshipStartDate = (userId, friendsArray) => {
@@ -69,6 +71,10 @@ const UserProfile = () => {
       setUserPosts([]);
     };
   }, [user_id]);
+
+  useEffect(() => {
+    setIsFollowing(friends.some((friend) => friend.user_id === user_id));
+  }, [friends, user_id]);
 
   return (
     <Container>
@@ -112,7 +118,15 @@ const UserProfile = () => {
                     Edit
                   </Button>
                 )}
-                {/* Add more buttons or user actions here */}
+                {user._id !== user_id && (
+                  <Button
+                    variant="contained"
+                    color={isFollowing ? "secondary" : "primary"}
+                    onClick={() => handleFollowToggle(userData._id)}
+                  >
+                    {isFollowing ? "Unfollow" : "Follow"}
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </Paper>

@@ -1,100 +1,119 @@
-Cardonomer React App Overview:
+# Cardonomer React App Overview:
 
-The cardonomer_react_app is a comprehensive platform designed for the Trading Card Game (TCG) community. Built on the robust MERN stack, it offers a seamless experience for users to manage their card collections, interact with other community members, and stay updated with the latest in the TCG world.
+## Overview
 
-Key Features:
+The `cardonomer_react_app` is a comprehensive platform designed for the Trading Card Game (TCG) community. Built on the robust MERN stack, it offers a seamless experience for users to manage their card collections, interact with other community members, and stay updated with the latest in the TCG world.
 
-    User Management: The platform offers a robust user management system where users can register, log in, and manage their profiles. They can also view and manage their friends, making the platform a social hub for TCG enthusiasts.
-    Cart System: Users can manage their card collections through a dynamic cart system. They can add or remove cards, view their prizes, and even apply discounts.
-    Pokemon TCG Integration: The platform has a dedicated section for Pokemon TCG. Users can view all available Pokemon cards, manage their decks, and even save their favorite decks for future reference.
-    Posts & Social Interaction: Users can publish posts, comment on others' posts, and like or unlike posts. This feature ensures that the community stays active and engaged.
-    Database Integration: The app is seamlessly integrated with MongoDB, ensuring efficient data storage and retrieval. Depending on the environment (development or production), it connects to the appropriate database instance.
-    Logging & Monitoring: With the integration of morgan, all HTTP requests are logged, ensuring that any issues can be quickly identified and resolved. The use of chalk adds color-coded logging, making it easier to differentiate between various log levels.
-    Cross-Platform Compatibility: The app uses cross-env to set environment variables, ensuring that it runs smoothly across different platforms.
-    Security: With packages like bcryptjs for password hashing and jsonwebtoken for token-based authentication, the platform ensures that user data is secure.
-    Validation: The app uses joi for data validation, ensuring that the data entering the system is consistent and adheres to the required format.
-    CORS Management: The app is configured to handle Cross-Origin Resource Sharing (CORS), allowing it to interact safely with different domains.
+## Key Features
 
-By combining these features, the cardonomer_react_app offers a one-stop solution for TCG enthusiasts, providing them with a platform where they can manage their collections, interact with fellow enthusiasts, and stay updated with the latest trends in the TCG world.
+- **User Management:** Robust user management system for registration, login, profile management, and friend interactions.
+- **Cart System:** Dynamic cart system for card management.
+- **Pokemon TCG Integration:** Section dedicated to Pokemon TCG card and deck management.
+- **Posts & Social Interaction:** Active community engagement through posts, comments, and likes.
+- **Database Integration:** MongoDB for efficient data storage and retrieval.
+- **Logging & Monitoring:** HTTP request logging with color-coded differentiation.
+- **Cross-Platform Compatibility:** Runs smoothly across different platforms.
+- **Security:** Advanced security features for user data protection.
+- **Validation:** Data consistency and validation.
+- **CORS Management:** Configured for safe cross-domain interactions.
 
-Details:
+By combining these features, the `cardonomer_react_app` offers a one-stop solution for TCG enthusiasts.
 
-    Name: cardonomer_react_app
-    Version: 3.0.0
-    Description: A TCG community application built using the MERN stack.
-    Main Entry Point: server.js
-    Author: Yon Vannucci
-    License: ISC
+## Details
 
-Scripts:
+- **Name:** cardonomer_react_app
+- **Version:** 3.0.0
+- **Description:** A TCG community application built using the MERN stack.
+- **Main Entry Point:** server.js
+- **Author:** Yon Vannucci
+- **License:** ISC
 
-    start:
-        Purpose: Starts the application in production mode.
-        Command: export || cross-env NODE_ENV=production&& node .
+## Scripts
 
-    test:
-        Purpose: Executes the test script.
-        Command: node test.js
+- **start:**
+  - **Purpose:** Starts the application in production mode.
+  - **Command:** `export || cross-env NODE_ENV=production&& node .`
+- **test:**
+  - **Purpose:** Executes the test script.
+  - **Command:** `node test.js`
+- **dev:**
+  - **Purpose:** Starts in development mode with nodemon.
+  - **Command:** `export || cross-env NODE_ENV=development&& nodemon .`
 
-    dev:
-        Purpose: Starts the application in development mode with nodemon for hot-reloading.
-        Command: export || cross-env NODE_ENV=development&& nodemon .
+## Dependencies
 
-Dependencies:
+- **axios:** Promise-based HTTP client.
+- **bcryptjs:** Password hashing.
+- **chalk:** Terminal string styling.
+  ... [Add other dependencies similarly]
 
-    axios: Promise-based HTTP client for making requests.
-    bcryptjs: Library for hashing and verifying passwords.
-    chalk: Terminal string styling for better visibility in logs.
-    config: Configuration control for different environments.
-    cors: Middleware for enabling Cross-Origin Resource Sharing (CORS).
-    cross-env: Script to set environment variables across platforms.
-    express: Web application framework for Node.js.
-    joi: Object schema validation.
-    jsonwebtoken: Library to create and verify JSON Web Tokens.
-    lodash: Utility library that provides modular methods for arrays, objects, and strings.
-    mongoose: MongoDB object modeling tool.
-    morgan: HTTP request logger middleware.
-    tree: Utility to display a tree structure of directories.
+  ## Development Dependencies
 
-Development Dependencies:
+- **nodemon:** Monitors file changes and restarts the server.
 
-    nodemon: Utility that monitors changes in files and automatically restarts the server.
+## Server-side API Documentation
 
-Server-side API Documentation:
+### Initial Setup
 
-Initial Setup:
+The application provides utilities to initialize the database.
 
-This application provides a set of utility functions to initialize the database with users, their friends, and Pokémon cards.
-Functions:
+#### Functions
 
-    generateInitialUsers(): Generates initial users from the data provided in initialData.json.
-    makeRandomFriends(): Assigns random friends to each user, and all of the friends to the admin user
-    generateInitialPokemonCards(): Generates initial Pokémon cards from the data provided in initialPkemonTCGdata.json.
+- **generateInitialUsers():** Generates users from `initialData.json`.
+- **makeRandomFriends():** Assigns random friends to users.
+- **generateInitialPokemonCards():** Generates Pokémon cards from `initialPkemonTCGdata.json`.
 
-Running the Initialization Functions:
+#### Running Initialization
 
-When the application starts, it will automatically run the above functions to populate the database. This is done in the app.listen callback:
+On application start, it will auto-run functions to populate the database.
 
+````javascript
 app.listen(PORT, async () => {
-...
-await generateInitialUsers();
-await makeRandomFriends();
-await generateInitialPokemonCards();
+    ...
+    await generateInitialUsers();
+    await makeRandomFriends();
+    await generateInitialPokemonCards();
 });
 
-Recommendation:
-
-After the initial run, it's recommended to comment out the initialization functions in the app.listen callback to avoid log spam and unnecessary database operations on subsequent starts:
-
+```javascript`
 app.listen(PORT, async () => {
-console.log(chalk.blueBright(`Listening on: http://localhost:${PORT}`));
-require("./DB/mongoDB/connectToDB");
-// await generateInitialUsers();
-// await makeRandomFriends();
-// await generateInitialPokemonCards();
+    ...
+   // await generateInitialUsers();
+   // await makeRandomFriends();
+   // await generateInitialPokemonCards();
 });
 
-By commenting out these lines, the initialization functions won't run on every server start, which can help in reducing unnecessary logs and database operations.
+Pre-launch Preparations
+
+Ensure all necessary packages are installed.
+
+Commands:
+````
+
+cd CARDONOMER_REACT/server
+npm install
+
+cd CARDONOMER_REACT/react-app
+npm installl
+
+Once the necessary packages are installed in both directories, the application is ready to be launched. Always remember this step, especially when setting up the project for the first time or after pulling any new changes that might have updated dependencies.
+
+## Users' Credentials
+
+| Username            | Password |
+| ------------------- | -------- |
+| regular@gmail.com   | Aa1234!  |
+| regular1@gmail.com  | Aa1234!  |
+| regular2@gmail.com  | Aa1234!  |
+| regular3@gmail.com  | Aa1234!  |
+| regular4@gmail.com  | Aa1234!  |
+| regular5@gmail.com  | Aa1234!  |
+| business@gmail.com  | Aa1234!  |
+| business1@gmail.com | Aa1234!  |
+| business2@gmail.com | Aa1234!  |
+| business3@gmail.com | Aa1234!  |
+| business4@gmail.com | Aa1234!  |
+| admin@gmail.com     | Aa1234!  |
 
 Objects Structure:
 
@@ -443,7 +462,28 @@ User API
    Success: Returns a list of friends.
    Failure: Returns an error message.
 
-5. Get All Users
+5. Follow/Unfollow User
+
+   Endpoint: /users/follow/:userID
+   HTTP Method: PUT
+   Description: Allows a user to follow or unfollow another user.
+   Parameters:
+   userID: ID of the user to follow or unfollow.
+   Authentication: Required. The user making the request must be authenticated.
+   Request Body: None.
+   Response:
+   Success:
+   Message indicating that the action was successful.
+   Returns the updated list of friends for the authenticated user.
+   Failure: Returns an error message.
+
+Notes:
+
+    When the authenticated user calls this endpoint targeting another user, one of two actions will occur:
+        If the authenticated user is not currently following the targeted user, the targeted user will be added to the authenticated user's friend list (i.e., the "follow" action).
+        If the authenticated user is already following the targeted user, the targeted user will be removed from the authenticated user's friend list (i.e., the "unfollow" action).
+
+6. Get All Users
 
    Endpoint: /users/allusers/:userID
    HTTP Method: GET
@@ -454,7 +494,7 @@ User API
    Success: Returns a list of all users.
    Failure: Returns an error message.
 
-6. Edit User
+7. Edit User
 
    Endpoint: /users/edit/:userID
    HTTP Method: PUT

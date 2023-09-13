@@ -152,3 +152,16 @@ export const getPrizes = async (userID) => {
     return Promise.reject("An unexpected error occurred!");
   }
 };
+
+export const toggleFollowUser = async (currentUserId, targetUserId) => {
+  try {
+    const { data } = await axios.put(
+      `${apiUrl}/users/follow/${targetUserId}`,
+      currentUserId
+    );
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) return Promise.reject(error.message);
+    return Promise.reject("An unexpected error occurred!");
+  }
+};

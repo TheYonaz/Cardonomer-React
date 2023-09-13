@@ -166,23 +166,42 @@ const followUser = async (req, res) => {
   try {
     const targetUserId = req.params.userID; // Get the ID of the user to follow from the request parameters.
     const currentUserId = req.user._id; // Get the ID of the currently authenticated user from the request user object.
-
+    console.log("currentUserId", currentUserId);
     const currentUser = await User.findById(currentUserId);
+    const targetUser = await User.findById(targetUserId);
+
     if (!currentUser) {
       return handleError(res, 404, "Current user not found");
     }
 
+    if (!targetUser) {
+      return handleError(res, 404, "Target user not found");
+    }
+
+    // Simplified representation of the target user for friends array
+    const simplifiedTargetUser = {
+      user_id: targetUser._id,
+      name: targetUser.name,
+      image: targetUser.image,
+      email: targetUser.email,
+      // _id: targetUser._id, // Seems redundant but included as per your structure
+    };
+
     // Check if targetUserId is already in the friends array.
-    const index = currentUser.friends.indexOf(targetUserId);
+    const index = currentUser.friends.findIndex(
+      (friend) => friend.user_id.toString() === targetUserId
+    );
+
     if (index === -1) {
       // If not found, add it (follow action).
-      currentUser.friends.push(targetUserId);
+      currentUser.friends.push(simplifiedTargetUser);
     } else {
       // If found, remove it (unfollow action).
       currentUser.friends.splice(index, 1);
     }
 
     await currentUser.save(); // Save the updated user document.
+
     return res.send({
       message: "Follow/unfollow action was successful",
       friends: currentUser.friends,

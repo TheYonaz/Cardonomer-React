@@ -104,7 +104,10 @@ const UsersManagment = () => {
                 ) && (
                   <TableRow>
                     <TableCell colSpan={5}>
-                      <Posts posts={userPosts[user._id] || []} />
+                      <Posts
+                        posts={userPosts[user._id] || []}
+                        enableActionBar={false}
+                      />
                     </TableCell>
                   </TableRow>
                 )}

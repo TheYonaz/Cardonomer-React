@@ -23,11 +23,11 @@ const TopNavbar = () => {
             <Logo />
             <CartNav />
           </Box>
-          <MoreButton />
           <MidNav />
           <Box>
             <RightNavBar />
           </Box>
+          <MoreButton />
         </Toolbar>
       </AppBar>
     </>

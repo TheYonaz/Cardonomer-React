@@ -14,9 +14,19 @@ const Logo = () => {
   return (
     <>
       {" "}
-      <Box sx={{ display: { xs: "none", md: "inline-flex" } }}>
+      <Box
+        sx={{
+          display: { xs: "inline-flex", md: "inline-flex" },
+          // maxWidth: { xs: "50vw", md: "20vw" },
+        }}
+      >
         <NavBarLink to={ROUTES.ROOT}>
-          <Typography component="span" variant="h4" style={logoStyle}>
+          <Typography
+            component="span"
+            variant="h4"
+            style={logoStyle}
+            sx={{ fontSize: { xs: "5vw", md: "2.2vw" } }}
+          >
             Cardonomer
           </Typography>
         </NavBarLink>
