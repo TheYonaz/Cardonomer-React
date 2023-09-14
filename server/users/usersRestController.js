@@ -20,10 +20,12 @@ const modelUserToServer = require("./helpers/modelUserToServer");
 const registerUser = async (req, res) => {
   try {
     const user = req.body;
+    console.log(user);
     const { error } = validateRegistration(user);
     if (error)
       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
-    const normalizedUser = normalizeUser(user);
+    const normalizedUser = await normalizeUser(user);
+    console.log("normalizedUser", normalizedUser);
     const userToDB = new User(normalizedUser);
     const userFromDB = await userToDB.save();
     const pickedUser = lodash.pick(userFromDB, "name", "email", "_id");

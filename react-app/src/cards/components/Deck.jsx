@@ -35,7 +35,7 @@ const Deck = ({
     <>
       <Box
         sx={{
-          border: "5px solid yellow",
+          border: "5px solid beige",
         }}
       >
         <Box position="sticky" top={0} zIndex={1}>

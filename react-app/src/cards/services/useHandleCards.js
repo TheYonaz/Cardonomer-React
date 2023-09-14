@@ -16,8 +16,7 @@ const useHandleCards = () => {
   const [cardData, setCardsData] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const snack = useSnack();
+
   useAxios();
 
   useEffect(() => {

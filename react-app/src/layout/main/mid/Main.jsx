@@ -5,7 +5,7 @@ const Main = ({ children }) => {
     <MuiPaper
       sx={{
         minHeight: "90vh",
-        backgroundColor: "#333333",
+        backgroundColor: "wheat",
         width: { md: "80vw", sm: "99vw", xs: "99vw" },
       }}
     >

@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import ReactMapGL, { Marker, Source, Layer } from "react-map-gl";
-import { Avatar, Box, Typography } from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {
+  Avatar,
+  Box,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useUser } from "../../users/providers/UserProvider";
 import Spinner from "../../layout/components/Spinner";
@@ -17,17 +24,14 @@ const MapGame = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [points, setPoints] = useState([]);
   const [enteredCircles, setEnteredCircles] = useState([]);
-  const [discountApplied, setDiscountApplied] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const { user } = useUser();
-  // console.log(
-  //   "process.env.REACT_APP_MAPBOX_TOKEN",
-  //   process.env.REACT_APP_MAPBOX_TOKEN
-  // );
+
+  // 0.005 km is equal to 5 meters.
   const circles = points.map((point) =>
     createGeoJSONCircle([point.longitude, point.latitude], 0.415)
   );
-  // 0.005 km is equal to 5 meters.
 
   useEffect(() => {
     const watchUser = navigator.geolocation.watchPosition((position) => {
@@ -68,6 +72,7 @@ const MapGame = () => {
     try {
       await addDiscountToUser(user._id);
       console.log("Discount added to user's cart!");
+      setOpenDialog(true); // open the dialog
     } catch (error) {
       console.error("Error adding discount to cart:", error);
     }
@@ -110,7 +115,24 @@ const MapGame = () => {
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
       mapboxAccessToken={freeToken}
     >
-      {" "}
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Congratulations!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You've got a 10% off coupon waiting for you in the cart!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="primary">
+            Thanks!
+          </Button>
+        </DialogActions>
+      </Dialog>{" "}
       {userLocation && (
         <Marker
           latitude={userLocation.latitude}

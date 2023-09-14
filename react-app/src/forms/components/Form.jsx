@@ -84,7 +84,7 @@ Form.propTypes = {
   styles: object.isRequired,
 };
 Form.defaultProps = {
-  color: "inherit",
+  color: "success",
   to: "/",
   spacing: 1,
   title: "",

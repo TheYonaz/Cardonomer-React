@@ -32,6 +32,7 @@ const Card = ({
           whiteSpace: "nowrap",
           textOverflow: "ellipsis",
           overflow: "hidden",
+          color: "chocolate",
         }}
       >
         {pokemonCard.name}

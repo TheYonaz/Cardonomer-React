@@ -34,8 +34,9 @@ const PokemonCards = ({
         <Box display="flex" justifyContent="center" flexWrap="wrap">
           {(filteredCards || pokemonCards)
             .filter((card) => {
-              return card.name.includes(searchTerm.toLowerCase());
+              return card.name.toLowerCase().includes(searchTerm.toLowerCase());
             })
+
             .map((pokemonCard, index) => (
               <Grid
                 key={index}

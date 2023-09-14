@@ -14,6 +14,7 @@ export const login = async (user) => {
 };
 export const signup = async (normalizedUser) => {
   try {
+    console.log("normalizedUser", normalizedUser);
     const { data } = await axios.post(
       `${apiUrl}/users/registration`,
       normalizedUser

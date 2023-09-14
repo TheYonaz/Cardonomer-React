@@ -9,5 +9,6 @@ const ROUTES = {
   CART: "/cart",
   ADMIN: "/admin",
   MAP: "/map",
+  GRAPH: "/graph",
 };
 export default ROUTES;

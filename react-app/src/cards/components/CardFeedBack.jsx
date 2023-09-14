@@ -7,7 +7,6 @@ import Deck from "./Deck";
 import PokemonCards from "./Pokemon/PokemonCards";
 import Joi from "joi";
 import useForm from "../../forms/hooks/useForm";
-import { useEffect } from "react";
 import { useDeck } from "../deckProvider/DeckProvider";
 
 const CardFeedBack = ({

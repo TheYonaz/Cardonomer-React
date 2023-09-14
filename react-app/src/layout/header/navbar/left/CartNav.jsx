@@ -34,7 +34,7 @@ const CartNav = () => {
             }}
           >
             <Badge badgeContent={cartLength} color="error">
-              <ShoppingCartIcon />
+              <ShoppingCartIcon color="action" />
             </Badge>
           </NavBarLink>
         </Divider>

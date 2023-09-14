@@ -1,5 +1,4 @@
 import {
-  Autocomplete,
   Avatar,
   Box,
   Divider,
@@ -116,13 +115,13 @@ const MidNav = () => {
         sx={{ display: { xs: "none", md: "inline-flex" } }}
       >
         <Divider orientation="vertical" flexItem />
-        <NavItem to={ROUTES.POKEMON_CARDS} label="PokemonTcg" />
+        <NavItem to={ROUTES.POKEMON_CARDS} label="PokemonTcg" color="black" />
         <Divider orientation="vertical" flexItem />
         <Divider orientation="vertical" flexItem />
-        <NavItem to={ROUTES.POKEMON_CARDS} label="Yu-gi-oh Tcg" />
+        <NavItem to={ROUTES.POKEMON_CARDS} label="Yu-gi-oh Tcg" color="black" />
         <Divider orientation="vertical" flexItem />
         <Divider orientation="vertical" flexItem />
-        <NavItem to={ROUTES.POKEMON_CARDS} label="another Tcg" />
+        <NavItem to={ROUTES.POKEMON_CARDS} label="another Tcg" color="black" />
         <Divider orientation="vertical" flexItem />
       </Box>
     </>

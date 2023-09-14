@@ -22,7 +22,7 @@ const DeckAction = ({
           display="flex"
           justifyContent="space-between"
           padding={2}
-          bgcolor="yellow"
+          bgcolor="beige"
         >
           <Box>
             <Button

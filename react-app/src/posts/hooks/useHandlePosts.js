@@ -8,9 +8,7 @@ import {
   deletePost,
 } from "../service/PostSystemAPI";
 import { useSnack } from "../../providers/SnackBarProvider";
-import { normalizePostData } from "../../layout/main/mid/post/postNormalization/postNormalization";
-// import { useUser } from "../../users/providers/UserProvider";
-// import { useNavigate } from "react-router-dom";
+
 import useAxios from "../../hooks/useAxios";
 import { useSearchParams } from "react-router-dom";
 
@@ -72,7 +70,7 @@ const useHandlePosts = () => {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-    [postsData, isLoading]
+    [snack, postsData, onePostData, postStatus]
   );
   const fetchSinglePost = useCallback(async (postId) => {
     try {
@@ -100,24 +98,27 @@ const useHandlePosts = () => {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-    [postsData]
+    [postsData, snack, postStatus]
   );
-  const handleLike = useCallback(async (postId) => {
-    try {
-      setLoading(true);
-      const updatedPost = await likePost(postId);
-      console.log("handleLike", updatedPost);
-      // const updatedPosts = postsData.map((post) =>
-      //   post.post_id === updatedPost._id ? updatedPost : post
-      // );
-      console.log("hhandleLike2", updatedPost);
-      postStatus(false, null, updatedPost);
-      snack("success", "Liked Successfully!");
-      console.log("handleLike3", postsData);
-    } catch (error) {
-      if (typeof error === "string") postStatus(false, error, null);
-    }
-  }, []);
+  const handleLike = useCallback(
+    async (postId) => {
+      try {
+        setLoading(true);
+        const updatedPost = await likePost(postId);
+        console.log("handleLike", updatedPost);
+        // const updatedPosts = postsData.map((post) =>
+        //   post.post_id === updatedPost._id ? updatedPost : post
+        // );
+        console.log("hhandleLike2", updatedPost);
+        postStatus(false, null, updatedPost);
+        snack("success", "Liked Successfully!");
+        console.log("handleLike3", postsData);
+      } catch (error) {
+        if (typeof error === "string") postStatus(false, error, null);
+      }
+    },
+    [postsData, snack, postStatus]
+  );
 
   const getfriendsPosts = useCallback(async () => {
     try {
@@ -125,11 +126,11 @@ const useHandlePosts = () => {
       const friendsPosts = await getFriendsPosts();
       postStatus(false, null, friendsPosts);
       console.log("getfriendsPosts1", postsData);
-      snack("success", "Posts Retrieved Successfully!");
+      // snack("success", "Posts Retrieved Successfully!");
     } catch (error) {
       if (typeof error === "string") postStatus(false, error, null);
     }
-  }, []);
+  }, [postsData, snack, postStatus]);
 
   const handleDeletePost = useCallback(
     async (postId, userId) => {
@@ -143,7 +144,7 @@ const useHandlePosts = () => {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-    [postsData]
+    [postsData, snack, postStatus]
   );
 
   const value = useMemo(

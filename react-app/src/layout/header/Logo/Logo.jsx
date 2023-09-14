@@ -8,7 +8,7 @@ const Logo = () => {
   const logoStyle = {
     marginRight: 2,
     fontFamily: "fantasy, sans-serif",
-    color: "red",
+    color: "green",
   };
 
   return (

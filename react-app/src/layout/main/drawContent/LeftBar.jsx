@@ -17,10 +17,17 @@ const LeftSidebar = () => {
         height="48vh"
         sx={{ position: "sticky", top: 0, width: { md: "12vw", sm: "13vw" } }}
       >
-        <SidebarItem icon={<CardMarketIcon />} label="Card Market" />
+        <SidebarItem
+          icon={<CardMarketIcon />}
+          label="Card Analytics"
+          to={ROUTES.GRAPH}
+        />
         <SidebarItem icon={<GamesIcon />} label="Games" to={ROUTES.MAP} />
-        <SidebarItem icon={<RecentGamesIcon />} label="Recent games" />
-        <SidebarItem icon={<RecentFriendsIcon />} label="Recently Played" />
+        <SidebarItem icon={<RecentGamesIcon />} label="Recent games(example)" />
+        <SidebarItem
+          icon={<RecentFriendsIcon />}
+          label="Recently Played(example)"
+        />
       </Box>
     </>
   );

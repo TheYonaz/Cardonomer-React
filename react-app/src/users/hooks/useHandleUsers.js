@@ -97,7 +97,7 @@ const useHandleUsers = (currentQuery) => {
           email: user.email,
           password: user.password,
         });
-        snack("Logged Successfully!");
+        snack("success", "Logged Successfully!");
       } catch (error) {
         if (typeof error === "string") requestStatus(false, error, null);
       }
@@ -149,7 +149,7 @@ const useHandleUsers = (currentQuery) => {
         if (typeof error === "string") requestStatus(false, error, null);
       }
     },
-    [user, requestStatus]
+    [requestStatus]
   );
   const handleGetAllUsers = async (userId) => {
     try {

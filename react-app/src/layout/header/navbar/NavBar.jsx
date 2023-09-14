@@ -6,18 +6,15 @@
 import React from "react";
 import { AppBar, Toolbar, Box } from "@mui/material";
 import Logo from "../Logo/Logo";
-import { useMenu } from "../menu/MenuProvider";
 import MidNav from "./mid/MidNav";
 import MoreButton from "../navbar/right/components/MoreButton";
 import RightNavBar from "./right/RightNavBar";
-import { useUser } from "../../../users/providers/UserProvider";
 import CartNav from "./left/CartNav";
 
 const TopNavbar = () => {
-  // const setOpen = useMenu();
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" color="transparent">
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Box display="flex" alignItems="center" justifyContent="center">
             <Logo />
