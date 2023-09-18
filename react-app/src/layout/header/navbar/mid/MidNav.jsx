@@ -24,8 +24,6 @@ const MidNav = () => {
   const { allUsers, filteredUsers } = value;
   const { user } = useUser();
   const navigate = useNavigate();
-  console.log("allUsers", allUsers);
-  console.log("filteredUsers", filteredUsers);
 
   useEffect(() => {
     if (user) {

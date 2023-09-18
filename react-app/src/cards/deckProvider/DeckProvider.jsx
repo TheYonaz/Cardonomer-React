@@ -18,7 +18,6 @@ export const DeckProvider = ({ children }) => {
     async (userId) => {
       try {
         const deckFromServer = await getUserPokemonDecks(userId);
-        console.log("handleLoadDeck user1", deckFromServer);
         if (deckFromServer) {
           return setDeck(deckFromServer);
         }
@@ -32,14 +31,12 @@ export const DeckProvider = ({ children }) => {
     async (deckID) => {
       try {
         const response = await deleteDeck(deckID);
-        console.log("handleDeleteDeck", response);
         if (response === "deleted successfully") {
           // Filter out the deleted deck
           setDeck((prevDecks) => {
             const updatedDecks = prevDecks.filter(
               (deck) => deck._id !== deckID
             );
-            console.log("updatedDecks", updatedDecks);
             return updatedDecks;
           });
         }
@@ -66,7 +63,6 @@ export const DeckProvider = ({ children }) => {
     if (user) {
       handleLoadDeck(user._id);
     }
-    console.log("useDeck", decksFromDb);
   }, [user, handleLoadDeck]);
 
   const handleSetDeck = (newDeck) => {

@@ -34,9 +34,6 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
   const findFriendshipStartDate = (userId, friendsArray) => {
-    console.log(userId);
-    console.log(friendsArray);
-    console.log(user._id);
     const friend = friendsArray.find((friend) => friend.user_id === userId);
     return friend ? friend.startOfFriendship : null;
   };
@@ -103,7 +100,7 @@ const UserProfile = () => {
                 {user._id !== user_id && (
                   <Typography variant="body1" paragraph>
                     {/* You can add more user details here */}
-                    Friend since:{console.log(userData)}
+                    Friend since:
                     {friendshipStartDate
                       ? new Date(friendshipStartDate).toLocaleDateString()
                       : "Not friends"}

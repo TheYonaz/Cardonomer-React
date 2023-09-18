@@ -3,7 +3,6 @@ import { IconButton, TextField, Button, Box, Badge } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
-import useHandlePosts from "../hooks/useHandlePosts";
 import { useUser } from "../../users/providers/UserProvider";
 import { useSnack } from "../../providers/SnackBarProvider";
 
@@ -23,7 +22,6 @@ const PostActionBar = ({
   const snack = useSnack();
 
   const handleCommentSubmit = () => {
-    console.log("comment", { content: commentText, post_id: postId });
     if (commentText === "" || !commentText) {
       return snack("warning", "Comment has no content");
     }

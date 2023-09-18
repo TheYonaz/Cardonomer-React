@@ -38,7 +38,6 @@ const Post = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const { handleDeletePost } = useHandlePosts();
 
-  console.log("author", author);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

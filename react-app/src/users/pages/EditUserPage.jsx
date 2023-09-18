@@ -29,8 +29,6 @@ const EditUserPage = () => {
       handelGetUser(user._id).then((userFromClient) => {
         if (user._id !== userFromClient._id) return navigate(ROUTES.ROOT);
         let modeledUser = mapUserToModel(userFromClient);
-        console.log("userFromClient", userFromClient);
-        // delete modeledUser._id;
         setData(modeledUser);
       });
   }, []);

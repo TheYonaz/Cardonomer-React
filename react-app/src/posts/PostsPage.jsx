@@ -17,8 +17,6 @@ const PostsPage = () => {
 
   useEffect(() => {
     getfriendsPosts();
-
-    console.log("postsData", postsData);
   }, [refresh, commented, user]);
 
   const handlePostPublished = () => {

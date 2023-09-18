@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import { useUser } from "../../../../users/providers/UserProvider";
 import Post from "../../../../posts/components/Post";
 import { Box, Container, TextField } from "@mui/material";
 import useHandlePosts from "../../../../posts/hooks/useHandlePosts";
 const Posts = ({ posts, onCommentPublished, enableActionBar = true }) => {
-  const { user } = useUser();
   const { handleComment, handleLike } = useHandlePosts();
-  console.log("posts", posts);
   const [searchTerm, setSearchTerm] = useState("");
   const uniquePosts = posts.filter(
     (post, index, self) => index === self.findIndex((p) => p._id === post._id)
   );
-  console.log("posts1", uniquePosts);
   return (
     <Container>
       <Box m={2}>
@@ -33,9 +29,6 @@ const Posts = ({ posts, onCommentPublished, enableActionBar = true }) => {
         })
         .map((post) => (
           <Box m={2} key={post._id}>
-            {console.log(post)}{" "}
-            {console.log("posts", new Date(post.createdAt.toString()))}
-            {/* Add margin-bottom to each post */}
             <Post
               timepublished={new Date(post.createdAt.toString())}
               onComment={handleComment}
@@ -51,7 +44,6 @@ const Posts = ({ posts, onCommentPublished, enableActionBar = true }) => {
               user_id={post.user_id}
               enableActionBar={enableActionBar}
             />
-            {console.log("posts2", post)}
           </Box>
         ))
         .reverse()}

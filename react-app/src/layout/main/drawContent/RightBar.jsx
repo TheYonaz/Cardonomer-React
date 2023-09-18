@@ -11,7 +11,6 @@ const RightSidebar = () => {
   const { friends } = useFriends();
   const navigate = useNavigate();
   const { user } = useUser();
-  console.log("RightSidebar", friends);
   if (!friends || friends.length === 0 || !user) {
     return (
       <Box
@@ -44,31 +43,11 @@ const RightSidebar = () => {
         <Typography>Friends</Typography>
         <List>
           {friends.map((friend, index) => {
-            // const isOnline = Math.random() > 0.5;
             return (
               <ListItem
                 key={index}
                 onClick={() => navigate(`${ROUTES.PROFILE}/${friend.user_id}`)}
               >
-                {/* <ListItemIcon>
-                  {isOnline ? (
-                    <OnlineIcon
-                      sx={{
-                        color: "green",
-                        fontSize: { md: "25px", sm: "13px" },
-                        marginLeft: -1,
-                      }}
-                    />
-                  ) : (
-                    <OfflineIcon
-                      sx={{
-                        color: "red",
-                        fontSize: { md: "25px", sm: "13px" },
-                        marginLeft: -1,
-                      }}
-                    />
-                  )}
-                </ListItemIcon> */}
                 <Avatar
                   src={friend.image.url ? friend.image.url : friend.image.alt}
                   sx={{ marginRight: 1 }}

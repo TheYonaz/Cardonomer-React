@@ -22,12 +22,9 @@ const CardFeedBack = ({
   const [isOpen, setDialog] = useState(false);
 
   const { decksFromDb, handleDeleteDeck, saveDeckData } = useDeck();
-  console.log("deck", deck);
   const handleSaveDeck = () => {
     const deckToSave = { deckName: deckname, cards: deck };
-    console.log("handleSaveDeck0", deckToSave);
     saveDeckData(deckToSave);
-    console.log("handleSaveDeck1");
     setDeck([]);
     setDeckName("");
   };
@@ -44,7 +41,6 @@ const CardFeedBack = ({
   const handleLoadDecks = (loadDeck) => {
     setDeck(loadDeck);
   };
-  console.log("decksFromDb2", decksFromDb);
 
   const handleClear = () => {
     setDeck([]);

@@ -1,13 +1,5 @@
-import {
-  Badge,
-  Box,
-  CardMedia,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
+import { Badge, Box, Grid, Paper } from "@mui/material";
+import React from "react";
 // import { scrollbarStyles } from "../../styles/styles";
 import Card from "./card/Card";
 import DeckAction from "./DeckAction";
@@ -84,7 +76,6 @@ const Deck = ({
         </Paper>
       </Box>
       <Box>
-        {console.log("decksFromDb", decksFromDb)}
         <LoadDeck
           decksFromDb={decksFromDb}
           handleLoadDecks={handleLoadDecks}

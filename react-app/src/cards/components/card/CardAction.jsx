@@ -2,13 +2,10 @@ import React from "react";
 import { Button, Box, Typography, Icon } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useCart } from "../../../users/providers/CartProvider";
-import { useUser } from "../../../users/providers/UserProvider";
 
 const CardAction = ({ price, cardId, pokemonCard, fontSizeBreakpoints }) => {
   const { ...value } = useCart();
   const { addCartItem } = value;
-  const { user } = useUser();
-  // console.log(cardId);
   return (
     <Box
       display="flex"
@@ -18,9 +15,7 @@ const CardAction = ({ price, cardId, pokemonCard, fontSizeBreakpoints }) => {
       }}
       textAlign="center"
     >
-      <Typography variant="body1">
-        {/*Price:*/} ${price}{" "}
-      </Typography>
+      <Typography variant="body1">${price} </Typography>
       <Button
         size="small"
         variant="text"

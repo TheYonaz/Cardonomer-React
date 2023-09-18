@@ -46,7 +46,6 @@ const useHandleUsers = (currentQuery) => {
   useEffect(() => {
     setQuery(currentQuery);
   }, [currentQuery]);
-  console.log("Users Data:", usersData);
 
   useEffect(() => {
     if (query) {
@@ -67,11 +66,9 @@ const useHandleUsers = (currentQuery) => {
       try {
         setLoading(true);
         const token = await login(user);
-        console.log(0, user, token);
         setTokenInLocalStorage(token);
         setToken(token);
         const userFromLocalStorage = getUserFromLocalStorage();
-        console.log("handleLogin", userFromLocalStorage);
         requestStatus(false, null, null, userFromLocalStorage);
         snack("success", "Logged Successfully!");
         navigate(ROUTES.CARDS);
@@ -92,7 +89,6 @@ const useHandleUsers = (currentQuery) => {
         setLoading(true);
         const normalizedUser = normalizeUser(user);
         await signup(normalizedUser);
-        console.log("handleSignUp", normalizedUser);
         await handleLogin({
           email: user.email,
           password: user.password,
@@ -109,7 +105,6 @@ const useHandleUsers = (currentQuery) => {
       try {
         setLoading(false);
         const userFromClient = await GetUser(userId);
-        console.log("handleGET user", userFromClient);
         if (userFromClient) {
           requestStatus(false, null, user, userFromClient);
           return userFromClient;
@@ -141,7 +136,6 @@ const useHandleUsers = (currentQuery) => {
     async (userId) => {
       try {
         const userFromClient = await GetUserFriends(userId);
-        console.log("handleGETFriends user", userFromClient);
         if (userFromClient) {
           return userFromClient;
         }

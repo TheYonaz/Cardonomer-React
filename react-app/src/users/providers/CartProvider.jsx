@@ -91,7 +91,6 @@ export const CartProvider = ({ children }) => {
     const fetchCartItems = async (userId) => {
       try {
         const data = await GetUserCart(userId);
-        console.log("fetchCartItems", data);
         setCartItems(data);
         setCartLength(data.length);
       } catch (error) {
@@ -102,7 +101,6 @@ export const CartProvider = ({ children }) => {
     const fetchPrizes = async (userId) => {
       try {
         const data = await getPrizes(userId);
-        console.log("Prizes:", data);
         setPrizes(data);
       } catch (error) {
         console.error("Error fetching prizes:", error);
@@ -122,7 +120,6 @@ export const CartProvider = ({ children }) => {
       fetchPrizes(user._id);
       mergeGuestCartWithUserCart();
     }
-    console.log("cartItems", cartItems);
     return () => {
       setCartItems([]);
       setCartLength(0);

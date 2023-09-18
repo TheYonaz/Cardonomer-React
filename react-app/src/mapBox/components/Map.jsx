@@ -30,7 +30,7 @@ const MapGame = () => {
 
   // 0.005 km is equal to 5 meters.
   const circles = points.map((point) =>
-    createGeoJSONCircle([point.longitude, point.latitude], 0.415)
+    createGeoJSONCircle([point.longitude, point.latitude], 0.05)
   );
 
   useEffect(() => {
@@ -68,10 +68,8 @@ const MapGame = () => {
 
   const activateDiscount = async () => {
     // This function gets activated when the user enters any circle.
-    console.log("User entered the circle!");
     try {
       await addDiscountToUser(user._id);
-      console.log("Discount added to user's cart!");
       setOpenDialog(true); // open the dialog
     } catch (error) {
       console.error("Error adding discount to cart:", error);

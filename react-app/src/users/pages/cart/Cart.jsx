@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import {
-  Avatar,
   Box,
   Button,
   Card,
-  CardHeader,
   Typography,
   CardMedia,
   Select,
@@ -12,7 +10,6 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import TextField from "@mui/material/TextField";
 
 import { useCart } from "../../providers/CartProvider";
 import PokemonCards from "../../../cards/components/Pokemon/PokemonCards";
@@ -24,7 +21,6 @@ const Cart = () => {
   const [selectedDiscount, setSelectedDiscount] = useState(""); // State to hold the selected discount
   const fontSizeBreakpoints = { xs: 5, sm: 10, m: 12, lg: 15 };
   const maxHeightBreakpoints = { xs: 75, sm: 100, m: 150, lg: 200 };
-  console.log("discountPrizes", discountPrizes.prizes);
   const handleDiscountChange = (event) => {
     setSelectedDiscount(event.target.value);
   };
@@ -43,13 +39,11 @@ const Cart = () => {
   };
 
   const handleBuyNow = (pokemonCard) => {
-    // Implement your buy now logic here
-    console.log("Buying:", pokemonCard.name);
+    // Implement buy now logic here
   };
 
   const handleBuyAll = () => {
-    // Implement your buy all logic here
-    console.log("Buying all items in the cart");
+    // Implement buy all logic here
   };
   const resetDiscount = () => {
     setSelectedDiscount("");

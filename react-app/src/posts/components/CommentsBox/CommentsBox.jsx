@@ -3,7 +3,6 @@ import List from "@mui/material/List";
 import Comment from "./Comment"; // import the Comment component
 
 const CommentsBox = ({ comments }) => {
-  console.log("commentsBox", comments);
   return (
     <List>
       {comments.map((comment, index) => (

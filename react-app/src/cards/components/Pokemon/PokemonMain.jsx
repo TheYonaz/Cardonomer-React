@@ -14,9 +14,7 @@ const PokemonMain = () => {
   useEffect(() => {
     try {
       fetchPokemonTcgData();
-    } catch (error) {
-      console.log("Error fetching data: ", error);
-    }
+    } catch (error) {}
   }, []);
 
   return (

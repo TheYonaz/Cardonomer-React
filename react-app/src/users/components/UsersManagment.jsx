@@ -68,7 +68,6 @@ const UsersManagment = () => {
           <TableBody>
             {users.map((user) => (
               <React.Fragment key={user._id}>
-                {console.log(user)}
                 <TableRow>
                   <TableCell>{`${user.name.first} ${user.name.last}`}</TableCell>
                   <TableCell>{user.email}</TableCell>

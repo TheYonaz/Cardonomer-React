@@ -27,7 +27,6 @@ const publishPost = async (req, res) => {
 const addCommentToPost = async (req, res) => {
   const { postId } = req.params;
   const { content } = req.body;
-  console.log(content);
   const { _id, image, name } = req.user;
   const comment = {
     user_id: _id,

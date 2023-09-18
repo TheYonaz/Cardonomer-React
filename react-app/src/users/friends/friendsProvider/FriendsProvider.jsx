@@ -10,12 +10,10 @@ export const FriendsProvider = ({ children }) => {
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState([]);
   const { user } = useUser();
-  console.log(user);
   const handleGetUserFriends = useCallback(
     async (userId) => {
       try {
         const userFriendsFromClient = await GetUserFriends(userId);
-        console.log("handleGETFriends user", userFriendsFromClient);
         if (userFriendsFromClient) {
           return setFriends(userFriendsFromClient);
         }
@@ -38,7 +36,6 @@ export const FriendsProvider = ({ children }) => {
     if (user) {
       handleGetUserFriends(user._id);
     }
-    console.log("useFriends", friends);
     return;
   }, [user]);
   // Assuming you pass `viewedUserId` into the FriendsProvider

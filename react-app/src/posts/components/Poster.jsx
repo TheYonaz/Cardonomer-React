@@ -7,10 +7,8 @@ const Poster = ({ handleSubmit, onPostPublished }) => {
   const [content, setContent] = useState("");
   const { user } = useUser();
   const onSubmit = async () => {
-    console.log("in poster ", user);
     const post = await handleSubmit({ content, user_id: user._id });
     setContent("");
-    console.log("in poster ", post);
     onPostPublished();
   };
 

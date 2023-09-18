@@ -28,8 +28,6 @@ const useHandlePosts = () => {
   useEffect(() => {
     setQuery(searchParams.get("q") || "");
   }, [searchParams]);
-  console.log("Posts Data:", postsData);
-
   useEffect(() => {
     if (filteredPosts) {
       setFilteredPosts(
@@ -58,14 +56,9 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const publishedPost = await publishPost(post);
-        console.log(1);
         const newPosts = [publishedPost, ...postsData];
-        console.log(3);
         postStatus(false, null, newPosts);
         snack("success", "Post Published Successfully!");
-        console.log("handlePublish", onePostData);
-        console.log("handlePublish2", newPosts);
-        console.log(4);
       } catch (error) {
         if (typeof error === "string") postStatus(false, error, null);
       }
@@ -76,7 +69,7 @@ const useHandlePosts = () => {
     try {
       setLoading(true);
       const fetchedPost = await getPost(postId);
-      console.log("fetchSinglePost", fetchedPost);
+
       postStatus(false, null, fetchedPost);
     } catch (error) {
       if (typeof error === "string") postStatus(false, error, null);
@@ -87,7 +80,7 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const updatedPost = await publishComment(postId, comment);
-        console.log("handleComment", updatedPost);
+
         // Update the post in the posts data
         const newPostsData = postsData.map((post) =>
           post._id === updatedPost._id ? updatedPost : post
@@ -105,14 +98,11 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const updatedPost = await likePost(postId);
-        console.log("handleLike", updatedPost);
         // const updatedPosts = postsData.map((post) =>
         //   post.post_id === updatedPost._id ? updatedPost : post
         // );
-        console.log("hhandleLike2", updatedPost);
         postStatus(false, null, updatedPost);
         snack("success", "Liked Successfully!");
-        console.log("handleLike3", postsData);
       } catch (error) {
         if (typeof error === "string") postStatus(false, error, null);
       }
@@ -125,8 +115,6 @@ const useHandlePosts = () => {
       setLoading(true);
       const friendsPosts = await getFriendsPosts();
       postStatus(false, null, friendsPosts);
-      console.log("getfriendsPosts1", postsData);
-      // snack("success", "Posts Retrieved Successfully!");
     } catch (error) {
       if (typeof error === "string") postStatus(false, error, null);
     }
