@@ -43,7 +43,7 @@ const editValidation = (user) => {
         zip: Joi.number(),
       })
       .required(),
-    isBusiness: Joi.boolean().required(),
+    isBusiness: Joi.boolean(),
   });
   return schema.validate(user);
 };

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { getUserPokemonDecks } from "../../cards/services/pokemonAPI";
 import Posts from "../../layout/main/mid/post/Posts";
-import { getPost, getUsersPost } from "../../posts/service/PostSystemAPI";
+import { getUsersPost } from "../../posts/service/PostSystemAPI";
 import UserDecks from "./UserDecks";
 import { useUser } from "../providers/UserProvider";
 import { useFriends } from "../friends/friendsProvider/FriendsProvider";
@@ -141,7 +141,7 @@ const UserProfile = () => {
         </Card>
       )}
       {userPosts.length > 0 ? (
-        <Posts posts={userPosts} />
+        <Posts posts={userPosts} enableActionBar={false} />
       ) : (
         <Card variant="outlined" style={{ marginTop: "20px" }}>
           <CardHeader

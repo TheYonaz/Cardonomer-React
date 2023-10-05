@@ -17,7 +17,7 @@ const useHandlePosts = () => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [postsData, setpostsData] = useState([]);
-  const [onePostData, setOnePostData] = useState([]);
+  // const [onePostData, setOnePostData] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState(null);
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState("");
@@ -39,7 +39,7 @@ const useHandlePosts = () => {
         )
       );
     }
-  }, [postsData, query]);
+  }, [postsData, query, filteredPosts]);
 
   const postStatus = useCallback(
     (loading, errorMessage, posts, onePostData) => {
@@ -63,18 +63,21 @@ const useHandlePosts = () => {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-    [snack, postsData, onePostData, postStatus]
+    [snack, postsData, postStatus]
   );
-  const fetchSinglePost = useCallback(async (postId) => {
-    try {
-      setLoading(true);
-      const fetchedPost = await getPost(postId);
+  const fetchSinglePost = useCallback(
+    async (postId) => {
+      try {
+        setLoading(true);
+        const fetchedPost = await getPost(postId);
 
-      postStatus(false, null, fetchedPost);
-    } catch (error) {
-      if (typeof error === "string") postStatus(false, error, null);
-    }
-  }, []);
+        postStatus(false, null, fetchedPost);
+      } catch (error) {
+        if (typeof error === "string") postStatus(false, error, null);
+      }
+    },
+    [postStatus]
+  );
   const handleComment = useCallback(
     async (postId, comment) => {
       try {
@@ -107,7 +110,7 @@ const useHandlePosts = () => {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-    [postsData, snack, postStatus]
+    [snack, postStatus]
   );
 
   const getfriendsPosts = useCallback(async () => {
@@ -118,7 +121,7 @@ const useHandlePosts = () => {
     } catch (error) {
       if (typeof error === "string") postStatus(false, error, null);
     }
-  }, [postsData, snack, postStatus]);
+  }, [postStatus]);
 
   const handleDeletePost = useCallback(
     async (postId, userId) => {

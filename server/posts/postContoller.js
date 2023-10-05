@@ -43,6 +43,7 @@ const addCommentToPost = async (req, res) => {
     if (!post) throw new Error("Could not find this post in the database");
     post.comments.push(comment);
     post = await post.save();
+    console.log("addCommentToPost", post);
     res.send(post);
   } catch (error) {
     handleError(res, 500, "An error occurred while adding comment to post.");
@@ -74,6 +75,7 @@ const likePost = async (req, res) => {
     }
     user.save();
     const postFromDB = await post.save();
+    console.log("postFromDB", postFromDB);
     res.send(postFromDB);
   } catch (error) {
     console.error("likePost error:", error.message);
@@ -128,11 +130,23 @@ const getUserPosts = async (req, res) => {
 const deletePost = async (req, res) => {
   const { postId, userId } = req.params;
   const { isAdmin, _id } = req.user;
+  console.log(postId);
   try {
     if (userId !== _id && !isAdmin)
       throw new Error("You do not have permission to delete this post");
     const post = await Post.findByIdAndDelete(postId);
     if (!post) throw new Error("Could not find this post in the database");
+    const user = User.findById(_id);
+    if (user && user.publishedPosts && Array.isArray(user.publishedPosts)) {
+      // Filter out the postId from the user's publishedPosts array
+      user.publishedPosts = user.publishedPosts.filter(
+        (postObj) => postObj._id !== postId
+      );
+
+      // Save the user back to the database
+      await user.save();
+    }
+
     res.send("success");
   } catch (error) {
     console.error("deletePost error:", error.message);
