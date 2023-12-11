@@ -41,15 +41,12 @@ const useHandlePosts = () => {
     }
   }, [postsData, query]);
 
-  const postStatus = useCallback(
-    (loading, errorMessage, posts, onePostData) => {
-      setLoading(loading);
-      setError(errorMessage);
-      setpostsData(posts);
-      // setOnePostData(onePostData);
-    },
-    []
-  );
+  const postStatus = useCallback((loading, errorMessage, posts) => {
+    setLoading(loading);
+    setError(errorMessage);
+    setpostsData(posts);
+    // setOnePostData(onePostData);
+  }, []);
 
   const handlePublish = useCallback(
     async (post) => {
