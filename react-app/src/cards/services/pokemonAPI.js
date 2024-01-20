@@ -1,7 +1,7 @@
 import axios from "axios";
 import { normalizeDeckData } from "../deckProvider/normalizeCard";
 const pokemonTCGapiURL =
-  process.env.REACT_APP_API_URL || "http://localhost:8181";
+  process.env.REACT_APP_API_URL || "https://cardonomer1-back.onrender.com";
 
 export const getPokemonCards = async () => {
   try {
