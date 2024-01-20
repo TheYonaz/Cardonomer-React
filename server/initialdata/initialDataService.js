@@ -94,9 +94,11 @@ const makeRandomFriends = async () => {
 
   // Check the first user for friends
   const firstUser = await User.findById(SavedUSERS[0], { friends: 1 });
-  if (firstUser.friends.length > 0) {
-    console.log("Users already have friends. Skipping friend assignment.");
-    return; // Exit the function if the first user has friends
+  if (!firstUser || (firstUser.friends && firstUser.friends.length > 0)) {
+    console.log(
+      "No user found or users already have friends. Skipping friend assignment."
+    );
+    return;
   }
 
   for (let i = 0; i < SavedUSERS.length; i++) {

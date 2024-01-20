@@ -39,7 +39,7 @@ const useHandlePosts = () => {
         )
       );
     }
-  }, [postsData, query]);
+  }, [postsData, query, filteredPosts]);
 
   const postStatus = useCallback(
     (loading, errorMessage, posts, onePostData) => {
@@ -56,25 +56,28 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const publishedPost = await publishPost(post);
-        const newPosts = [publishedPost, ...postsData];
+        const newPosts = [...postsData, publishedPost];
         postStatus(false, null, newPosts);
         snack("success", "Post Published Successfully!");
       } catch (error) {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-    [snack, postsData, onePostData, postStatus]
+    [snack, postsData, postStatus]
   );
-  const fetchSinglePost = useCallback(async (postId) => {
-    try {
-      setLoading(true);
-      const fetchedPost = await getPost(postId);
+  const fetchSinglePost = useCallback(
+    async (postId) => {
+      try {
+        setLoading(true);
+        const fetchedPost = await getPost(postId);
 
-      postStatus(false, null, fetchedPost);
-    } catch (error) {
-      if (typeof error === "string") postStatus(false, error, null);
-    }
-  }, []);
+        postStatus(false, null, fetchedPost);
+      } catch (error) {
+        if (typeof error === "string") postStatus(false, error, null);
+      }
+    },
+    [postStatus]
+  );
   const handleComment = useCallback(
     async (postId, comment) => {
       try {
@@ -98,16 +101,17 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const updatedPost = await likePost(postId);
-        // const updatedPosts = postsData.map((post) =>
-        //   post.post_id === updatedPost._id ? updatedPost : post
-        // );
-        postStatus(false, null, updatedPost);
+        const updatedPosts = postsData.map((post) =>
+          post.post_id === updatedPost._id ? updatedPost : post
+        );
+        // postStatus(false, null, updatedPost);
+        postStatus(false, null, updatedPosts);
         snack("success", "Liked Successfully!");
       } catch (error) {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-    [postsData, snack, postStatus]
+    [snack, postStatus, postsData]
   );
 
   const getfriendsPosts = useCallback(async () => {
@@ -118,7 +122,7 @@ const useHandlePosts = () => {
     } catch (error) {
       if (typeof error === "string") postStatus(false, error, null);
     }
-  }, [postsData, snack, postStatus]);
+  }, [postStatus]);
 
   const handleDeletePost = useCallback(
     async (postId, userId) => {
