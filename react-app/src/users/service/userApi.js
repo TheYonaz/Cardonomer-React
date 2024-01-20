@@ -1,5 +1,6 @@
 import axios from "axios";
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8181";
+const apiUrl =
+  process.env.REACT_APP_API_URL || "https://cardonomer1-back.onrender.com";
 export const login = async (user) => {
   try {
     const { data } = await axios.post(`${apiUrl}/users/login`, user);
