@@ -11,13 +11,29 @@ const PostsPage = () => {
   const [refresh, setRefresh] = useState(false);
   const [commented, setComment] = useState(false);
 
-  const { getfriendsPosts, value, handlePublish } = useHandlePosts();
+  const {
+    getfriendsPosts,
+    value,
+    handlePublish,
+    handleDeletePost,
+    handleLike,
+    handleComment,
+  } = useHandlePosts();
   const { postsData, error, isLoading } = value;
   const { user } = useUser();
 
   useEffect(() => {
-    getfriendsPosts();
-  }, [refresh, commented, user]);
+    if (!postsData.length) getfriendsPosts();
+  }, [
+    refresh,
+    commented,
+    user,
+    getfriendsPosts,
+    handlePublish,
+    handleDeletePost,
+    handleLike,
+    handleComment,
+  ]);
 
   const handlePostPublished = () => {
     setRefresh((prev) => !prev);

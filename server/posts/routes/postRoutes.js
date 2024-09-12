@@ -10,7 +10,7 @@ const {
   getUserPosts,
   deletePost,
 } = require("../postContoller");
-router.post("/post", auth, publishPost); //need auth when finish
+router.post("/post", auth, publishPost);
 router.get("/post/", auth, getPostsOfFriends);
 router.put("/like/:postId", auth, likePost);
 router.put("/post/comment/:postId", auth, addCommentToPost);

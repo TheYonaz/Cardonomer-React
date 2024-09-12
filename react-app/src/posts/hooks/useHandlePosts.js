@@ -53,7 +53,7 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const publishedPost = await publishPost(post);
-        const newPosts = [publishedPost, ...postsData];
+        const newPosts = [...postsData, publishedPost];
         postStatus(false, null, newPosts);
         snack("success", "Post Published Successfully!");
       } catch (error) {
@@ -98,16 +98,21 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const updatedPost = await likePost(postId);
-        // const updatedPosts = postsData.map((post) =>
-        //   post.post_id === updatedPost._id ? updatedPost : post
-        // );
-        postStatus(false, null, updatedPost);
+        const updatedPosts = postsData.map((post) =>
+          post.post_id === updatedPost._id ? updatedPost : post
+        );
+        // postStatus(false, null, updatedPost);
+        postStatus(false, null, updatedPosts);
         snack("success", "Liked Successfully!");
       } catch (error) {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
+<<<<<<< HEAD
     [snack, postStatus]
+=======
+    [snack, postStatus, postsData]
+>>>>>>> 58f64f9f2aa63e0298bb99e3523e25c68b5b915d
   );
 
   const getfriendsPosts = useCallback(async () => {

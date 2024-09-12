@@ -21,7 +21,7 @@ const MidNav = () => {
 
   const { handleGetAllUsers, value, handleSignup, handleLogout, setAllUsers } =
     useHandleUsers(searchInput);
-  const { allUsers, filteredUsers } = value;
+  const { filteredUsers } = value;
   const { user } = useUser();
   const navigate = useNavigate();
 
