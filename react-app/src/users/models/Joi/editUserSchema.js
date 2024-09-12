@@ -8,7 +8,7 @@ const EditUserSchema = {
   phone: Joi.string().min(9).max(11).required(),
   email: Joi.string()
     .ruleset.pattern(/^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/)
-    .rule({ message: 'user "email" mast be a valid mail' })
+    .rule({ message: 'user "email" must be a valid mail' })
     .required(),
   url: Joi.string().min(14),
   alt: Joi.string().min(2).max(256),
