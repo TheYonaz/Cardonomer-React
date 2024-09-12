@@ -1,5 +1,5 @@
 export const freeToken =
-  "pk.eyJ1IjoieW9udjEiLCJhIjoiY2xtN2pudzN0MDExazNjcjcyMnhlbzdocyJ9.NzyvPvbTL_hD1N84MKnITA";
+  "pk.eyJ1IjoieW9udjEiLCJhIjoiY20wemFjbHptMDJieTJqc2NsbWt2NDJsZSJ9.j_pvKPf6GcJjEY7vvyxNvA";
 
 export const createGeoJSONCircle = (center, radiusInKm, points = 64) => {
   const coords = {
