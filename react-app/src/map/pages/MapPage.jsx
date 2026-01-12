@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Box, Fab, Drawer, useMediaQuery, useTheme, IconButton, Typography, CircularProgress, Paper, SwipeableDrawer, Snackbar, Alert } from '@mui/material';
+import { Box, Fab, Drawer, useMediaQuery, useTheme, IconButton, Typography, CircularProgress, Paper, SwipeableDrawer, Snackbar, Alert, Tooltip, Zoom } from '@mui/material';
+import '../styles/EngagingMap.css';
 import CloseIcon from '@mui/icons-material/Close';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
@@ -292,8 +293,20 @@ const MapPage = () => {
       position: 'relative', 
       width: '100%', 
       height: '100vh',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      background: 'linear-gradient(180deg, #f5f7fa 0%, #c3cfe2 100%)'
     }}>
+      {/* User Count Badge */}
+      {!locationLoading && allUsers.length > 0 && (
+        <Zoom in={true} style={{ transitionDelay: '500ms' }}>
+          <Paper className="user-count-badge" elevation={6}>
+            <Typography variant="body2" fontWeight="bold">
+              👥 {allUsers.length} Collectors Nearby
+            </Typography>
+          </Paper>
+        </Zoom>
+      )}
+      
       {/* Map component taking full screen */}
       <Box 
         ref={mapContainerRef}
@@ -302,6 +315,7 @@ const MapPage = () => {
         {/* Location loading state */}
         {locationLoading && (
           <Box 
+            className="map-loading-gradient"
             sx={{
               position: 'absolute',
               top: 0,
@@ -312,13 +326,22 @@ const MapPage = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              bgcolor: 'rgba(245, 247, 250, 0.8)',
               zIndex: 10
             }}
           >
-            <CircularProgress size={60} thickness={4} />
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Finding your location...
+            <CircularProgress 
+              size={80} 
+              thickness={4} 
+              sx={{ 
+                color: 'white',
+                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
+              }} 
+            />
+            <Typography variant="h5" sx={{ mt: 3, color: 'white', fontWeight: 'bold', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+              🗺️ Finding Pokemon Collectors Near You...
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 1, color: 'rgba(255,255,255,0.9)' }}>
+              Searching for nearby traders
             </Typography>
           </Box>
         )}
@@ -445,7 +468,7 @@ const MapPage = () => {
           </Box>
         )}
         
-        {/* Action buttons */}
+        {/* Action buttons with enhanced styling */}
         <Box 
           sx={{
             position: 'absolute',
@@ -458,62 +481,76 @@ const MapPage = () => {
           }}
         >
           {/* Unified Location Control Button */}
-          <Fab
-            color="primary"
-            aria-label="my-location"
-            sx={{ 
-              boxShadow: 3,
-              position: 'relative',
-              transition: 'all 0.3s ease',
-              '&:active': {
-                transform: 'scale(0.95)',
-              }
-            }}
-            onClick={handleLocationControl}
+          <Tooltip 
+            title={locationTrackingEnabled ? "Location tracking active" : "Jump to my location"} 
+            placement="left"
+            arrow
           >
-            <Box
-              sx={{
+            <Fab
+              color="primary"
+              aria-label="my-location"
+              className="map-control-fab fab-with-pulse"
+              sx={{ 
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                },
+                '&:active': {
+                  transform: 'scale(0.95)',
+                }
               }}
+              onClick={handleLocationControl}
             >
-              <MyLocationIcon />
-              
-              {/* Location tracking indicator */}
-              {locationTrackingEnabled && (
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: -3,
-                    right: -3,
-                    width: 12,
-                    height: 12,
-                    borderRadius: '50%',
-                    bgcolor: 'secondary.main',
-                    border: '2px solid #fff',
-                    animation: locationTrackingEnabled ? 'pulse 1.5s infinite' : 'none',
-                    '@keyframes pulse': {
-                      '0%': { boxShadow: '0 0 0 0 rgba(156, 39, 176, 0.7)' },
-                      '70%': { boxShadow: '0 0 0 6px rgba(156, 39, 176, 0)' },
-                      '100%': { boxShadow: '0 0 0 0 rgba(156, 39, 176, 0)' }
-                    }
-                  }}
-                />
-              )}
-            </Box>
-          </Fab>
+              <Box
+                sx={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <MyLocationIcon sx={{ color: 'white', fontSize: 28 }} />
+                
+                {/* Location tracking indicator */}
+                {locationTrackingEnabled && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: -8,
+                      right: -8,
+                      width: 16,
+                      height: 16,
+                      borderRadius: '50%',
+                      bgcolor: '#4caf50',
+                      border: '3px solid #fff',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                      animation: 'tradePulse 1.5s infinite'
+                    }}
+                  />
+                )}
+              </Box>
+            </Fab>
+          </Tooltip>
           
           {/* Profile button */}
-          <Fab
-            color="secondary"
-            aria-label="my-profile"
-            sx={{ boxShadow: 3 }}
-            onClick={handleOpenUserProfile}
-          >
-            <PersonIcon />
-          </Fab>
+          <Tooltip title="View my profile" placement="left" arrow>
+            <Fab
+              color="secondary"
+              aria-label="my-profile"
+              className="map-control-fab"
+              sx={{ 
+                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)',
+                }
+              }}
+              onClick={handleOpenUserProfile}
+            >
+              <PersonIcon sx={{ color: 'white', fontSize: 28 }} />
+            </Fab>
+          </Tooltip>
         </Box>
 
         <MapView 

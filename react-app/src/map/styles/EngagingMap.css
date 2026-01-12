@@ -1,0 +1,327 @@
+/* Engaging Map Styles - Professional & Interactive */
+
+/* Animated gradient background for loading states */
+.map-loading-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Enhanced user markers with glow effect */
+.user-marker.enhanced {
+  position: relative;
+  animation: markerFloat 3s ease-in-out infinite;
+}
+
+@keyframes markerFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+.user-marker.enhanced::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(102,126,234,0.4) 0%, transparent 70%);
+  animation: pulseGlow 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* Engaging marker hover with bounce */
+.user-marker.enhanced:hover {
+  animation: bounceUp 0.4s ease-out;
+  transform: translateY(-10px) scale(1.1);
+}
+
+@keyframes bounceUp {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-15px) scale(1.15); }
+  100% { transform: translateY(-10px) scale(1.1); }
+}
+
+/* Card badge on markers for users with many cards */
+.user-marker-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 12px;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 5;
+  animation: badgePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Shimmer effect for online users */
+.user-marker.online::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  animation: shimmer 3s infinite;
+  border-radius: 50%;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Cluster markers for groups */
+.marker-cluster {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+  animation: clusterPulse 2s ease-in-out infinite;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.marker-cluster:hover {
+  transform: scale(1.2);
+  box-shadow: 0 6px 20px rgba(102,126,234,0.6);
+}
+
+@keyframes clusterPulse {
+  0%, 100% { box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+  50% { box-shadow: 0 6px 24px rgba(102,126,234,0.8); }
+}
+
+/* Enhanced location indicator with ripple */
+.location-indicator.enhanced {
+  animation: rippleExpand 2.5s ease-out infinite;
+}
+
+@keyframes rippleExpand {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+}
+
+/* Engaging hover tooltip with smooth transition */
+.user-hover-info {
+  animation: tooltipSlideIn 0.3s ease-out;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+@keyframes tooltipSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Trade available indicator */
+.trade-indicator {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+  border: 2px solid white;
+  border-radius: 50%;
+  animation: tradePulse 1.5s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes tradePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0);
+  }
+}
+
+/* Map controls styling */
+.map-control-fab {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+  transition: all 0.3s ease !important;
+}
+
+.map-control-fab:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.25) !important;
+}
+
+/* Floating action buttons with pulsing effect */
+.fab-with-pulse {
+  position: relative;
+}
+
+.fab-with-pulse::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.6;
+  animation: fabPulse 2s ease-out infinite;
+}
+
+@keyframes fabPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Status chips with animation */
+.status-chip-animated {
+  animation: chipFloat 2s ease-in-out infinite;
+}
+
+@keyframes chipFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Card preview on hover */
+.card-preview-popup {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  animation: cardPopupSlide 0.3s ease-out;
+  z-index: 1000;
+}
+
+@keyframes cardPopupSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
+
+/* Engaging empty state */
+.empty-state-animated {
+  animation: fadeInScale 0.6s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Map zoom indicator */
+.zoom-level-indicator {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-size: 12px;
+  font-weight: 600;
+  color: #667eea;
+  z-index: 1000;
+}
+
+/* User count badge */
+.user-count-badge {
+  position: absolute;
+  top: 80px;
+  left: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 24px;
+  box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+  z-index: 1000;
+  animation: badgeSlideIn 0.5s ease-out;
+}
+
+@keyframes badgeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+

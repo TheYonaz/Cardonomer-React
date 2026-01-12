@@ -4,6 +4,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import debounce from 'lodash.debounce';
 import '../styles/MapView.css';
 import '../styles/MapEffects.css';
+import '../styles/EngagingMap.css';
 import {
   createMapParticle,
   createRippleEffect,
@@ -227,6 +228,9 @@ const MapView = ({
           latitude = user.coordinates.latitude;
         }
         
+        const cardCount = user.cards?.length || user.collectionStats?.totalCards || 0;
+        const hasCardsForSale = user.cards?.some(c => c.forSale) || (user.collectionStats?.cardsForSale || 0) > 0;
+        
         return (
           <Marker
             key={user.id}
@@ -236,8 +240,9 @@ const MapView = ({
           >
             <div
               className={`user-marker enhanced ${isCurrentUserMarker ? 'is-current-user' : ''} ${
-                hoveredUser && hoveredUser.id === user.id ? 'hovered' : ''
-              } ${touchedUser && touchedUser.id === user.id ? 'touched' : ''}`}
+                user.online || user.onlineStatus === 'Online' ? 'online' : ''
+              } ${hoveredUser && hoveredUser.id === user.id ? 'hovered' : ''} ${
+                touchedUser && touchedUser.id === user.id ? 'touched' : ''}`}
               onMouseEnter={() => setHoveredUser(user)}
               onMouseLeave={() => setHoveredUser(null)}
               onClick={() => onUserClick && onUserClick(user)}
@@ -255,6 +260,16 @@ const MapView = ({
                 height: `${size}px`,
               }}
             >
+              {/* Trade available indicator */}
+              {hasCardsForSale && <div className="trade-indicator" />}
+              
+              {/* Card count badge */}
+              {cardCount > 0 && (
+                <div className="user-marker-badge">
+                  🎴 {cardCount}
+                </div>
+              )}
+              
               <div 
                 className="location-indicator enhanced"
                 style={{
@@ -264,26 +279,34 @@ const MapView = ({
               ></div>
               <img
                 className="user-profile-image"
-                src={user.profilePicture || user.profile_picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=random`}
-                alt={user.username}
+                src={user.profilePicture || user.profile_picture || user.image?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || user.name?.first)}&background=random`}
+                alt={user.username || `${user.name?.first} ${user.name?.last}`}
                 width={size}
                 height={size}
                 onError={(e) => {
-                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=random`;
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || user.name?.first || 'User')}&background=random`;
                 }}
               />
               <div
                 className="status-indicator"
                 style={{
-                  backgroundColor: getStatusColor(user.online),
+                  backgroundColor: getStatusColor(user.online || user.onlineStatus === 'Online'),
                   width: `${size / 4}px`,
                   height: `${size / 4}px`,
                 }}
               />
               {(hoveredUser && hoveredUser.id === user.id) || (touchedUser && touchedUser.id === user.id) ? (
                 <div className="user-hover-info">
-                  <div className="username">{user.username}</div>
-                  <div className="status">{user.online ? 'Online' : 'Offline'}</div>
+                  <div className="username">{user.username || `${user.name?.first} ${user.name?.last}`}</div>
+                  <div className="status">
+                    {user.online || user.onlineStatus === 'Online' ? '🟢 Online' : '⚫ Offline'}
+                    {cardCount > 0 && ` • ${cardCount} cards`}
+                  </div>
+                  {hasCardsForSale && (
+                    <div style={{ fontSize: '10px', color: '#4caf50', fontWeight: 'bold', marginTop: '2px' }}>
+                      💰 Has cards for sale
+                    </div>
+                  )}
                 </div>
               ) : null}
             </div>

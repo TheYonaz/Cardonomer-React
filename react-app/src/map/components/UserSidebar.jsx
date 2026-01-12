@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Box, 
@@ -9,7 +9,15 @@ import {
   Badge,
   Button,
   Paper,
-  Grid
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Tabs,
+  Tab,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar
 } from '@mui/material';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import ExactIcon from '@mui/icons-material/LocationOn';
@@ -23,6 +31,7 @@ import ROUTES from '../../router/routesModel';
 
 const UserSidebar = ({ currentUser, selectedUser, onClose, isMobile }) => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(0);
   const user = selectedUser || currentUser;
   
   // Determine if this is the current user's profile
@@ -227,61 +236,171 @@ const UserSidebar = ({ currentUser, selectedUser, onClose, isMobile }) => {
       
       <Divider />
       
-      {/* Bio Section */}
-      <Box sx={{ px: 3, py: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          About
-        </Typography>
-        <Typography variant="body1" paragraph>
-          {user.bio || 'No bio available'}
-        </Typography>
+      {/* Tabs Navigation */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs 
+          value={activeTab} 
+          onChange={(e, newValue) => setActiveTab(newValue)}
+          variant="fullWidth"
+          sx={{
+            '& .MuiTab-root': {
+              fontWeight: 600,
+              textTransform: 'none',
+              fontSize: '1rem'
+            }
+          }}
+        >
+          <Tab label="About" />
+          <Tab label="Cards" />
+        </Tabs>
       </Box>
       
-      <Divider />
-      
-      {/* Collection Stats */}
-      <Box sx={{ px: 3, py: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Collection Stats
-        </Typography>
-        <Paper sx={{ p: 2, mt: 1 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="text.secondary">
-                Total Cards:
+      {/* Tab Content */}
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        {/* About Tab */}
+        {activeTab === 0 && (
+          <>
+            {/* Bio Section */}
+            <Box sx={{ px: 3, py: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                About
               </Typography>
-              <Typography variant="h6" fontWeight="medium">
-                {user.collectionStats?.totalCards || 0}
+              <Typography variant="body1" paragraph>
+                {user.bio || 'No bio available'}
               </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="text.secondary">
-                Cards for Sale:
+            </Box>
+            
+            <Divider />
+            
+            {/* Collection Stats */}
+            <Box sx={{ px: 3, py: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Collection Stats
               </Typography>
-              <Typography variant="h6" fontWeight="medium">
-                {user.collectionStats?.cardsForSale || 0}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body2" color="text.secondary">
-                Completed Trades:
-              </Typography>
-              <Typography variant="h6" fontWeight="medium">
-                {user.collectionStats?.completedTrades || 0}
-              </Typography>
-            </Grid>
-            {user.collectionStats?.rareCards !== undefined && (
-              <Grid item xs={6}>
+              <Paper sx={{ p: 2, mt: 1, background: 'linear-gradient(135deg, #667eea15 0%, #764ba215 100%)' }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 1, borderRadius: 1, bgcolor: 'background.paper' }}>
+                      <Typography variant="h4" fontWeight="bold" color="primary">
+                        {user.collectionStats?.totalCards || 0}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Total Cards
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 1, borderRadius: 1, bgcolor: 'background.paper' }}>
+                      <Typography variant="h4" fontWeight="bold" color="success.main">
+                        {user.collectionStats?.cardsForSale || 0}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        For Sale
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box sx={{ textAlign: 'center', p: 1, borderRadius: 1, bgcolor: 'background.paper' }}>
+                      <Typography variant="h4" fontWeight="bold" color="secondary.main">
+                        {user.collectionStats?.completedTrades || 0}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Trades
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  {user.collectionStats?.rareCards !== undefined && (
+                    <Grid item xs={6}>
+                      <Box sx={{ textAlign: 'center', p: 1, borderRadius: 1, bgcolor: 'background.paper' }}>
+                        <Typography variant="h4" fontWeight="bold" color="warning.main">
+                          {user.collectionStats.rareCards}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Rare Cards
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  )}
+                </Grid>
+              </Paper>
+            </Box>
+          </>
+        )}
+        
+        {/* Cards Tab */}
+        {activeTab === 1 && (
+          <Box sx={{ px: 2, py: 2 }}>
+            <Typography variant="h6" gutterBottom sx={{ px: 1 }}>
+              Card Collection
+            </Typography>
+            {user.cards && user.cards.length > 0 ? (
+              <ImageList 
+                cols={isMobile ? 2 : 2} 
+                gap={12}
+                sx={{ 
+                  width: '100%',
+                  maxHeight: '60vh',
+                  overflow: 'auto'
+                }}
+              >
+                {user.cards.map((card) => (
+                  <ImageListItem 
+                    key={card.id} 
+                    sx={{ 
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        zIndex: 2
+                      }
+                    }}
+                  >
+                    <img
+                      src={card.imageUrl || 'https://via.placeholder.com/200x280?text=Pokemon+Card'}
+                      alt={card.name}
+                      loading="lazy"
+                      style={{ 
+                        borderRadius: 8,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                      }}
+                    />
+                    <ImageListItemBar
+                      title={card.name}
+                      subtitle={card.rarity}
+                      actionIcon={
+                        card.forSale && (
+                          <Chip 
+                            label={`$${card.price}`}
+                            color="success"
+                            size="small"
+                            sx={{ mr: 1 }}
+                          />
+                        )
+                      }
+                      sx={{
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        '& .MuiImageListItemBar-title': {
+                          fontSize: '0.85rem',
+                          fontWeight: 600
+                        },
+                        '& .MuiImageListItemBar-subtitle': {
+                          fontSize: '0.7rem'
+                        }
+                      }}
+                    />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            ) : (
+              <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'grey.50' }}>
                 <Typography variant="body2" color="text.secondary">
-                  Rare Cards:
+                  No cards in collection yet
                 </Typography>
-                <Typography variant="h6" fontWeight="medium">
-                  {user.collectionStats.rareCards}
-                </Typography>
-              </Grid>
+              </Paper>
             )}
-          </Grid>
-        </Paper>
+          </Box>
+        )}
       </Box>
       
       {/* Action Buttons */}
