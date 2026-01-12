@@ -22,21 +22,20 @@ const CartNav = () => {
           : snack("error", "please log in to view the cart");
       }}
     >
-        <Divider>
-          <NavBarLink
-            onClick={() => {
-              user
-                ? navigate(ROUTES.CART)
-                : snack("error", "please log in to view the cart");
-            }}
-          >
-            <Badge badgeContent={cartLength} color="error">
-              <ShoppingCartIcon color="action" />
-            </Badge>
-          </NavBarLink>
-        </Divider>
-      </Box>
-    </>
+      <Divider>
+        <NavBarLink
+          onClick={() => {
+            user
+              ? navigate(ROUTES.CART)
+              : snack("error", "please log in to view the cart");
+          }}
+        >
+          <Badge badgeContent={cartLength} color="error">
+            <ShoppingCartIcon color="action" />
+          </Badge>
+        </NavBarLink>
+      </Divider>
+    </Box>
   );
 };
 
