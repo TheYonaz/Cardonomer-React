@@ -28,11 +28,6 @@ const EmailManagementPage = () => {
 
   const adminActions = useAdminActions();
 
-  // Check if user is admin
-  if (!user || !user.isAdmin) {
-    return <Navigate to={ROUTES.ROOT} replace />;
-  }
-
   // Fetch data
   useEffect(() => {
     const fetchData = async () => {
@@ -51,8 +46,15 @@ const EmailManagementPage = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (user?.isAdmin) {
+      fetchData();
+    }
+  }, [user?.isAdmin]);
+
+  // Check if user is admin - after all hooks
+  if (!user || !user.isAdmin) {
+    return <Navigate to={ROUTES.ROOT} replace />;
+  }
 
   const handleViewDetails = (log) => {
     setSelectedLog(log);
