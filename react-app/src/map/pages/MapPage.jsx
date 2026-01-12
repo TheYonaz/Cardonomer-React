@@ -47,7 +47,14 @@ const MapPage = () => {
   
   const handleMapError = (error) => {
     console.error('Map error:', error);
-    setMapError(error.message || 'Failed to load map');
+    
+    // Check if it's a token error
+    const errorMsg = error.message || 'Failed to load map';
+    if (errorMsg.includes('401') || errorMsg.includes('403')) {
+      setMapError('Invalid or expired Mapbox token. Please add REACT_APP_MAPBOX_TOKEN to your Render environment variables.');
+    } else {
+      setMapError(errorMsg);
+    }
     setMapLoading(false);
   };
   
@@ -453,7 +460,12 @@ const MapPage = () => {
                 {mapError}
               </Typography>
               <Typography variant="body2" color="text.secondary" paragraph>
-                The map is using a hardcoded Mapbox token for local development.
+                The Mapbox token is expired or not configured.
+              </Typography>
+              <Typography variant="body2" color="text.secondary" paragraph sx={{ mt: 1, p: 2, bgcolor: 'grey.100', borderRadius: 1, fontFamily: 'monospace' }}>
+                <strong>To fix:</strong><br/>
+                1. Get a free token from mapbox.com<br/>
+                2. Add to Render: REACT_APP_MAPBOX_TOKEN=pk.your_token
               </Typography>
               <Fab
                 color="primary"
