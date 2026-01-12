@@ -38,7 +38,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import InfoIcon from '@mui/icons-material/Info';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import axios from 'axios';
-import SwipeableViews from 'react-swipeable-views';
+import { useSwipeable } from 'react-swipeable';
 import { useUser } from '../../../users/providers/UserProvider';
 import PokemonTCGImporter from './PokemonTCGImporter';
 
@@ -173,17 +173,27 @@ const PokemonTCGBrowser = () => {
     }
   };
   
-  const handleSwipeChange = (index) => {
-    setSelectedSetIndex(index);
-    const selectedSet = sets[index];
-    if (selectedSet) {
-      fetchCardsForSet(selectedSet.id);
-      // Reset filters when changing sets
-      setSearchTerm('');
-      setFilterRarity('all');
-      setFilterType('all');
+  // Swipe handlers for mobile
+  const handleSwipeLeft = () => {
+    if (selectedSetIndex < sets.length - 1) {
+      handleTabChange(null, selectedSetIndex + 1);
     }
   };
+  
+  const handleSwipeRight = () => {
+    if (selectedSetIndex > 0) {
+      handleTabChange(null, selectedSetIndex - 1);
+    }
+  };
+  
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleSwipeLeft,
+    onSwipedRight: handleSwipeRight,
+    trackMouse: false,
+    trackTouch: true,
+    preventScrollOnSwipe: true,
+    delta: 50
+  });
 
   // Get unique rarities and types from current cards
   const availableRarities = [...new Set(cards.map(c => c.rarity).filter(Boolean))];
@@ -473,120 +483,108 @@ const PokemonTCGBrowser = () => {
           </Paper>
 
       {/* Swipeable Cards Display */}
-      <SwipeableViews
-        index={selectedSetIndex}
-        onChangeIndex={handleSwipeChange}
-        enableMouseEvents
-        resistance
-        style={{ minHeight: '400px' }}
-      >
-        {sets.map((set, setIndex) => (
-          <Box key={set.id}>
-            {selectedSetIndex === setIndex && (
-              cardsLoading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-                  <Box textAlign="center">
-                    <CircularProgress size={60} />
-                    <Typography variant="h6" sx={{ mt: 2 }}>Loading cards...</Typography>
-                  </Box>
-                </Box>
-              ) : (
-                <>
-                  <Grid container spacing={viewMode === 'grid' ? 2 : 1}>
-                    {filteredCards.map((card) => (
-                      <Grid 
-                        item 
-                        xs={viewMode === 'grid' ? 6 : 12} 
-                        sm={viewMode === 'grid' ? 4 : 12} 
-                        md={viewMode === 'grid' ? 3 : 12} 
-                        lg={viewMode === 'grid' ? 2 : 12} 
-                        key={card.id}
-                      >
-                        <Card sx={{ 
-                          height: '100%',
-                          transition: 'all 0.2s',
-                          '&:hover': {
-                            transform: viewMode === 'grid' ? 'scale(1.05)' : 'translateX(4px)',
-                            boxShadow: 4
-                          }
-                        }}>
-                          <Box sx={{ display: viewMode === 'list' ? 'flex' : 'block' }}>
-                            <CardMedia
-                              component="img"
-                              image={card.images.small}
-                              alt={card.name}
-                              sx={{ 
-                                width: viewMode === 'list' ? 150 : '100%',
-                                height: viewMode === 'list' ? 150 : 'auto',
-                                objectFit: 'contain',
-                                p: 1,
-                                bgcolor: '#f9f9f9'
-                              }}
-                            />
-                            <Box sx={{ flex: 1 }}>
-                              <CardContent sx={{ pb: 1 }}>
-                                <Typography variant={viewMode === 'grid' ? 'subtitle2' : 'h6'} gutterBottom noWrap title={card.name}>
-                                  {card.name}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary" display="block">
-                                  #{card.number} • {card.supertype}
-                                </Typography>
-                                {card.types && (
-                                  <Box sx={{ mt: 1, display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                                    {card.types.map(type => (
-                                      <Chip
-                                        key={type}
-                                        label={type}
-                                        size="small"
-                                        sx={{
-                                          bgcolor: getTypeColor(type),
-                                          color: 'white',
-                                          fontWeight: 'bold',
-                                          fontSize: '0.7rem'
-                                        }}
-                                      />
-                                    ))}
-                                  </Box>
-                                )}
-                                {card.rarity && (
-                                  <Chip
-                                    label={card.rarity}
-                                    size="small"
-                                    color={getRarityColor(card.rarity)}
-                                    sx={{ mt: 1 }}
-                                  />
-                                )}
-                                {card.hp && (
-                                  <Typography variant="body2" sx={{ mt: 1 }}>
-                                    HP: {card.hp}
-                                  </Typography>
-                                )}
-                                {card.artist && viewMode === 'list' && (
-                                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
-                                    Artist: {card.artist}
-                                  </Typography>
-                                )}
-                              </CardContent>
-                            </Box>
-                          </Box>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                  
-                  {filteredCards.length === 0 && (
-                    <Paper sx={{ p: 4, textAlign: 'center', mt: 4 }}>
-                      <Typography variant="h6" color="text.secondary">
-                        No cards found matching your filters
-                      </Typography>
-                    </Paper>
-                  )}
-                </>
-              )
-            )}
+      <Box {...swipeHandlers} sx={{ touchAction: 'pan-y', minHeight: '400px' }}>
+        {cardsLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <Box textAlign="center">
+              <CircularProgress size={60} />
+              <Typography variant="h6" sx={{ mt: 2 }}>Loading cards...</Typography>
+            </Box>
           </Box>
-        ))}
-      </SwipeableViews>
+        ) : (
+          <>
+            <Grid container spacing={viewMode === 'grid' ? 2 : 1}>
+              {filteredCards.map((card) => (
+                <Grid 
+                  item 
+                  xs={viewMode === 'grid' ? 6 : 12} 
+                  sm={viewMode === 'grid' ? 4 : 12} 
+                  md={viewMode === 'grid' ? 3 : 12} 
+                  lg={viewMode === 'grid' ? 2 : 12} 
+                  key={card.id}
+                >
+                  <Card sx={{ 
+                    height: '100%',
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      transform: viewMode === 'grid' ? 'scale(1.05)' : 'translateX(4px)',
+                      boxShadow: 4
+                    }
+                  }}>
+                    <Box sx={{ display: viewMode === 'list' ? 'flex' : 'block' }}>
+                      <CardMedia
+                        component="img"
+                        image={card.images.small}
+                        alt={card.name}
+                        sx={{ 
+                          width: viewMode === 'list' ? 150 : '100%',
+                          height: viewMode === 'list' ? 150 : 'auto',
+                          objectFit: 'contain',
+                          p: 1,
+                          bgcolor: '#f9f9f9'
+                        }}
+                      />
+                      <Box sx={{ flex: 1 }}>
+                        <CardContent sx={{ pb: 1 }}>
+                          <Typography variant={viewMode === 'grid' ? 'subtitle2' : 'h6'} gutterBottom noWrap title={card.name}>
+                            {card.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" display="block">
+                            #{card.number} • {card.supertype}
+                          </Typography>
+                          {card.types && (
+                            <Box sx={{ mt: 1, display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                              {card.types.map(type => (
+                                <Chip
+                                  key={type}
+                                  label={type}
+                                  size="small"
+                                  sx={{
+                                    bgcolor: getTypeColor(type),
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    fontSize: '0.7rem'
+                                  }}
+                                />
+                              ))}
+                            </Box>
+                          )}
+                          {card.rarity && (
+                            <Chip
+                              label={card.rarity}
+                              size="small"
+                              color={getRarityColor(card.rarity)}
+                              sx={{ mt: 1 }}
+                            />
+                          )}
+                          {card.hp && (
+                            <Typography variant="body2" sx={{ mt: 1 }}>
+                              HP: {card.hp}
+                            </Typography>
+                          )}
+                          {card.artist && viewMode === 'list' && (
+                            <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
+                              Artist: {card.artist}
+                            </Typography>
+                          )}
+                        </CardContent>
+                      </Box>
+                    </Box>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+            
+            {filteredCards.length === 0 && (
+              <Paper sx={{ p: 4, textAlign: 'center', mt: 4 }}>
+                <Typography variant="h6" color="text.secondary">
+                  No cards found matching your filters
+                </Typography>
+              </Paper>
+            )}
+          </>
+        )}
+      </Box>
     </Container>
   );
 };
