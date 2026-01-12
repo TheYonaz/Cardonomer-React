@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl';
 // Use the pre-built CSP worker to prevent "WebWorker bundle" errors
 // eslint-disable-next-line import/no-webpack-loader-syntax
 // @ts-ignore - mapbox provides default export
-mapboxgl.workerClass = require('mapbox-gl/dist/mapbox-gl-csp-worker').default;
+mapboxgl.workerClass = require('mapbox-gl/dist/mapbox-gl-csp-worker.js').default;
 import { useMediaQuery, useTheme } from '@mui/material';
 import debounce from 'lodash.debounce';
 import '../styles/MapView.css';
