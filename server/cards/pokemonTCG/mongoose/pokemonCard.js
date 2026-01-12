@@ -1,25 +1,52 @@
 const mongoose = require("mongoose");
 const cardSchema = new mongoose.Schema({
-  name: { type: String, unique: true },
+  // API identifiers
+  apiId: { type: String, unique: true, sparse: true }, // Pokemon TCG API ID
+  name: { type: String, required: true },
+  
+  // Set information
+  set: {
+    id: String,
+    name: String,
+    series: String,
+    releaseDate: String
+  },
+  
+  // Card details
+  number: String,
+  supertype: String,
   subtypes: [String],
-  nationalPokedexNumbers: [Number],
+  types: [String],
+  hp: String,
+  rarity: String,
+  artist: String,
+  
+  // Images
   images: {
     small: String,
     large: String,
   },
-  tcgplayer: {
-    url: String,
-    updatedAt: String,
-    prices: {
-      holofoil: {
-        low: Number,
-        mid: Number,
-        high: Number,
-        market: Number,
-        directLow: Number,
-      },
-    },
-  },
+  
+  // Gameplay information
+  attacks: [{
+    name: String,
+    cost: [String],
+    convertedEnergyCost: Number,
+    damage: String,
+    text: String
+  }],
+  weaknesses: [{
+    type: String,
+    value: String
+  }],
+  resistances: [{
+    type: String,
+    value: String
+  }],
+  retreatCost: [String],
+  convertedRetreatCost: Number,
+  
+  // Market information
   cardmarket: {
     url: String,
     updatedAt: String,
@@ -41,6 +68,22 @@ const cardSchema = new mongoose.Schema({
       reverseHoloAvg30: Number,
     },
   },
+  tcgplayer: {
+    url: String,
+    updatedAt: String,
+    prices: mongoose.Schema.Types.Mixed,
+  },
+  
+  // Additional data
+  flavorText: String,
+  nationalPokedexNumbers: [Number],
+  legalities: mongoose.Schema.Types.Mixed,
+  
+  // Metadata
+  importedAt: { type: Date, default: Date.now },
+  source: { type: String, default: 'pokemon-tcg-api' }
+}, {
+  timestamps: true // adds createdAt and updatedAt automatically
 });
 
 // Create the model

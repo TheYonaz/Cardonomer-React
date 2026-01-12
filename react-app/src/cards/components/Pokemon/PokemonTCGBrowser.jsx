@@ -36,9 +36,14 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import InfoIcon from '@mui/icons-material/Info';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import axios from 'axios';
+import { useUser } from '../../../users/providers/UserProvider';
+import PokemonTCGImporter from './PokemonTCGImporter';
 
 const PokemonTCGBrowser = () => {
+  const { user } = useUser();
+  
   // State management
   const [sets, setSets] = useState([]);
   const [selectedSet, setSelectedSet] = useState(null);
@@ -51,6 +56,7 @@ const PokemonTCGBrowser = () => {
   const [filterRarity, setFilterRarity] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('number'); // 'number', 'name', 'rarity'
+  const [importerOpen, setImporterOpen] = useState(false);
   
   const API_KEY = '3485fea1-443a-4f5d-9082-4889d05b238e';
   const API_BASE = 'https://api.pokemontcg.io/v2';
@@ -111,9 +117,9 @@ const PokemonTCGBrowser = () => {
         }
       });
       
-      // Sort sets by release date (newest first)
+      // Sort sets alphabetically by name
       const sortedSets = response.data.data.sort((a, b) => 
-        new Date(b.releaseDate) - new Date(a.releaseDate)
+        a.name.localeCompare(b.name)
       );
       
       setSets(sortedSets);
@@ -206,18 +212,47 @@ const PokemonTCGBrowser = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
+      {/* Import Dialog */}
+      <PokemonTCGImporter 
+        open={importerOpen} 
+        onClose={() => setImporterOpen(false)} 
+      />
+
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h3" gutterBottom fontWeight="bold" sx={{ 
-          background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-        }}>
-          🎴 Pokemon Trading Card Game Browser
-        </Typography>
-        <Typography variant="h6" color="text.secondary">
-          Explore all Pokemon TCG sets and cards with comprehensive details
-        </Typography>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2 }}>
+        <Box>
+          <Typography variant="h3" gutterBottom fontWeight="bold" sx={{ 
+            background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            🎴 Pokemon Trading Card Game Browser
+          </Typography>
+          <Typography variant="h6" color="text.secondary">
+            Explore all Pokemon TCG sets and cards with comprehensive details
+          </Typography>
+        </Box>
+        {user?.isAdmin && (
+          <Button
+            variant="contained"
+            startIcon={<CloudDownloadIcon />}
+            onClick={() => setImporterOpen(true)}
+            sx={{
+              background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
+              color: 'white',
+              px: 3,
+              py: 1.5,
+              fontWeight: 'bold',
+              boxShadow: 3,
+              '&:hover': {
+                background: 'linear-gradient(45deg, #764ba2 30%, #667eea 90%)',
+                boxShadow: 6,
+              }
+            }}
+          >
+            Import All Cards to DB
+          </Button>
+        )}
       </Box>
 
       {/* Sets Grid */}

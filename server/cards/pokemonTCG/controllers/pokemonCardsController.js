@@ -69,7 +69,47 @@ const deleteDeck = async (req, res) => {
   }
 };
 
+// Import cards in bulk from Pokemon TCG API
+const importCards = async (req, res) => {
+  try {
+    const { cards, batchNumber, totalBatches } = req.body;
+    
+    if (!cards || !Array.isArray(cards)) {
+      return handleError(res, 400, "Invalid cards data");
+    }
+    
+    console.log(`📥 Importing batch ${batchNumber}/${totalBatches} with ${cards.length} cards`);
+    
+    // Use bulkWrite for better performance
+    const bulkOps = cards.map(card => ({
+      updateOne: {
+        filter: { apiId: card.apiId },
+        update: { $set: card },
+        upsert: true
+      }
+    }));
+    
+    const result = await PokemonCard.bulkWrite(bulkOps, { ordered: false });
+    
+    console.log(`✅ Batch ${batchNumber} imported: ${result.upsertedCount} new, ${result.modifiedCount} updated`);
+    
+    return res.send({
+      success: true,
+      batchNumber,
+      totalBatches,
+      cardsProcessed: cards.length,
+      inserted: result.upsertedCount,
+      updated: result.modifiedCount,
+      message: `Batch ${batchNumber}/${totalBatches} imported successfully`
+    });
+  } catch (error) {
+    console.error("importCards error:", error.message);
+    handleError(res, 500, `Import failed: ${error.message}`);
+  }
+};
+
 exports.savePokemonDeck = savePokemonDeck;
 exports.getCards = getCards;
 exports.getPokemonDecks = getPokemonDecks;
 exports.deleteDeck = deleteDeck;
+exports.importCards = importCards;
