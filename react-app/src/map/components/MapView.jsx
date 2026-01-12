@@ -3,10 +3,6 @@ import Map, { Marker, useMap } from 'react-map-gl';
 // Mapbox CSP worker fix to avoid Babel-transpiled worker errors
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import mapboxgl from 'mapbox-gl';
-// Use the pre-built CSP worker to prevent "WebWorker bundle" errors
-// eslint-disable-next-line import/no-webpack-loader-syntax
-// @ts-ignore - mapbox provides default export
-mapboxgl.workerClass = require('mapbox-gl/dist/mapbox-gl-csp-worker.js').default;
 import { useMediaQuery, useTheme } from '@mui/material';
 import debounce from 'lodash.debounce';
 import '../styles/MapView.css';
