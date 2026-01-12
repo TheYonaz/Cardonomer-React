@@ -148,3 +148,75 @@ export const toggleFollowUser = async (currentUserId, targetUserId) => {
     return Promise.reject("An unexpected error occurred!");
   }
 };
+
+export const verifyEmail = async (token) => {
+  try {
+    const { data } = await axios.get(`${apiUrl}/users/verify/${token}`);
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || error.message;
+      return Promise.reject(errorMessage);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+
+export const resendVerification = async () => {
+  try {
+    const { data } = await axios.post(`${apiUrl}/users/resend-verification`);
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || error.message;
+      return Promise.reject(errorMessage);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+
+export const forgotPassword = async (email) => {
+  try {
+    const { data } = await axios.post(`${apiUrl}/users/forgot-password`, {
+      email,
+    });
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || error.message;
+      return Promise.reject(errorMessage);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+
+export const resetPassword = async (token, password) => {
+  try {
+    const { data } = await axios.post(
+      `${apiUrl}/users/reset-password/${token}`,
+      { password }
+    );
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || error.message;
+      return Promise.reject(errorMessage);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+
+export const checkResetToken = async (token) => {
+  try {
+    const { data } = await axios.get(
+      `${apiUrl}/users/check-reset-token/${token}`
+    );
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || error.message;
+      return Promise.reject(errorMessage);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};

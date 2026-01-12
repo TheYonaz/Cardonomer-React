@@ -230,6 +230,29 @@ const userSchema = new mongoose.Schema({
     default: [],
   },
   prizes: { type: [String], default: [] },
+  emailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  emailVerificationToken: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  emailVerificationExpires: {
+    type: Date,
+  },
+  passwordResetToken: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  passwordResetExpires: {
+    type: Date,
+  },
+  lastPasswordResetRequest: {
+    type: Date,
+  },
 });
 const User = mongoose.model("User", userSchema);
 

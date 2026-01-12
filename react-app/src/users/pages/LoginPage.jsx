@@ -60,6 +60,7 @@ const LoginPage = () => {
             onInputChange={handleInputChange}
           />
 
+          <FormLink text="Forgot password?" to={ROUTES.FORGOT_PASSWORD} />
           <FormLink text="Did not registered yet?" to={ROUTES.SIGNUP} />
         </Form>
       </>

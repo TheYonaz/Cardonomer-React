@@ -73,7 +73,10 @@ const useHandleUsers = (currentQuery) => {
         snack("success", "Logged Successfully!");
         navigate(ROUTES.CARDS);
       } catch (error) {
-        if (typeof error === "string") requestStatus(false, error, null);
+        if (typeof error === "string") {
+          requestStatus(false, error, null);
+          snack("error", error);
+        }
       }
     },
     [navigate, requestStatus, setToken, snack]
@@ -88,17 +91,18 @@ const useHandleUsers = (currentQuery) => {
       try {
         setLoading(true);
         const normalizedUser = normalizeUser(user);
-        await signup(normalizedUser);
-        await handleLogin({
-          email: user.email,
-          password: user.password,
-        });
-        snack("success", "Logged Successfully!");
+        const response = await signup(normalizedUser);
+        requestStatus(false, null, null);
+        snack("success", "Registration successful! Please check your email to verify your account.");
+        navigate(ROUTES.LOGIN);
       } catch (error) {
-        if (typeof error === "string") requestStatus(false, error, null);
+        if (typeof error === "string") {
+          requestStatus(false, error, null);
+          snack("error", error);
+        }
       }
     },
-    [handleLogin, requestStatus, snack]
+    [requestStatus, snack, navigate]
   );
   const handleGetUser = useCallback(
     async (userId) => {

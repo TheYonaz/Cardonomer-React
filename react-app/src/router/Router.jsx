@@ -8,6 +8,9 @@ import Cart from "../users/pages/cart/Cart";
 import EditUserPage from "../users/pages/EditUserPage";
 import LoginPage from "../users/pages/LoginPage";
 import SignUpPage from "../users/pages/SignUpPage";
+import ForgotPasswordPage from "../users/pages/ForgotPasswordPage";
+import ResetPasswordPage from "../users/pages/ResetPasswordPage";
+import EmailVerificationPage from "../users/pages/EmailVerificationPage";
 import NotFound from "../layout/components/NotFound";
 import { useUser } from "../users/providers/UserProvider";
 import ROUTES from "./routesModel";
@@ -22,6 +25,9 @@ const Router = () => {
       <Route path={POKEMON_CARDS} element={<PokemonMain />} />
       <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+      <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
+      <Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerificationPage />} />
       <Route path={ROUTES.EDIT_USER} element={<EditUserPage />} />
       <Route path={ROUTES.CART} element={<Cart />} />
       <Route path={ROUTES.ADMIN} element={<UsersManagment />} />

@@ -11,11 +11,28 @@ const lodash = require("lodash");
 
 const normalizeUser = require("./helpers/normalizeUser");
 
-const { comparePassword } = require("../users/helpers/bcrypt");
+const { comparePassword, generatePassword } = require("../users/helpers/bcrypt");
 
 const { generateAuthToken } = require("../auth/providers/jwt");
 const PokemonCard = require("../cards/pokemonTCG/mongoose/pokemonCard");
 const modelUserToServer = require("./helpers/modelUserToServer");
+const {
+  createEmailVerificationToken,
+  createPasswordResetToken,
+  hashToken,
+} = require("./helpers/emailTokens");
+const {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} = require("../email/sendGridService");
+const {
+  emailVerificationTemplate,
+  passwordResetTemplate,
+} = require("../email/templates/emailTemplates");
+const config = require("config");
+
+const FRONTEND_URL =
+  config.get("FRONTEND_URL") || "http://localhost:3000";
 
 const registerUser = async (req, res) => {
   try {
@@ -23,11 +40,34 @@ const registerUser = async (req, res) => {
     const { error } = validateRegistration(user);
     if (error)
       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
+    
     const normalizedUser = await normalizeUser(user);
+    
+    // Generate email verification token
+    const { token, hashedToken, expires } = createEmailVerificationToken();
+    normalizedUser.emailVerificationToken = hashedToken;
+    normalizedUser.emailVerificationExpires = expires;
+    normalizedUser.emailVerified = false;
+    
     const userToDB = new User(normalizedUser);
     const userFromDB = await userToDB.save();
+    
+    // Send verification email
+    const verificationLink = `${FRONTEND_URL}/verify-email/${token}`;
+    const userName = `${userFromDB.name.first} ${userFromDB.name.last}`;
+    const emailTemplate = emailVerificationTemplate(verificationLink, userName);
+    
+    await sendVerificationEmail(
+      userFromDB.email,
+      userName,
+      emailTemplate
+    );
+    
     const pickedUser = lodash.pick(userFromDB, "name", "email", "_id");
-    return res.send(pickedUser);
+    return res.send({
+      ...pickedUser,
+      message: "Registration successful! Please check your email to verify your account.",
+    });
   } catch (error) {
     return handleError(res, 500, `Mongoose Error: ${error.message}`);
   }
@@ -40,10 +80,24 @@ const loginUser = async (req, res) => {
     const { error } = validateLogin(user);
     if (error)
       return handleError(res, 400, `Joi Error:${error.details[0].message}`);
-    const userInDB = await User.findOne({ email: email });
-    if (!userInDB) throw new Error("Invalid email or password”");
+
+    const userInDB = await User.findOne({ email });
+    if (!userInDB)
+      return handleError(res, 400, "Invalid email or password");
+
+    // Check if email is verified
+    if (!userInDB.emailVerified) {
+      return handleError(
+        res,
+        403,
+        "Please verify your email before logging in. Check your inbox for the verification link."
+      );
+    }
+
     const isPasswordValid = comparePassword(user.password, userInDB.password);
-    if (!isPasswordValid) throw new Error("Invalid  password”");
+    if (!isPasswordValid)
+      return handleError(res, 400, "Invalid email or password");
+
     const { _id, isBusiness, isAdmin, image, name } = userInDB;
     const token = generateAuthToken({ _id, isBusiness, isAdmin, image, name });
     return res.send(token);
@@ -209,6 +263,180 @@ const followUser = async (req, res) => {
   }
 };
 
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const hashedToken = hashToken(token);
+
+    const user = await User.findOne({
+      emailVerificationToken: hashedToken,
+      emailVerificationExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return handleError(
+        res,
+        400,
+        "Invalid or expired verification token. Please request a new verification email."
+      );
+    }
+
+    user.emailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    await user.save();
+
+    return res.send({
+      message: "Email verified successfully! You can now log in.",
+    });
+  } catch (error) {
+    console.error("verifyEmail error:", error.message);
+    return handleError(res, 500, "An error occurred during email verification");
+  }
+};
+
+const resendVerificationEmail = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const user = await User.findById(_id);
+
+    if (!user) {
+      return handleError(res, 404, "User not found");
+    }
+
+    if (user.emailVerified) {
+      return handleError(res, 400, "Email is already verified");
+    }
+
+    // Generate new verification token
+    const { token, hashedToken, expires } = createEmailVerificationToken();
+    user.emailVerificationToken = hashedToken;
+    user.emailVerificationExpires = expires;
+    await user.save();
+
+    // Send verification email
+    const verificationLink = `${FRONTEND_URL}/verify-email/${token}`;
+    const userName = `${user.name.first} ${user.name.last}`;
+    const emailTemplate = emailVerificationTemplate(verificationLink, userName);
+
+    await sendVerificationEmail(user.email, userName, emailTemplate);
+
+    return res.send({
+      message: "Verification email sent! Please check your inbox.",
+    });
+  } catch (error) {
+    console.error("resendVerificationEmail error:", error.message);
+    return handleError(res, 500, "An error occurred while resending verification email");
+  }
+};
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return handleError(res, 400, "Email is required");
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    // Always return success to prevent user enumeration
+    const successMessage =
+      "If an account with that email exists, a password reset link has been sent.";
+
+    if (!user) {
+      return res.send({ message: successMessage });
+    }
+
+    // Rate limiting - prevent sending too many reset emails
+    if (
+      user.lastPasswordResetRequest &&
+      Date.now() - user.lastPasswordResetRequest < 60 * 60 * 1000 // 1 hour
+    ) {
+      return res.send({ message: successMessage }); // Don't reveal rate limiting
+    }
+
+    // Generate password reset token
+    const { token, hashedToken, expires } = createPasswordResetToken();
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = expires;
+    user.lastPasswordResetRequest = Date.now();
+    await user.save();
+
+    // Send password reset email
+    const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
+    const userName = `${user.name.first} ${user.name.last}`;
+    const emailTemplate = passwordResetTemplate(resetLink, userName);
+
+    await sendPasswordResetEmail(user.email, userName, emailTemplate);
+
+    return res.send({ message: successMessage });
+  } catch (error) {
+    console.error("forgotPassword error:", error.message);
+    return handleError(res, 500, "An error occurred while processing your request");
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!password) {
+      return handleError(res, 400, "Password is required");
+    }
+
+    const hashedToken = hashToken(token);
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return handleError(
+        res,
+        400,
+        "Invalid or expired reset token. Please request a new password reset."
+      );
+    }
+
+    // Update password
+    user.password = await generatePassword(password);
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    return res.send({
+      message: "Password reset successful! You can now log in with your new password.",
+    });
+  } catch (error) {
+    console.error("resetPassword error:", error.message);
+    return handleError(res, 500, "An error occurred while resetting your password");
+  }
+};
+
+const checkResetToken = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const hashedToken = hashToken(token);
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return handleError(res, 400, "Invalid or expired reset token");
+    }
+
+    return res.send({ valid: true });
+  } catch (error) {
+    console.error("checkResetToken error:", error.message);
+    return handleError(res, 500, "An error occurred while checking the reset token");
+  }
+};
+
 exports.followUser = followUser;
 exports.getFriends = getFriends;
 exports.loginUser = loginUser;
@@ -216,3 +444,8 @@ exports.registerUser = registerUser;
 exports.getUser = getUser;
 exports.getAllUsers = getAllUsers;
 exports.editUser = editUser;
+exports.verifyEmail = verifyEmail;
+exports.resendVerificationEmail = resendVerificationEmail;
+exports.forgotPassword = forgotPassword;
+exports.resetPassword = resetPassword;
+exports.checkResetToken = checkResetToken;

@@ -9,5 +9,8 @@ const ROUTES = {
   CART: "/cart",
   ADMIN: "/admin",
   GRAPH: "/graph",
+  FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/reset-password/:token",
+  VERIFY_EMAIL: "/verify-email/:token",
 };
 export default ROUTES;

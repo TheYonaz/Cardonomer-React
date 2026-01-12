@@ -2,5 +2,8 @@
   "NODE_ENV": "development",
   "PORT": 5000,
   "DB_NAME": null,
-  "DB_PASSWORD": null
+  "DB_PASSWORD": null,
+  "SENDGRID_API_KEY": "",
+  "EMAIL_FROM": "noreply@cardonomer.com",
+  "FRONTEND_URL": "http://localhost:3000"
 }
