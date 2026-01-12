@@ -110,7 +110,8 @@ const MapView = ({
         ambientParticlesRef.current.stop();
       }
     };
-  }, [containerRef.current]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
   
   // Update ambient particles when time of day changes
   useEffect(() => {

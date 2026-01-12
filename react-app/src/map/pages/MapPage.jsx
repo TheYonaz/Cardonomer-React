@@ -236,7 +236,17 @@ const MapPage = () => {
   useEffect(() => {
     loadLocationAndUsers();
     
-    // Setup location watching
+    // Cleanup timer on unmount
+    return () => {
+      if (locationControlTimer) {
+        clearTimeout(locationControlTimer);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
+  
+  // Setup location watching separately
+  useEffect(() => {
     const watchId = watchUserLocation(
       (location) => {
         setUserLocation(location);
@@ -266,9 +276,9 @@ const MapPage = () => {
     };
   }, [locationTrackingEnabled]);
 
-  // Add current user to the map users
+  // Add current user to the map users (fixed infinite loop)
   useEffect(() => {
-    if (user && userLocation) {
+    if (user && userLocation && allUsers.length > 0) {
       // Check if the user is already in the allUsers array
       const userExists = allUsers.some(u => u.id === user.id);
       
@@ -280,6 +290,7 @@ const MapPage = () => {
           coordinates: [userLocation.coords.longitude, userLocation.coords.latitude],
           locationPrecision: 'Exact',
           onlineStatus: 'Online',
+          online: true,
           lastActive: new Date().toISOString(),
           bio: 'This is you!',
           collectionStats: {
@@ -293,7 +304,8 @@ const MapPage = () => {
         setAllUsers(prevUsers => [currentUserMarker, ...prevUsers]);
       }
     }
-  }, [user, userLocation, allUsers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, userLocation?.timestamp]); // Only depend on values that indicate actual changes
 
   return (
     <Box sx={{ 

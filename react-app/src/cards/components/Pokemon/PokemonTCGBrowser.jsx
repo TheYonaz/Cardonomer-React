@@ -65,6 +65,7 @@ const PokemonTCGBrowser = () => {
   // Fetch all sets on mount
   useEffect(() => {
     fetchSets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Filter and sort cards when dependencies change

@@ -183,8 +183,8 @@ const UserSidebar = ({ currentUser, selectedUser, onClose, isMobile }) => {
           }
         >
           <Avatar
-            src={user.profilePicture}
-            alt={user.username}
+            src={user.profilePicture || user.image?.url}
+            alt={user.username || `${user.name?.first} ${user.name?.last}` || 'User'}
             sx={{ 
               width: isMobile ? 80 : 120, 
               height: isMobile ? 80 : 120,
@@ -196,7 +196,7 @@ const UserSidebar = ({ currentUser, selectedUser, onClose, isMobile }) => {
         </Badge>
         
         <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-          {user.username}
+          {user.username || `${user.name?.first || ''} ${user.name?.last || ''}`.trim() || 'User'}
         </Typography>
         
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
