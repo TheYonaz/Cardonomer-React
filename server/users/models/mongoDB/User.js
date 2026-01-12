@@ -29,8 +29,19 @@ const regexType = (regex, required = true, unique = false) => {
 };
 
 const imageSchema = new mongoose.Schema({
-  url: regexType(URL_REGEX, false),
-  alt: DEFAULT_VALIDATION,
+  url: {
+    type: String,
+    required: false,
+    match: RegExp(URL_REGEX),
+    trim: true,
+  },
+  alt: {
+    type: String,
+    trim: true,
+    maxLength: 256,
+    lowercase: true,
+    required: false,
+  },
 });
 
 const addressSchema = new mongoose.Schema({
@@ -39,18 +50,38 @@ const addressSchema = new mongoose.Schema({
     trim: true,
     maxLength: 256,
     lowercase: true,
+    required: false,
   },
-  country: DEFAULT_VALIDATION,
-  city: DEFAULT_VALIDATION,
-  street: DEFAULT_VALIDATION,
+  country: {
+    type: String,
+    trim: true,
+    maxLength: 256,
+    lowercase: true,
+    required: false,
+  },
+  city: {
+    type: String,
+    trim: true,
+    maxLength: 256,
+    lowercase: true,
+    required: false,
+  },
+  street: {
+    type: String,
+    trim: true,
+    maxLength: 256,
+    lowercase: true,
+    required: false,
+  },
   houseNumber: {
     type: Number,
     minLength: 1,
-    required: true,
+    required: false,
   },
   zip: {
     type: Number,
     minLength: 4,
+    required: false,
   },
 });
 
@@ -93,15 +124,26 @@ const deckSchema = new mongoose.Schema({
 });
 const userSchema = new mongoose.Schema({
   name: nameSchema,
-  phone: regexType(/0[0-9]{1,2}\-?\s?[0-9]{3}\s?[0-9]{4}/),
+  phone: {
+    type: String,
+    required: false,
+    match: RegExp(/0[0-9]{1,2}\-?\s?[0-9]{3}\s?[0-9]{4}/),
+    trim: true,
+  },
   email: regexType(
     /^([a-zA-Z0-9._-]+)@([a-zA-Z0-9_-]+)\.([a-zA-Z]{2,5})$/,
     true,
     true
   ),
   password: regexType(PASSWORD_REGEX),
-  image: imageSchema,
-  address: addressSchema,
+  image: {
+    type: imageSchema,
+    required: false,
+  },
+  address: {
+    type: addressSchema,
+    required: false,
+  },
   isAdmin: {
     type: Boolean,
     default: false,

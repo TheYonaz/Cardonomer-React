@@ -8,7 +8,6 @@ const ROUTES = {
   PROFILE: "/profile",
   CART: "/cart",
   ADMIN: "/admin",
-  MAP: "/map",
   GRAPH: "/graph",
 };
 export default ROUTES;

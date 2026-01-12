@@ -3,25 +3,25 @@ const normalizeUser = (user) => {
     _id: user._id,
     name: {
       first: user.first,
-      middle: user.middle,
+      middle: "",
       last: user.last,
     },
-    phone: user.phone,
+    phone: "000-0000000",
     email: user.email,
     password: user.password,
     image: {
-      url: user.url,
-      alt: user.alt,
+      url: "https://cdn.pixabay.com/photo/2020/06/30/10/23/icon-5355896_960_720.png",
+      alt: "User image",
     },
     address: {
-      state: user.state,
-      country: user.country,
-      city: user.city,
-      street: user.street,
-      zip: +user.zip,
-      houseNumber: +user.houseNumber,
+      state: "",
+      country: "N/A",
+      city: "N/A",
+      street: "N/A",
+      zip: 0,
+      houseNumber: 0,
     },
-    isBusiness: user.isBusiness,
+    isBusiness: false,
   };
 };
 export default normalizeUser;

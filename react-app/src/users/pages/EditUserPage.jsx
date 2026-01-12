@@ -13,25 +13,28 @@ import { useUser } from "../providers/UserProvider";
 const EditUserPage = () => {
   const navigate = useNavigate();
   const { user } = useUser();
-  const { handelGetUser, handelEditUser } = useHandleUsers();
+  const { handleGetUser, handleEditUser } = useHandleUsers();
   const { value, ...rest } = useForm(
     initialEditUserForm,
     EditUserSchema,
-    handelEditUser
+    handleEditUser
   );
   const { setData } = rest;
 
   useEffect(() => {
     if (!user) {
       navigate(ROUTES.ROOT);
+      return;
     }
-    if (user)
-      handelGetUser(user._id).then((userFromClient) => {
-        if (user._id !== userFromClient._id) return navigate(ROUTES.ROOT);
-        let modeledUser = mapUserToModel(userFromClient);
-        setData(modeledUser);
-      });
-  }, []);
+    handleGetUser(user._id).then((userFromClient) => {
+      if (user._id !== userFromClient._id) {
+        navigate(ROUTES.ROOT);
+        return;
+      }
+      let modeledUser = mapUserToModel(userFromClient);
+      setData(modeledUser);
+    });
+  }, [user, navigate, handleGetUser, setData]);
   return (
     <Container
       sx={{

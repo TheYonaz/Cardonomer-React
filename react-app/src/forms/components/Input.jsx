@@ -30,6 +30,9 @@ const Input = ({
         onChange={onInputChange}
         fullWidth
         autoComplete="off"
+        aria-label={makeFirstLetterCapital(label)}
+        aria-describedby={error ? `${name}-error` : undefined}
+        aria-invalid={Boolean(error)}
       />
     </Grid>
   );

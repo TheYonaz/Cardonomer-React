@@ -5,12 +5,6 @@ import ROUTES from "../../../router/routesModel";
 import { Box } from "@mui/material";
 
 const Logo = () => {
-  const logoStyle = {
-    marginRight: 2,
-    fontFamily: "fantasy, sans-serif",
-    color: "green",
-  };
-
   return (
     <>
       {" "}
@@ -21,14 +15,33 @@ const Logo = () => {
         }}
       >
         <NavBarLink to={ROUTES.ROOT}>
-          <Typography
-            component="span"
-            variant="h4"
-            style={logoStyle}
-            sx={{ fontSize: { xs: "5vw", md: "2.2vw" } }}
-          >
-            Cardonomer
-          </Typography>
+          <Box display="flex" alignItems="center" gap={0.8}>
+            <Typography
+              component="span"
+              variant="h4"
+              sx={{
+                fontSize: { xs: "5vw", md: "2.2vw" },
+                fontFamily: "'Trebuchet MS', 'Segoe UI', sans-serif",
+                letterSpacing: 0.5,
+                fontWeight: 800,
+                background: "linear-gradient(90deg, #b2431f 0%, #d9891e 45%, #1b7c3a 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Cardonomer
+            </Typography>
+            <Typography
+              component="span"
+              sx={{
+                fontSize: { xs: "5vw", md: "2vw" },
+                lineHeight: 1,
+                filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.25))",
+              }}
+            >
+              ⚡
+            </Typography>
+          </Box>
         </NavBarLink>
       </Box>
     </>

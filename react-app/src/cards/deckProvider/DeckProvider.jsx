@@ -25,7 +25,7 @@ export const DeckProvider = ({ children }) => {
         if (typeof error === "string") return setError(error);
       }
     },
-    [user]
+    []
   );
   const handleDeleteDeck = useCallback(
     async (deckID) => {
@@ -44,19 +44,21 @@ export const DeckProvider = ({ children }) => {
         if (typeof error === "string") return setError(error);
       }
     },
-    [user]
+    []
   );
 
   const saveDeckData = useCallback(
     async (deck) => {
       try {
         const data = await savePokemonDeck(deck);
-        await handleLoadDeck(user._id);
+        if (user?._id) {
+          await handleLoadDeck(user._id);
+        }
       } catch (error) {
         if (typeof error === "string") return setError(error);
       }
     },
-    [user]
+    [user, handleLoadDeck]
   );
 
   useEffect(() => {

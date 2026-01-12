@@ -12,7 +12,7 @@ const PostsPage = () => {
   const [commented, setComment] = useState(false);
 
   const {
-    getfriendsPosts,
+    getFriendsPosts,
     value,
     handlePublish,
     handleDeletePost,
@@ -20,20 +20,12 @@ const PostsPage = () => {
     handleComment,
   } = useHandlePosts();
   const { postsData, error, isLoading } = value;
+  const safePosts = postsData || [];
   const { user } = useUser();
 
   useEffect(() => {
-    if (!postsData.length) getfriendsPosts();
-  }, [
-    refresh,
-    commented,
-    user,
-    getfriendsPosts,
-    handlePublish,
-    handleDeletePost,
-    handleLike,
-    handleComment,
-  ]);
+    getFriendsPosts();
+  }, [refresh, commented, getFriendsPosts]);
 
   const handlePostPublished = () => {
     setRefresh((prev) => !prev);
@@ -41,10 +33,28 @@ const PostsPage = () => {
   const handleCommentPublished = () => {
     setComment((prev) => !prev);
   };
-  if (!user) return <Typography>Please log in</Typography>;
+  if (!user)
+    return (
+      <Container sx={{ textAlign: "center", mt: 8 }}>
+        <Typography variant="h4" gutterBottom>
+          Please log in to view posts
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          Connect with friends and share your TCG adventures!
+        </Typography>
+      </Container>
+    );
   return (
-    <Container>
-      {" "}
+    <Container
+      maxWidth="sm"
+      sx={{
+        py: 3,
+        px: { xs: 1, sm: 0 },
+        display: "flex",
+        flexDirection: "column",
+        gap: 2.5,
+      }}
+    >
       <Poster
         handleSubmit={handlePublish}
         onPostPublished={handlePostPublished}
@@ -53,7 +63,10 @@ const PostsPage = () => {
         error={error}
         isLoading={isLoading}
         onCommentPublished={handleCommentPublished}
-        posts={postsData}
+        posts={safePosts}
+        onLike={handleLike}
+        onComment={handleComment}
+        onDelete={handleDeletePost}
       />
     </Container>
   );

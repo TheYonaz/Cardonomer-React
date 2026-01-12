@@ -19,10 +19,14 @@ const Deck = ({
   handleLoadDecks,
   handleDeleteDeck,
 }) => {
-  const cardCounts = deck.reduce((counts, card) => {
-    counts[card._id] = (counts[card._id] || 0) + 1;
-    return counts;
-  }, {});
+  const cardCounts = React.useMemo(
+    () =>
+      deck.reduce((counts, card) => {
+        counts[card._id] = (counts[card._id] || 0) + 1;
+        return counts;
+      }, {}),
+    [deck]
+  );
   return (
     <>
       <Box
@@ -55,7 +59,7 @@ const Deck = ({
             display="flex"
             justifyContent="center"
             flexWrap="wrap"
-            bgcolor="red"
+            bgcolor="background.paper"
           >
             {Array.from(new Set(deck)).map((pokemonCard, index) => (
               <Grid key={index} item mt={1}>
@@ -86,4 +90,4 @@ const Deck = ({
   );
 };
 
-export default Deck;
+export default React.memo(Deck);

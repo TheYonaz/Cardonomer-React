@@ -9,30 +9,32 @@ import { FriendsProvider } from "./users/friends/friendsProvider/FriendsProvider
 import { DeckProvider } from "./cards/deckProvider/DeckProvider";
 import { CartProvider } from "./users/providers/CartProvider";
 import ScrollbarStyles from "./styles/styles";
-// import "mapbox-gl/dist/mapbox-gl.css";
+import ErrorBoundary from "./layout/components/ErrorBoundary";
 
 function App() {
   return (
-    <div className="App">
-      <ScrollbarStyles />
-      <BrowserRouter>
-        <UserProvider>
-          <SnackBarProvider>
-            <FriendsProvider>
-              <CartProvider>
-                <MenuProvider>
-                  <DeckProvider>
-                    <Layout>
-                      <Router />
-                    </Layout>
-                  </DeckProvider>
-                </MenuProvider>
-              </CartProvider>
-            </FriendsProvider>
-          </SnackBarProvider>
-        </UserProvider>
-      </BrowserRouter>
-    </div>
+    <ErrorBoundary>
+      <div className="App">
+        <ScrollbarStyles />
+        <BrowserRouter>
+          <UserProvider>
+            <SnackBarProvider>
+              <FriendsProvider>
+                <CartProvider>
+                  <MenuProvider>
+                    <DeckProvider>
+                      <Layout>
+                        <Router />
+                      </Layout>
+                    </DeckProvider>
+                  </MenuProvider>
+                </CartProvider>
+              </FriendsProvider>
+            </SnackBarProvider>
+          </UserProvider>
+        </BrowserRouter>
+      </div>
+    </ErrorBoundary>
   );
 }
 

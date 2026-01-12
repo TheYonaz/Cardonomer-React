@@ -26,17 +26,24 @@ const MidNav = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      const getUsers = async () => {
-        if (user) return await handleGetAllUsers(user._id);
-      };
-      getUsers();
+    // Lazy-load users only when typing to avoid expensive fetch on initial load
+    if (!user || !searchInput) {
+      setAllUsers([]);
+      return;
     }
-    return setAllUsers([]);
-  }, [handleSignup, handleLogout, user]);
+    let active = true;
+    const getUsers = async () => {
+      await handleGetAllUsers(user._id);
+      if (!active) setAllUsers([]);
+    };
+    getUsers();
+    return () => {
+      active = false;
+    };
+  }, [user, searchInput, handleGetAllUsers, setAllUsers, handleSignup, handleLogout]);
   return (
     <>
-      <Box position="relative">
+      <Box position="relative" sx={{ width: { xs: "100%", md: "auto" } }}>
         {user && (
           <TextField
             label="Search Users"
@@ -48,8 +55,14 @@ const MidNav = () => {
               else setShowDropdown(false);
             }}
             sx={{
-              borderRadius: "5px", // Rounded corners
-              boxShadow: "0px 0px 10px rgba(0,0,0,0.1)", // Light shadow
+              minWidth: { xs: "100%", md: 260 },
+              borderRadius: "10px",
+              boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "rgba(255,255,255,0.85)",
+                borderRadius: "10px",
+                height: 44,
+              },
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": {
                   borderColor: "primary.main", // Change border color on hover

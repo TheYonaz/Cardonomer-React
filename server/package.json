@@ -4,9 +4,9 @@
   "description": "TCG community app with MERN",
   "main": "server.js",
   "scripts": {
-    "start": "export || cross-env NODE_ENV=production&& node .",
+    "start": "cross-env NODE_ENV=production node .",
     "test": "node test.js",
-    "dev": "export || cross-env NODE_ENV=development&& nodemon ."
+    "dev": "cross-env NODE_ENV=development nodemon ."
   },
   "author": "Yon Vannucci",
   "license": "ISC",

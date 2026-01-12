@@ -17,7 +17,6 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import { useUser } from "../../users/providers/UserProvider";
-import useHandlePosts from "../hooks/useHandlePosts";
 
 const Post = ({
   timepublished,
@@ -32,11 +31,11 @@ const Post = ({
   likes,
   user_id,
   enableActionBar,
+  onDelete,
 }) => {
   const [showComments, setShowComments] = useState(false);
   const { user } = useUser();
   const [anchorEl, setAnchorEl] = useState(null);
-  const { handleDeletePost } = useHandlePosts();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -45,19 +44,53 @@ const Post = ({
   const handleClose = (action) => {
     if (action === "delete") {
       setAnchorEl(null);
-      handleDeletePost(postId, user_id);
+      onDelete(postId, user_id);
     }
     setAnchorEl(null);
   };
 
   return (
-    <Card sx={{ marginBottom: "20px" }}>
+    <Card
+      sx={{
+        marginBottom: "18px",
+        borderRadius: 3,
+        border: "1px solid rgba(208, 180, 138, 0.6)",
+        boxShadow: "0 12px 26px rgba(0,0,0,0.12)",
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(252,247,235,0.96) 100%)",
+        position: "relative",
+        overflow: "hidden",
+        "&:before": {
+          content: '""',
+          position: "absolute",
+          top: -60,
+          right: -60,
+          width: 160,
+          height: 160,
+          background: "radial-gradient(circle, rgba(255,238,200,0.4) 0%, transparent 60%)",
+          zIndex: 0,
+        },
+      }}
+    >
       <CardHeader
-        avatar={<Avatar src={image} />}
+        avatar={
+          <Avatar
+            src={image}
+            alt={`${author?.first || "User"}'s avatar`}
+            sx={{
+              border: "2px solid #d0b48a",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.12)",
+            }}
+          />
+        }
         action={
-          (user._id === user_id || user.isAdmin) && (
+          user && (user._id === user_id || user.isAdmin) && (
             <Box>
-              <MoreVertIcon onClick={handleClick} />
+              <MoreVertIcon 
+                onClick={handleClick}
+                sx={{ cursor: 'pointer' }}
+                aria-label="Post options"
+              />
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -72,16 +105,23 @@ const Post = ({
           )
         }
         title={
-          <Box sx={{ textAlign: "left" }}>
-            {`${author.first} ${author.last}`}
+          <Box sx={{ textAlign: "left", fontWeight: 700, color: "#3e2f1c" }}>
+            {author ? `${author.first} ${author.last}` : "Unknown User"}
           </Box>
         }
         subheader={
-          <Box sx={{ textAlign: "left" }}>{timepublished.toLocaleString()}</Box>
+          <Box sx={{ textAlign: "left", color: "rgba(0,0,0,0.6)" }}>
+            {timepublished ? new Date(timepublished).toLocaleString() : ""}
+          </Box>
         }
       />
       <CardContent>
-        <Typography variant="h6" color="text" align="left">
+        <Typography
+          variant="h6"
+          color="text"
+          align="left"
+          sx={{ color: "#3e2f1c", position: "relative", zIndex: 1 }}
+        >
           {content}
         </Typography>
       </CardContent>
@@ -124,4 +164,4 @@ const Post = ({
   );
 };
 
-export default Post;
+export default React.memo(Post);

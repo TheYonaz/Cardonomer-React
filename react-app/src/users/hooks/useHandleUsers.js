@@ -100,28 +100,26 @@ const useHandleUsers = (currentQuery) => {
     },
     [handleLogin, requestStatus, snack]
   );
-  const handelGetUser = useCallback(
+  const handleGetUser = useCallback(
     async (userId) => {
       try {
         setLoading(false);
         const userFromClient = await GetUser(userId);
         if (userFromClient) {
-          requestStatus(false, null, user, userFromClient);
+          requestStatus(false, null, null, userFromClient);
           return userFromClient;
         }
       } catch (error) {
         if (typeof error === "string") requestStatus(false, error, null);
       }
     },
-    [user]
+    [requestStatus]
   );
-  const handelEditUser = useCallback(
-    async (user, user_id) => {
+  const handleEditUser = useCallback(
+    async (userData) => {
       try {
         setLoading(false);
-        // const normalize_User = normalizeEditUser(user);
-        const normalize_User = user;
-        normalize_User._id = user._id;
+        const normalize_User = { ...userData, _id: userData._id };
         await EditUser(normalize_User);
         requestStatus(false, null, null);
         snack("success", "The user has been successfully updated");
@@ -130,9 +128,9 @@ const useHandleUsers = (currentQuery) => {
         if (typeof error === "string") requestStatus(false, error, null);
       }
     },
-    [user]
+    [requestStatus, snack, navigate]
   );
-  const handelGetUserFriends = useCallback(
+  const handleGetUserFriends = useCallback(
     async (userId) => {
       try {
         const userFromClient = await GetUserFriends(userId);
@@ -145,14 +143,17 @@ const useHandleUsers = (currentQuery) => {
     },
     [requestStatus]
   );
-  const handleGetAllUsers = async (userId) => {
-    try {
-      const allUsers = await GetAllUsers(userId);
-      if (allUsers) setAllUsers(allUsers);
-    } catch (error) {
-      if (typeof error === "string") requestStatus(false, error, null);
-    }
-  };
+  const handleGetAllUsers = useCallback(
+    async (userId) => {
+      try {
+        const allUsers = await GetAllUsers(userId);
+        if (allUsers) setAllUsers(allUsers);
+      } catch (error) {
+        if (typeof error === "string") requestStatus(false, error, null);
+      }
+    },
+    [requestStatus]
+  );
 
   const value = useMemo(() => {
     return { isLoading, error, user, allUsers, filteredUsers };
@@ -163,9 +164,9 @@ const useHandleUsers = (currentQuery) => {
     handleLogin,
     handleLogout,
     handleSignup,
-    handelGetUser,
-    handelGetUserFriends,
-    handelEditUser,
+    handleGetUser,
+    handleGetUserFriends,
+    handleEditUser,
     handleGetAllUsers,
     setAllUsers,
   };

@@ -14,7 +14,7 @@ const registerValidation = (user) => {
       .ruleset.regex(/0[0-9]{1,2}\-?\s?[0-9]{3}\s?[0-9]{4}/)
 
       .rule({ message: 'user "phone" must be a valid phone number' })
-      .required(),
+      .allow(""),
     email: Joi.string()
       .ruleset.pattern(
         /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
@@ -40,18 +40,18 @@ const registerValidation = (user) => {
           .allow(""),
         alt: Joi.string().min(2).max(256).allow(""),
       })
-      .required(),
+      .allow(""),
     address: Joi.object()
       .keys({
         state: Joi.string().allow(""),
-        country: Joi.string().required(),
-        city: Joi.string().required(),
-        street: Joi.string().required(),
-        houseNumber: Joi.number().required(),
-        zip: Joi.number(),
+        country: Joi.string().allow(""),
+        city: Joi.string().allow(""),
+        street: Joi.string().allow(""),
+        houseNumber: Joi.number().allow(0),
+        zip: Joi.number().allow(0),
       })
-      .required(),
-    isBusiness: Joi.boolean().required(),
+      .allow(""),
+    isBusiness: Joi.boolean().allow(""),
     isAdmin: Joi.boolean().allow(""),
     likedPosts: Joi.array().items(Joi.string()).allow(""),
     decks: Joi.array().items(Joi.string()),

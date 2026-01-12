@@ -10,13 +10,26 @@ const useAxios = () => {
 
   useEffect(() => {
     axios.defaults.headers.common["x-auth-token"] = token;
-    axios.interceptors.request.use((data) => Promise.resolve(data), null);
 
-    axios.interceptors.response.use(null, (error) => {
-      const expectedError = error.response && error.response.status >= 400;
-      if (expectedError) snack("error", error.message);
-      return Promise.reject(error);
-    });
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const expectedError =
+          error.response &&
+          error.response.status >= 400 &&
+          error.response.status < 500;
+        if (expectedError) {
+          const errorMessage =
+            error.response?.data?.message || error.message || "An error occurred";
+          snack("error", errorMessage);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(responseInterceptor);
+    };
   }, [token, snack]);
 };
 

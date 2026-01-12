@@ -1,12 +1,14 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   publishPost,
-  getFriendsPosts,
+  getFriendsPosts as fetchFriendsPosts,
   publishComment,
   getPost,
   likePost,
   deletePost,
 } from "../service/PostSystemAPI";
+import { normalizePostData } from "../helpers/normalizePost";
+import { useUser } from "../../users/providers/UserProvider";
 import { useSnack } from "../../providers/SnackBarProvider";
 
 import useAxios from "../../hooks/useAxios";
@@ -16,11 +18,12 @@ const useHandlePosts = () => {
   useAxios();
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
-  const [postsData, setpostsData] = useState([]);
+  const [postsData, setPostsData] = useState([]);
   // const [onePostData, setOnePostData] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState(null);
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState("");
+  const { user } = useUser();
   // const { user } = useUser();
   // const navigate = useNavigate();
   const snack = useSnack();
@@ -29,7 +32,7 @@ const useHandlePosts = () => {
     setQuery(searchParams.get("q") || "");
   }, [searchParams]);
   useEffect(() => {
-    if (filteredPosts) {
+    if (query) {
       setFilteredPosts(
         postsData.filter(
           (post) =>
@@ -38,14 +41,15 @@ const useHandlePosts = () => {
             post.publisher_name.last.includes(query)
         )
       );
+    } else {
+      setFilteredPosts(null);
     }
-  }, [postsData, query, filteredPosts]);
+  }, [postsData, query]);
 
   const postStatus = useCallback((loading, errorMessage, posts) => {
     setLoading(loading);
     setError(errorMessage);
-    setpostsData(posts);
-    // setOnePostData(onePostData);
+    setPostsData(posts);
   }, []);
 
   const handlePublish = useCallback(
@@ -53,7 +57,8 @@ const useHandlePosts = () => {
       try {
         setLoading(true);
         const publishedPost = await publishPost(post);
-        const newPosts = [...postsData, publishedPost];
+        const normalized = normalizePostData(publishedPost);
+        const newPosts = [...postsData, normalized];
         postStatus(false, null, newPosts);
         snack("success", "Post Published Successfully!");
       } catch (error) {
@@ -79,11 +84,15 @@ const useHandlePosts = () => {
     async (postId, comment) => {
       try {
         setLoading(true);
-        const updatedPost = await publishComment(postId, comment);
+        const updatedPost = normalizePostData(
+          await publishComment(postId, comment)
+        );
 
         // Update the post in the posts data
         const newPostsData = postsData.map((post) =>
-          post._id === updatedPost._id ? updatedPost : post
+          post._id === updatedPost._id
+            ? { ...post, ...updatedPost, image: updatedPost.image || post.image }
+            : post
         );
         postStatus(false, null, newPostsData);
         snack("success", "Comment Published Successfully!");
@@ -96,29 +105,29 @@ const useHandlePosts = () => {
   const handleLike = useCallback(
     async (postId) => {
       try {
-        setLoading(true);
+        const targetPost = postsData.find((p) => p._id === postId);
+        const alreadyLiked =
+          user && targetPost?.likes?.some((like) => like.user_id === user._id);
         const updatedPost = await likePost(postId);
+        const normalized = normalizePostData(updatedPost);
         const updatedPosts = postsData.map((post) =>
-          post.post_id === updatedPost._id ? updatedPost : post
+          post._id === normalized._id
+            ? { ...post, ...normalized, image: normalized.image || post.image }
+            : post
         );
-        // postStatus(false, null, updatedPost);
         postStatus(false, null, updatedPosts);
-        snack("success", "Liked Successfully!");
+        snack("success", alreadyLiked ? "Unliked successfully!" : "Liked Successfully!");
       } catch (error) {
         if (typeof error === "string") postStatus(false, error, null);
       }
     },
-<<<<<<< HEAD
-    [snack, postStatus]
-=======
-    [snack, postStatus, postsData]
->>>>>>> 58f64f9f2aa63e0298bb99e3523e25c68b5b915d
+    [snack, postStatus, postsData, user]
   );
 
-  const getfriendsPosts = useCallback(async () => {
+  const getFriendsPosts = useCallback(async () => {
     try {
       setLoading(true);
-      const friendsPosts = await getFriendsPosts();
+      const friendsPosts = await fetchFriendsPosts();
       postStatus(false, null, friendsPosts);
     } catch (error) {
       if (typeof error === "string") postStatus(false, error, null);
@@ -152,7 +161,7 @@ const useHandlePosts = () => {
   return {
     value,
     handlePublish,
-    getfriendsPosts,
+    getFriendsPosts,
     handleComment,
     handleLike,
     fetchSinglePost,

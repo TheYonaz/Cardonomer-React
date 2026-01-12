@@ -25,11 +25,15 @@ const UsersManagment = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const allUsers = await GetAllUsers(user._id);
-      setUsers(allUsers);
+      try {
+        const allUsers = await GetAllUsers(user._id);
+        setUsers(allUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
     };
-    if (user) fetchData();
-  }, [user]);
+    if (user?._id) fetchData();
+  }, [user?._id]);
 
   const toggleRowExpansion = async (userId, dataType) => {
     const currentExpanded = expandedRows.find(
@@ -40,14 +44,18 @@ const UsersManagment = () => {
         prev.filter((row) => row.userId !== userId || row.dataType !== dataType)
       );
     } else {
-      if (dataType === "posts") {
-        const posts = await getUsersPost(userId);
-        setUserPosts((prevPosts) => ({ ...prevPosts, [userId]: posts }));
-      } else if (dataType === "decks") {
-        const decks = await getUserPokemonDecks(userId);
-        setUserDecks((prevDecks) => ({ ...prevDecks, [userId]: decks }));
+      try {
+        if (dataType === "posts") {
+          const posts = await getUsersPost(userId);
+          setUserPosts((prevPosts) => ({ ...prevPosts, [userId]: posts }));
+        } else if (dataType === "decks") {
+          const decks = await getUserPokemonDecks(userId);
+          setUserDecks((prevDecks) => ({ ...prevDecks, [userId]: decks }));
+        }
+        setExpandedRows((prev) => [...prev, { userId, dataType }]);
+      } catch (error) {
+        console.error(`Error fetching ${dataType}:`, error);
       }
-      setExpandedRows((prev) => [...prev, { userId, dataType }]);
     }
   };
 

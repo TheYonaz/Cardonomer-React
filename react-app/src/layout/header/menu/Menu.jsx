@@ -47,12 +47,14 @@ const Menu = ({ isOpen, anchorEl, onClose }) => {
                 onClick={onClose}
                 styles={{ display: { xs: "block", md: "none" } }}
               />
-              <MenuLink
-                label="Map Game"
-                navigateTo={ROUTES.MAP}
-                onClick={onClose}
-                styles={{ display: { xs: "block", md: "none" } }}
-              />
+              {user.isAdmin && (
+                <MenuLink
+                  label="Users Management"
+                  navigateTo={ROUTES.ADMIN}
+                  onClick={onClose}
+                  styles={{ display: { xs: "block", md: "none" } }}
+                />
+              )}
               <MenuLink
                 label="Log Out"
                 onClick={handleMenuLogout}

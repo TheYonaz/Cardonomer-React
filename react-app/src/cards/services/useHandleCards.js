@@ -44,7 +44,7 @@ const useHandleCards = () => {
     } catch (error) {
       if (typeof error === "string") requestStatus(false, error, null);
     }
-  }, []);
+  }, [requestStatus]);
 
   // const saveDeckData = useCallback(async (deck) => {
   //   try {

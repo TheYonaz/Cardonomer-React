@@ -16,7 +16,7 @@ export const SnackBarProvider = ({ children }) => {
       setSnackMessage(message);
       setSnackVariant(variant);
     },
-    [setOpenSnack, setSnackColor, setSnackMessage, setSnackVariant]
+    []
   );
   return (
     <>

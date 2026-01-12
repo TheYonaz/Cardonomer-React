@@ -75,16 +75,16 @@ const Form = ({
 Form.propTypes = {
   children: node.isRequired,
   onSubmit: func.isRequired,
-  color: string.isRequired,
-  to: string.isRequired,
-  spacing: number.isRequired,
+  color: string,
+  to: string,
+  spacing: number,
   onReset: func.isRequired,
   hasFormErrors: func.isRequired,
-  title: string.isRequired,
-  styles: object.isRequired,
+  title: string,
+  styles: object,
 };
 Form.defaultProps = {
-  color: "success",
+  color: "inherit",
   to: "/",
   spacing: 1,
   title: "",

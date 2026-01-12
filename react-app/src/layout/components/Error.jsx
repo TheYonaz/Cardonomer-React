@@ -8,7 +8,7 @@ const Error = ({ errorMessage }) => {
     <Container>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
-          <Typography variant="h5" color="initial">
+          <Typography variant="h5" color="error">
             Oops... something went wrong: {errorMessage}
           </Typography>
         </Grid>
@@ -17,6 +17,9 @@ const Error = ({ errorMessage }) => {
             width="100%"
             src="/assets/images/broken-robot-error.png"
             alt="broken robot"
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
           />
         </Grid>
       </Grid>
@@ -24,4 +27,4 @@ const Error = ({ errorMessage }) => {
   );
 };
 
-export default Error;
+export default React.memo(Error);

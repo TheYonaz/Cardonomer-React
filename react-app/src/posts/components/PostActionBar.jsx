@@ -33,7 +33,6 @@ const PostActionBar = ({
   const userLikedPost = likes.map((like) => like.user_id).includes(user._id);
   const handleLikeClick = async () => {
     await onLike(postId);
-    onCommentPublished();
   };
 
   const handleCommentChange = (event) => {
@@ -46,13 +45,30 @@ const PostActionBar = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
+        px: 1,
+        pb: 1,
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <IconButton onClick={handleCommentClick} color="primary">
+        <IconButton
+          onClick={handleCommentClick}
+          color="primary"
+          sx={{
+            bgcolor: "rgba(208,180,138,0.25)",
+            mr: 0.5,
+            boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+          }}
+        >
           <CommentIcon />
         </IconButton>
-        <IconButton onClick={handleLikeClick} color="secondary">
+        <IconButton
+          onClick={handleLikeClick}
+          color="secondary"
+          sx={{
+            bgcolor: "rgba(208,180,138,0.25)",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+          }}
+        >
           <Badge badgeContent={likes.length} color="primary">
             {userLikedPost ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </Badge>
@@ -74,13 +90,22 @@ const PostActionBar = ({
             onChange={handleCommentChange}
             label="Comment"
             variant="outlined"
-            sx={{ marginInline: 2, minWidth: "35vw", marginBottom: 1 }}
+            sx={{
+              marginInline: 1,
+              minWidth: { xs: "60vw", sm: "45vw" },
+              marginBottom: 1,
+              bgcolor: "rgba(255,255,255,0.92)",
+            }}
           />
           <Button
             onClick={handleCommentSubmit}
             variant="contained"
             color="primary"
-            sx={{ paddingInline: 2 }}
+            sx={{
+              paddingInline: 2,
+              borderRadius: 2,
+              boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+            }}
           >
             Comment
           </Button>

@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import React from "react";
 import Error from "../../../components/Error";
 import Spinner from "../../../components/Spinner";
@@ -9,6 +9,9 @@ const PostFeedback = ({
   error,
   posts,
   onPublish,
+  onLike,
+  onComment,
+  onDelete,
   onCommentPublished,
 }) => {
   if (isLoading) return <Spinner />;
@@ -18,12 +21,24 @@ const PostFeedback = ({
       <Posts
         posts={posts}
         onPublish={onPublish}
+        onLike={onLike}
+        onComment={onComment}
+        onDelete={onDelete}
         onCommentPublished={onCommentPublished}
       />
     );
   if (posts && !posts.length)
-    return <Typography>Oops, there are no posts add some friends!</Typography>;
+    return (
+      <Box sx={{ textAlign: "center", mt: 8, p: 3 }}>
+        <Typography variant="h5" gutterBottom>
+          No posts yet
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Add some friends to see their posts here!
+        </Typography>
+      </Box>
+    );
   return null;
 };
 
-export default PostFeedback;
+export default React.memo(PostFeedback);

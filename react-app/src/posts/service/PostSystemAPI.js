@@ -1,7 +1,7 @@
 import axios from "axios";
 import { normalizePostData } from "../helpers/normalizePost";
 const apiUrl =
-  process.env.REACT_APP_API_URL || "https://cardonomer1-back.onrender.com";
+  process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export const publishPost = async (post) => {
   try {

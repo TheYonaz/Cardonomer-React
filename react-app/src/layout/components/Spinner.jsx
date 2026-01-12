@@ -8,7 +8,7 @@ const Spinner = ({ size = 40, height = "50vh", color = "primary" }) => {
       sx={{
         display: "flex",
         justifyContent: "center",
-        minHeight: { height },
+        minHeight: height,
       }}
     >
       <CircularProgress
@@ -20,4 +20,4 @@ const Spinner = ({ size = 40, height = "50vh", color = "primary" }) => {
   );
 };
 
-export default Spinner;
+export default React.memo(Spinner);

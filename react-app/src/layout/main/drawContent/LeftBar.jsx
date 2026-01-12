@@ -1,7 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
 import CardMarketIcon from "@mui/icons-material/Assessment";
-import GamesIcon from "@mui/icons-material/Games";
 import RecentGamesIcon from "@mui/icons-material/History";
 import RecentFriendsIcon from "@mui/icons-material/People";
 import SidebarItem from "./SideBarItem";
@@ -22,7 +21,6 @@ const LeftSidebar = () => {
           label="Card Analytics"
           to={ROUTES.GRAPH}
         />
-        <SidebarItem icon={<GamesIcon />} label="Games" to={ROUTES.MAP} />
         <SidebarItem icon={<RecentGamesIcon />} label="Recent games(example)" />
         <SidebarItem
           icon={<RecentFriendsIcon />}

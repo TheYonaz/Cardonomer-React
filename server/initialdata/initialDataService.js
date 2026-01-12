@@ -30,10 +30,17 @@ const generateInitialPokemonCards = async () => {
 const generateInitialUsers = async () => {
   const { users } = data;
 
-  users.forEach(async (user) => {
+  for (const user of users) {
     try {
+      const exists = await User.findOne({ email: user.email });
+      if (exists) {
+        console.log(chalk.yellow(`user ${user.email} already exists, skipping`));
+        continue;
+      }
+
       const { error } = registerValidation(user);
       if (error) throw new Error(`Joi Error :${error.details[0].message}`);
+
       const normalizedUser = await normalizeUser(user);
       const userToDb = new User(normalizedUser);
       await userToDb.save();
@@ -41,8 +48,7 @@ const generateInitialUsers = async () => {
     } catch (error) {
       console.log(chalk.redBright(error.message));
     }
-    return;
-  });
+  }
 };
 const clearFriends = async () => {
   await User.updateMany({}, { $set: { friends: [] } });

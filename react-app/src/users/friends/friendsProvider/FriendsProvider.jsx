@@ -15,7 +15,17 @@ export const FriendsProvider = ({ children }) => {
       try {
         const userFriendsFromClient = await GetUserFriends(userId);
         if (userFriendsFromClient) {
-          return setFriends(userFriendsFromClient);
+          const unique = Array.from(
+            new Map(
+              userFriendsFromClient.map((friend) => [
+                typeof friend.user_id === "object"
+                  ? friend.user_id._id || friend.user_id.toString()
+                  : friend.user_id?.toString(),
+                friend,
+              ])
+            ).values()
+          );
+          return setFriends(unique);
         }
       } catch (error) {
         if (typeof error === "string") return setError(error);
