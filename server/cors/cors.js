@@ -9,6 +9,7 @@ const corsConfig = {
     "http://localhost:3000",
     "https://cardonomer1-back.onrender.com",
     "https://cardonomer1.onrender.com",
+    "https://shakethat-pika.onrender.com",
   ],
 };
 app.use(cors(corsConfig));
