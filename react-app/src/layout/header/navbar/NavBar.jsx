@@ -1,8 +1,3 @@
-// import MenuIcon from "@mui/icons-material/Menu";
-// import AccountCircle from "@mui/icons-material/AccountCircle";
-// import Notifications from "@mui/icons-material/Notifications";
-// import NavItem from "../../components/NavItem";
-// import Menu from "../menu/Menu";
 import React from "react";
 import { AppBar, Toolbar, Box } from "@mui/material";
 import Logo from "../Logo/Logo";

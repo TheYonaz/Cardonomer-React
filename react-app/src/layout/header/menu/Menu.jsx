@@ -23,6 +23,8 @@ import {
   Login,
   CatchingPokemon,
   Casino,
+  Map,
+  Collections,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../../router/routesModel";
@@ -318,6 +320,58 @@ const Menu = ({ isOpen, anchorEl, onClose }) => {
 
           <ListItem disablePadding>
             <ListItemButton
+              onClick={() => handleNavigate(ROUTES.MAP)}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                transition: "all 0.2s",
+                "&:hover": {
+                  bgcolor: "rgba(102, 126, 234, 0.08)",
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <Map sx={{ color: "#667eea" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Collector Map"
+                primaryTypographyProps={{
+                  fontWeight: 500,
+                  fontSize: "0.95rem",
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => handleNavigate(ROUTES.POKEMON_TCG_BROWSER)}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                transition: "all 0.2s",
+                "&:hover": {
+                  bgcolor: "rgba(102, 126, 234, 0.08)",
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <Collections sx={{ color: "#667eea" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="TCG Browser"
+                primaryTypographyProps={{
+                  fontWeight: 500,
+                  fontSize: "0.95rem",
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton
               onClick={() => handleNavigate(ROUTES.POKEMON_CARDS)}
               sx={{
                 borderRadius: 2,
@@ -333,7 +387,7 @@ const Menu = ({ isOpen, anchorEl, onClose }) => {
                 <CatchingPokemon sx={{ color: "#667eea" }} />
               </ListItemIcon>
               <ListItemText
-                primary="Pokémon TCG"
+                primary="Pokémon Decks"
                 primaryTypographyProps={{
                   fontWeight: 500,
                   fontSize: "0.95rem",

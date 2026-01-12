@@ -46,23 +46,13 @@ const useHandleCards = () => {
     }
   }, [requestStatus]);
 
-  // const saveDeckData = useCallback(async (deck) => {
-  //   try {
-  //     setCardsLoading(true);
-  //     const data = await savePokemonDeck(deck);
-  //     setCardsLoading(false);
-  //   } catch (error) {
-  //     if (typeof error === "string") requestStatus(false, error, null);
-  //   }
-  // }, []);
-
   const value = useMemo(() => {
     return { isLoading, error, cardData };
   }, [isLoading, error, cardData]);
+  
   return {
     value,
     fetchPokemonTcgData,
-    // saveDeckData,
     setSearchTerm,
     filteredCards,
   };

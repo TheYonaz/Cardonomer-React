@@ -1,6 +1,5 @@
 import { Badge, Box, Grid, Paper } from "@mui/material";
 import React from "react";
-// import { scrollbarStyles } from "../../styles/styles";
 import Card from "./card/Card";
 import DeckAction from "./DeckAction";
 import LoadDeck from "./LoadDeck";

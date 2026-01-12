@@ -19,13 +19,10 @@ const useHandlePosts = () => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [postsData, setPostsData] = useState([]);
-  // const [onePostData, setOnePostData] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState(null);
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const { user } = useUser();
-  // const { user } = useUser();
-  // const navigate = useNavigate();
   const snack = useSnack();
 
   useEffect(() => {

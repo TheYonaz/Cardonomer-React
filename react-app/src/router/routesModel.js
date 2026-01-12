@@ -1,7 +1,9 @@
 const ROUTES = {
   ROOT: "/",
+  MAP: "/map",
   ABOUT: "/about",
   POKEMON_CARDS: "/pokemontcg",
+  POKEMON_TCG_BROWSER: "/tcg-browser",
   SIGNUP: "/signup",
   LOGIN: "/login",
   EDIT_USER: "/edit_user_page",

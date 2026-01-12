@@ -12,18 +12,23 @@ import ForgotPasswordPage from "../users/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../users/pages/ResetPasswordPage";
 import EmailVerificationPage from "../users/pages/EmailVerificationPage";
 import EmailManagementPage from "../users/pages/admin/EmailManagementPage";
+import MapPage from "../map/pages/MapPage";
+import PokemonTCGBrowser from "../cards/components/Pokemon/PokemonTCGBrowser";
 import NotFound from "../layout/components/NotFound";
 import { useUser } from "../users/providers/UserProvider";
 import ROUTES from "./routesModel";
 
-const { ROOT, POKEMON_CARDS } = ROUTES;
+const { ROOT, MAP, POKEMON_CARDS, POKEMON_TCG_BROWSER } = ROUTES;
 
 const Router = () => {
   const { user } = useUser();
   return (
     <Routes>
-      <Route path={ROOT} element={user ? <PostsPage /> : <PokemonMain />} />
+      <Route path={ROOT} element={<MapPage />} />
+      <Route path={MAP} element={<MapPage />} />
+      <Route path={"/posts"} element={user ? <PostsPage /> : <PokemonMain />} />
       <Route path={POKEMON_CARDS} element={<PokemonMain />} />
+      <Route path={POKEMON_TCG_BROWSER} element={<PokemonTCGBrowser />} />
       <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
       <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />

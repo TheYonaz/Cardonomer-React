@@ -10,21 +10,18 @@ import { useNavigate } from "react-router-dom";
 
 const CartNav = () => {
   const { cartLength } = useCart();
-  // const { cartLength } = value;
   const { user } = useUser();
   const snack = useSnack();
   const navigate = useNavigate();
+  
   return (
-    <>
-      {" "}
-      <Box
-        onClick={() => {
-          user
-            ? navigate(ROUTES.CART)
-            : snack("error", "please log in to view the cart");
-        }}
-        //    sx={{ display: { xs: "none", md: "inline-flex" } }}
-      >
+    <Box
+      onClick={() => {
+        user
+          ? navigate(ROUTES.CART)
+          : snack("error", "please log in to view the cart");
+      }}
+    >
         <Divider>
           <NavBarLink
             onClick={() => {

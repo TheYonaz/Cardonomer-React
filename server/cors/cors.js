@@ -1,6 +1,7 @@
 const cors = require("cors");
 const express = require("express");
 const app = express();
+
 const corsConfig = {
   origin: [
     "http://localhost:8181",
@@ -12,6 +13,7 @@ const corsConfig = {
     "https://shakethat-pika.onrender.com",
   ],
 };
+
 app.use(cors(corsConfig));
-// const setCors = () => cors(corsConfig);
+
 module.exports = app;

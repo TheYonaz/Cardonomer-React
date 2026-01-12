@@ -9,7 +9,6 @@ export const getPokemonCards = async () => {
     return Promise.resolve(data);
   } catch (error) {
     if (axios.isAxiosError(error)) return Promise.reject(error.message);
-    // return Promise.reject(error.message);
     return Promise.reject("An unexpected error occurred!");
   }
 };
@@ -22,7 +21,6 @@ export const savePokemonDeck = async (deck) => {
     return Promise.resolve(data);
   } catch (error) {
     if (axios.isAxiosError(error)) return Promise.reject(error.message);
-    // return Promise.reject(error.message);
     return Promise.reject("An unexpected error occurred!");
   }
 };
@@ -36,7 +34,6 @@ export const getUserPokemonDecks = async (userId) => {
     return Promise.resolve(normalizedDeck);
   } catch (error) {
     if (axios.isAxiosError(error)) return Promise.reject(error.message);
-    // return Promise.reject(error.message);
     return Promise.reject("An unexpected error occurred!");
   }
 };
@@ -48,7 +45,6 @@ export const deleteDeck = async (deckID) => {
     return Promise.resolve("deleted successfully");
   } catch (error) {
     if (axios.isAxiosError(error)) return Promise.reject(error.message);
-    // return Promise.reject(error.message);
     return Promise.reject("An unexpected error occurred!");
   }
 };
