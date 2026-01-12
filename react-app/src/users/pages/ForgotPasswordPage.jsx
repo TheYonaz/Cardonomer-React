@@ -306,29 +306,6 @@ const ForgotPasswordPage = () => {
             />
           </Paper>
         </Fade>
-
-        {/* Decorative Circles */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: "15%",
-            right: "8%",
-            width: 90,
-            height: 90,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            animation: "float 6s ease-in-out infinite",
-            "@keyframes float": {
-              "0%, 100%": {
-                transform: "translateY(0px)",
-              },
-              "50%": {
-                transform: "translateY(-20px)",
-              },
-            },
-          }}
-        />
       </Box>
     </Box>
   );

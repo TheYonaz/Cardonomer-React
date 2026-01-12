@@ -469,29 +469,6 @@ const ResetPasswordPage = () => {
             />
           </Paper>
         </Fade>
-
-        {/* Decorative Circle */}
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "10%",
-            right: "5%",
-            width: 100,
-            height: 100,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            animation: "float 7s ease-in-out infinite",
-            "@keyframes float": {
-              "0%, 100%": {
-                transform: "translateY(0px)",
-              },
-              "50%": {
-                transform: "translateY(-20px)",
-              },
-            },
-          }}
-        />
       </Box>
     </Box>
   );

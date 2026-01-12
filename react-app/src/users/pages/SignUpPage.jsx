@@ -162,43 +162,6 @@ const SignUpPage = () => {
             />
           </Paper>
         </Fade>
-
-        {/* Decorative Circles */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: "5%",
-            right: "5%",
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            animation: "float 7s ease-in-out infinite",
-            "@keyframes float": {
-              "0%, 100%": {
-                transform: "translateY(0px)",
-              },
-              "50%": {
-                transform: "translateY(-25px)",
-              },
-            },
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "10%",
-            left: "8%",
-            width: 80,
-            height: 80,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.08)",
-            backdropFilter: "blur(10px)",
-            animation: "float 9s ease-in-out infinite",
-            animationDelay: "1.5s",
-          }}
-        />
       </Box>
     </Box>
   );

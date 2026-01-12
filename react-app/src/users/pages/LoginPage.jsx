@@ -343,43 +343,6 @@ const LoginPage = () => {
             />
           </Paper>
         </Fade>
-
-        {/* Decorative Circles */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: "10%",
-            right: "10%",
-            width: 100,
-            height: 100,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            animation: "float 6s ease-in-out infinite",
-            "@keyframes float": {
-              "0%, 100%": {
-                transform: "translateY(0px)",
-              },
-              "50%": {
-                transform: "translateY(-20px)",
-              },
-            },
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "15%",
-            left: "5%",
-            width: 150,
-            height: 150,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.08)",
-            backdropFilter: "blur(10px)",
-            animation: "float 8s ease-in-out infinite",
-            animationDelay: "1s",
-          }}
-        />
       </Container>
     </Box>
   );

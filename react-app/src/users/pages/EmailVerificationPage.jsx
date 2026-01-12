@@ -311,29 +311,6 @@ const EmailVerificationPage = () => {
             />
           </Paper>
         </Fade>
-
-        {/* Decorative Circle */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: "10%",
-            left: "5%",
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            animation: "float 6.5s ease-in-out infinite",
-            "@keyframes float": {
-              "0%, 100%": {
-                transform: "translateY(0px)",
-              },
-              "50%": {
-                transform: "translateY(-22px)",
-              },
-            },
-          }}
-        />
       </Box>
     </Box>
   );
