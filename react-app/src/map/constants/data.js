@@ -1,5 +1,5 @@
-// Mapbox access token - Hardcoded for local development
-export const MAPBOX_TOKEN = "pk.eyJ1IjoieW9udjEiLCJhIjoiY2xtN2pudzN0MDExazNjcjcyMnhlbzdocyJ9.NzyvPvbTL_hD1N84MKnITA";
+// Mapbox access token - Get from environment variables
+export const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN || "pk.eyJ1IjoieW9udjEiLCJhIjoiY2xtN2pudzN0MDExazNjcjcyMnhlbzdocyJ9.NzyvPvbTL_hD1N84MKnITA";
 
 // Location precision levels
 export const LOCATION_PRECISION = [

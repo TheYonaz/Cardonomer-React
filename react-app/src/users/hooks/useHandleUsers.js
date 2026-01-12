@@ -71,7 +71,7 @@ const useHandleUsers = (currentQuery) => {
         const userFromLocalStorage = getUserFromLocalStorage();
         requestStatus(false, null, null, userFromLocalStorage);
         snack("success", "Logged Successfully!");
-        navigate(ROUTES.CARDS);
+        navigate(ROUTES.ROOT);
       } catch (error) {
         if (typeof error === "string") {
           requestStatus(false, error, null);

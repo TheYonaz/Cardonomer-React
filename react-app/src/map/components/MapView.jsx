@@ -292,8 +292,8 @@ const MapView = ({
       });
   }, [users, hoveredUser, touchedUser, viewport.zoom, currentUser, getMarkerSize, getStatusColor, onUserClick]);
   
-  // Import the hardcoded token
-  const MAPBOX_TOKEN = "pk.eyJ1IjoieW9udjEiLCJhIjoiY2xtN2pudzN0MDExazNjcjcyMnhlbzdocyJ9.NzyvPvbTL_hD1N84MKnITA";
+  // Get Mapbox token from environment variables or fallback
+  const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN || "pk.eyJ1IjoieW9udjEiLCJhIjoiY2xtN2pudzN0MDExazNjcjcyMnhlbzdocyJ9.NzyvPvbTL_hD1N84MKnITA";
   
   return (
     <div 
