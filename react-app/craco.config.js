@@ -1,37 +1,45 @@
 module.exports = {
   webpack: {
     configure: (webpackConfig) => {
-      // Fix for Mapbox GL JS - exclude mapbox-gl from transpilation
-      webpackConfig.module.rules = [
-        ...webpackConfig.module.rules.map(rule => {
-          if (rule.oneOf) {
-            return {
-              ...rule,
-              oneOf: rule.oneOf.map(oneOfRule => {
-                if (oneOfRule.test && oneOfRule.test.toString().includes('jsx')) {
-                  return {
-                    ...oneOfRule,
-                    exclude: /node_modules\/(?!(mapbox-gl|@mapbox)\/).*/,
-                  };
-                }
-                return oneOfRule;
-              }),
-            };
+      // Critical fix: Exclude mapbox-gl from ALL babel transpilation
+      const babelLoaderRule = webpackConfig.module.rules.find(rule => rule.oneOf);
+      
+      if (babelLoaderRule && babelLoaderRule.oneOf) {
+        babelLoaderRule.oneOf.forEach(rule => {
+          if (rule.loader && rule.loader.includes('babel-loader')) {
+            // Exclude mapbox-gl and its dependencies from babel transpilation
+            rule.exclude = [
+              /node_modules\/mapbox-gl/,
+              /node_modules\/@mapbox/,
+              rule.exclude
+            ].filter(Boolean);
           }
-          return rule;
-        }),
-      ];
+        });
+      }
 
-      // Add specific rule for mapbox-gl workers
+      // Ensure mapbox-gl workers aren't processed
       webpackConfig.module.rules.push({
-        test: /\.m?js/,
-        resolve: {
-          fullySpecified: false
-        }
+        test: /\.js$/,
+        include: /node_modules\/mapbox-gl/,
+        use: ['source-map-loader'],
+        enforce: 'pre'
       });
 
-      // Ignore source map warnings from mapbox-gl
-      webpackConfig.ignoreWarnings = [/Failed to parse source map/];
+      // Add resolve configuration for mapbox-gl
+      webpackConfig.resolve = {
+        ...webpackConfig.resolve,
+        alias: {
+          ...webpackConfig.resolve.alias,
+          // Ensure we use the dist version which has pre-built workers
+          'mapbox-gl': 'mapbox-gl/dist/mapbox-gl.js'
+        }
+      };
+
+      // Ignore source map warnings and worker warnings
+      webpackConfig.ignoreWarnings = [
+        /Failed to parse source map/,
+        /Critical dependency: the request of a dependency is an expression/
+      ];
 
       return webpackConfig;
     },
