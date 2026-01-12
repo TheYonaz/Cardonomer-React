@@ -14,17 +14,39 @@ const normalizeUserToFriends = require("../users/helpers/normalizeUserToFriends"
 const pokemonData = require("./initialPkemonTCGdata.json");
 const PokemonCard = require("../cards/pokemonTCG/mongoose/pokemonCard");
 const generateInitialPokemonCards = async () => {
-  const { pokemonCards } = pokemonData;
-  pokemonCards.forEach(async (card) => {
+  try {
+    // Drop the old unique index on 'name' if it exists
     try {
-      const newCard = delete card._id;
-      const pokeCardsToDB = new PokemonCard(card);
-      await pokeCardsToDB.save();
-      console.log("card uploaded succesfully");
+      await PokemonCard.collection.dropIndex('name_1');
+      console.log(chalk.green('✅ Dropped old name_1 unique index'));
     } catch (error) {
-      console.log(error.message);
+      // Index doesn't exist or already dropped, that's fine
+      if (!error.message.includes('index not found')) {
+        console.log(chalk.yellow('ℹ️  name_1 index not found (already removed or never existed)'));
+      }
     }
-  });
+    
+    const { pokemonCards } = pokemonData;
+    for (const card of pokemonCards) {
+      try {
+        delete card._id;
+        // Use updateOne with upsert to avoid duplicates
+        await PokemonCard.updateOne(
+          { name: card.name, 'set.name': card.set?.name },
+          { $set: card },
+          { upsert: true }
+        );
+      } catch (error) {
+        // Silently skip duplicates
+        if (!error.message.includes('E11000')) {
+          console.log(chalk.red(error.message));
+        }
+      }
+    }
+    console.log(chalk.green('✅ Initial Pokemon cards processed'));
+  } catch (error) {
+    console.log(chalk.red('❌ Error in generateInitialPokemonCards:'), error.message);
+  }
 };
 
 const generateInitialUsers = async () => {
