@@ -48,12 +48,20 @@ const Menu = ({ isOpen, anchorEl, onClose }) => {
                 styles={{ display: { xs: "block", md: "none" } }}
               />
               {user.isAdmin && (
-                <MenuLink
-                  label="Users Management"
-                  navigateTo={ROUTES.ADMIN}
-                  onClick={onClose}
-                  styles={{ display: { xs: "block", md: "none" } }}
-                />
+                <>
+                  <MenuLink
+                    label="Users Management"
+                    navigateTo={ROUTES.ADMIN}
+                    onClick={onClose}
+                    styles={{ display: { xs: "block", md: "none" } }}
+                  />
+                  <MenuLink
+                    label="Email Management"
+                    navigateTo={ROUTES.ADMIN_EMAILS}
+                    onClick={onClose}
+                    styles={{ display: { xs: "block", md: "none" } }}
+                  />
+                </>
               )}
               <MenuLink
                 label="Log Out"

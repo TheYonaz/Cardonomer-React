@@ -253,6 +253,20 @@ const userSchema = new mongoose.Schema({
   lastPasswordResetRequest: {
     type: Date,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+  suspendedAt: {
+    type: Date,
+  },
+  suspendedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  suspendedReason: {
+    type: String,
+  },
 });
 const User = mongoose.model("User", userSchema);
 

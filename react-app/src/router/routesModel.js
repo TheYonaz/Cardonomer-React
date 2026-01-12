@@ -8,6 +8,7 @@ const ROUTES = {
   PROFILE: "/profile",
   CART: "/cart",
   ADMIN: "/admin",
+  ADMIN_EMAILS: "/admin/emails",
   GRAPH: "/graph",
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password/:token",

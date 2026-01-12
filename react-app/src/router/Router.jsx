@@ -11,6 +11,7 @@ import SignUpPage from "../users/pages/SignUpPage";
 import ForgotPasswordPage from "../users/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../users/pages/ResetPasswordPage";
 import EmailVerificationPage from "../users/pages/EmailVerificationPage";
+import EmailManagementPage from "../users/pages/admin/EmailManagementPage";
 import NotFound from "../layout/components/NotFound";
 import { useUser } from "../users/providers/UserProvider";
 import ROUTES from "./routesModel";
@@ -31,6 +32,7 @@ const Router = () => {
       <Route path={ROUTES.EDIT_USER} element={<EditUserPage />} />
       <Route path={ROUTES.CART} element={<Cart />} />
       <Route path={ROUTES.ADMIN} element={<UsersManagment />} />
+      <Route path={ROUTES.ADMIN_EMAILS} element={<EmailManagementPage />} />
       <Route path={`${ROUTES.PROFILE}/:user_id`} element={<UserProfile />} />
       <Route path={ROUTES.GRAPH} element={<MainGraph />} />
       <Route path="*" element={<NotFound />} />

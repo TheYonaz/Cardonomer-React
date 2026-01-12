@@ -60,7 +60,8 @@ const registerUser = async (req, res) => {
     await sendVerificationEmail(
       userFromDB.email,
       userName,
-      emailTemplate
+      emailTemplate,
+      userFromDB._id
     );
     
     const pickedUser = lodash.pick(userFromDB, "name", "email", "_id");
@@ -91,6 +92,15 @@ const loginUser = async (req, res) => {
         res,
         403,
         "Please verify your email before logging in. Check your inbox for the verification link."
+      );
+    }
+
+    // Check if account is suspended
+    if (!userInDB.isActive) {
+      return handleError(
+        res,
+        403,
+        "Your account has been suspended. Please contact support for assistance."
       );
     }
 
@@ -319,7 +329,7 @@ const resendVerificationEmail = async (req, res) => {
     const userName = `${user.name.first} ${user.name.last}`;
     const emailTemplate = emailVerificationTemplate(verificationLink, userName);
 
-    await sendVerificationEmail(user.email, userName, emailTemplate);
+    await sendVerificationEmail(user.email, userName, emailTemplate, user._id);
 
     return res.send({
       message: "Verification email sent! Please check your inbox.",
@@ -368,7 +378,7 @@ const forgotPassword = async (req, res) => {
     const userName = `${user.name.first} ${user.name.last}`;
     const emailTemplate = passwordResetTemplate(resetLink, userName);
 
-    await sendPasswordResetEmail(user.email, userName, emailTemplate);
+    await sendPasswordResetEmail(user.email, userName, emailTemplate, user._id);
 
     return res.send({ message: successMessage });
   } catch (error) {

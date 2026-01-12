@@ -19,9 +19,12 @@ const Logged = ({ userImage }) => {
   return (
     <>
       {user.isAdmin && (
-        <Box>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <Button onClick={() => navigate(ROUTES.ADMIN)} sx={{ color: "red" }}>
             Users Management
+          </Button>
+          <Button onClick={() => navigate(ROUTES.ADMIN_EMAILS)} sx={{ color: "red" }}>
+            Email Management
           </Button>
         </Box>
       )}
