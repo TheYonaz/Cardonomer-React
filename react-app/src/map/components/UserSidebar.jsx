@@ -356,7 +356,7 @@ const UserSidebar = ({ currentUser, selectedUser, onClose, isMobile }) => {
                     }}
                   >
                     <img
-                      src={card.imageUrl || 'https://via.placeholder.com/200x280?text=Pokemon+Card'}
+                      src={card.imageUrl || 'https://placehold.co/200x280?text=Pokemon%20Card'}
                       alt={card.name}
                       loading="lazy"
                       style={{ 

@@ -336,12 +336,12 @@ export const getRandomCardImage = async (apiKey = DEFAULT_API_KEY) => {
   try {
     const response = await searchCards({ pageSize: 1, page: Math.floor(Math.random() * 100) + 1 }, apiKey);
     if (response.data && response.data.length > 0) {
-      return response.data[0].images?.small || response.data[0].images?.large || 'https://via.placeholder.com/200x280?text=Pokemon+Card';
+      return response.data[0].images?.small || response.data[0].images?.large || 'https://placehold.co/200x280?text=Pokemon%20Card';
     }
   } catch (error) {
     console.error('Failed to get random card image:', error);
   }
-  return 'https://via.placeholder.com/200x280?text=Pokemon+Card';
+  return 'https://placehold.co/200x280?text=Pokemon%20Card';
 };
 
 /**
@@ -354,12 +354,12 @@ export const getFallbackCardImages = async (count = 10, apiKey = DEFAULT_API_KEY
   try {
     const response = await searchCards({ pageSize: count }, apiKey);
     if (response.data && response.data.length > 0) {
-      return response.data.map(card => card.images?.small || card.images?.large || 'https://via.placeholder.com/200x280?text=Pokemon+Card');
+      return response.data.map(card => card.images?.small || card.images?.large || 'https://placehold.co/200x280?text=Pokemon%20Card');
     }
   } catch (error) {
     console.error('Failed to get fallback card images:', error);
   }
-  return Array(count).fill('https://via.placeholder.com/200x280?text=Pokemon+Card');
+  return Array(count).fill('https://placehold.co/200x280?text=Pokemon%20Card');
 };
 
 /**
