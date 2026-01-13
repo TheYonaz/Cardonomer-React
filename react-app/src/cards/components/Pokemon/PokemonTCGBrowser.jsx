@@ -43,7 +43,25 @@ import { useUser } from '../../../users/providers/UserProvider';
 import PokemonTCGImporter from './PokemonTCGImporter';
 
 // Create a separate axios instance for Pokemon TCG API (no auth token)
-const pokemonTcgAxios = axios.create();
+const pokemonTcgAxios = axios.create({
+  baseURL: 'https://api.pokemontcg.io/v2',
+  headers: {
+    'X-Api-Key': '3485fea1-443a-4f5d-9082-4889d05b238e'
+  }
+});
+
+// Remove any default headers that might interfere
+delete pokemonTcgAxios.defaults.headers.common['x-auth-token'];
+
+// Add request interceptor to ensure clean headers
+pokemonTcgAxios.interceptors.request.use(
+  (config) => {
+    // Remove any auth tokens that might have been added globally
+    delete config.headers['x-auth-token'];
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const PokemonTCGBrowser = () => {
   const { user } = useUser();
@@ -61,9 +79,6 @@ const PokemonTCGBrowser = () => {
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('number'); // 'number', 'name', 'rarity'
   const [importerOpen, setImporterOpen] = useState(false);
-  
-  const API_KEY = '3485fea1-443a-4f5d-9082-4889d05b238e';
-  const API_BASE = 'https://api.pokemontcg.io/v2';
 
   // Fetch all sets on mount
   useEffect(() => {
@@ -116,16 +131,14 @@ const PokemonTCGBrowser = () => {
   const fetchSets = async () => {
     try {
       setLoading(true);
-      const response = await pokemonTcgAxios.get(`${API_BASE}/sets`, {
-        headers: {
-          'X-Api-Key': API_KEY
-        }
-      });
+      const response = await pokemonTcgAxios.get('/sets');
       
-      // Sort sets alphabetically by name
-      const sortedSets = response.data.data.sort((a, b) => 
-        a.name.localeCompare(b.name)
-      );
+      // Sort sets by release date (newest first)
+      const sortedSets = response.data.data.sort((a, b) => {
+        const dateA = new Date(a.releaseDate);
+        const dateB = new Date(b.releaseDate);
+        return dateB - dateA; // Newest first
+      });
       
       setSets(sortedSets);
       setLoading(false);
@@ -146,13 +159,10 @@ const PokemonTCGBrowser = () => {
       setCards([]);
       setFilteredCards([]);
       
-      const response = await pokemonTcgAxios.get(`${API_BASE}/cards`, {
+      const response = await pokemonTcgAxios.get('/cards', {
         params: {
           q: `set.id:${setId}`,
           pageSize: 250
-        },
-        headers: {
-          'X-Api-Key': API_KEY
         }
       });
       
@@ -291,24 +301,27 @@ const PokemonTCGBrowser = () => {
       </Box>
 
       {/* Horizontal Scrollable Set Tabs */}
-      <Paper 
-        elevation={3} 
+      <Box 
         sx={{ 
           mb: 3, 
-          borderRadius: 2,
-          overflow: 'hidden',
-          background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)'
+          width: '100vw',
+          position: 'relative',
+          left: '50%',
+          right: '50%',
+          marginLeft: '-50vw',
+          marginRight: '-50vw',
+          background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)',
+          borderTop: 1,
+          borderBottom: 1,
+          borderColor: 'divider'
         }}
       >
         <Tabs
           value={selectedSetIndex}
           onChange={handleTabChange}
           variant="scrollable"
-          scrollButtons="auto"
-          allowScrollButtonsMobile
+          scrollButtons={false}
           sx={{
-            borderBottom: 1,
-            borderColor: 'divider',
             '& .MuiTab-root': {
               minWidth: 200,
               maxWidth: 280,
@@ -330,11 +343,6 @@ const PokemonTCGBrowser = () => {
               height: 4,
               borderRadius: '4px 4px 0 0',
               background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)'
-            },
-            '& .MuiTabs-scrollButtons': {
-              '&.Mui-disabled': {
-                opacity: 0.3
-              }
             }
           }}
         >
@@ -387,7 +395,7 @@ const PokemonTCGBrowser = () => {
             />
           ))}
         </Tabs>
-      </Paper>
+      </Box>
 
       {/* Filters and Controls */}
       <Paper elevation={2} sx={{ p: 2, mb: 3, borderRadius: 2 }}>

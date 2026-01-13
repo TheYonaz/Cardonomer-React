@@ -21,10 +21,12 @@ export const fetchAllSets = async () => {
       }
     });
     
-    // Sort sets alphabetically by name
-    const sortedSets = response.data.data.sort((a, b) => 
-      a.name.localeCompare(b.name)
-    );
+    // Sort sets by release date (newest first)
+    const sortedSets = response.data.data.sort((a, b) => {
+      const dateA = new Date(a.releaseDate);
+      const dateB = new Date(b.releaseDate);
+      return dateB - dateA; // Newest first
+    });
     
     return sortedSets;
   } catch (error) {
