@@ -42,6 +42,9 @@ import { useSwipeable } from 'react-swipeable';
 import { useUser } from '../../../users/providers/UserProvider';
 import PokemonTCGImporter from './PokemonTCGImporter';
 
+// Create a separate axios instance for Pokemon TCG API (no auth token)
+const pokemonTcgAxios = axios.create();
+
 const PokemonTCGBrowser = () => {
   const { user } = useUser();
   
@@ -113,7 +116,7 @@ const PokemonTCGBrowser = () => {
   const fetchSets = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE}/sets`, {
+      const response = await pokemonTcgAxios.get(`${API_BASE}/sets`, {
         headers: {
           'X-Api-Key': API_KEY
         }
@@ -143,7 +146,7 @@ const PokemonTCGBrowser = () => {
       setCards([]);
       setFilteredCards([]);
       
-      const response = await axios.get(`${API_BASE}/cards`, {
+      const response = await pokemonTcgAxios.get(`${API_BASE}/cards`, {
         params: {
           q: `set.id:${setId}`,
           pageSize: 250
