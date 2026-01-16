@@ -5,7 +5,7 @@
 
 import axios from 'axios';
 
-const API_KEY = '3485fea1-443a-4f5d-9082-4889d05b238e';
+const API_KEY = process.env.REACT_APP_POKEMONTCG_KEY || '3485fea1-443a-4f5d-9082-4889d05b238e';
 const API_BASE = 'https://api.pokemontcg.io/v2';
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 

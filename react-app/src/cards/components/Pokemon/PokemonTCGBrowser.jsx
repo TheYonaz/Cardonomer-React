@@ -46,7 +46,7 @@ import PokemonTCGImporter from './PokemonTCGImporter';
 const pokemonTcgAxios = axios.create({
   baseURL: 'https://api.pokemontcg.io/v2',
   headers: {
-    'X-Api-Key': '3485fea1-443a-4f5d-9082-4889d05b238e'
+    'X-Api-Key': process.env.REACT_APP_POKEMONTCG_KEY || '3485fea1-443a-4f5d-9082-4889d05b238e'
   }
 });
 
@@ -158,16 +158,30 @@ const PokemonTCGBrowser = () => {
       setCardsLoading(true);
       setCards([]);
       setFilteredCards([]);
-      
-      const response = await pokemonTcgAxios.get('/cards', {
-        params: {
-          q: `set.id:${setId}`,
-          pageSize: 250
-        }
-      });
-      
-      setCards(response.data.data);
-      setFilteredCards(response.data.data);
+
+      const pageSize = 250;
+      let page = 1;
+      let hasMore = true;
+      let allCards = [];
+
+      while (hasMore) {
+        const response = await pokemonTcgAxios.get('/cards', {
+          params: {
+            q: `set.id:${setId}`,
+            page,
+            pageSize
+          }
+        });
+
+        const pageCards = response.data.data || [];
+        allCards = allCards.concat(pageCards);
+
+        hasMore = pageCards.length === pageSize;
+        page += 1;
+      }
+
+      setCards(allCards);
+      setFilteredCards(allCards);
       setCardsLoading(false);
     } catch (error) {
       console.error('Error fetching cards:', error);
@@ -243,6 +257,77 @@ const PokemonTCGBrowser = () => {
     };
     return colors[type] || '#68A090';
   };
+
+  const renderCard = (card) => (
+    <Card sx={{ 
+      height: '100%',
+      transition: 'all 0.2s',
+      '&:hover': {
+        transform: viewMode === 'grid' ? 'scale(1.05)' : 'translateX(4px)',
+        boxShadow: 4
+      }
+    }}>
+      <Box sx={{ display: viewMode === 'list' ? 'flex' : 'block' }}>
+        <CardMedia
+          component="img"
+          image={card.images.small}
+          alt={card.name}
+          sx={{ 
+            width: viewMode === 'list' ? 150 : '100%',
+            height: viewMode === 'list' ? 150 : 'auto',
+            objectFit: 'contain',
+            p: 1,
+            bgcolor: '#f9f9f9'
+          }}
+        />
+        <Box sx={{ flex: 1 }}>
+          <CardContent sx={{ pb: 1 }}>
+            <Typography variant={viewMode === 'grid' ? 'subtitle2' : 'h6'} gutterBottom noWrap title={card.name}>
+              {card.name}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" display="block">
+              #{card.number} • {card.supertype}
+            </Typography>
+            {card.types && (
+              <Box sx={{ mt: 1, display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                {card.types.map(type => (
+                  <Chip
+                    key={type}
+                    label={type}
+                    size="small"
+                    sx={{
+                      bgcolor: getTypeColor(type),
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '0.7rem'
+                    }}
+                  />
+                ))}
+              </Box>
+            )}
+            {card.rarity && (
+              <Chip
+                label={card.rarity}
+                size="small"
+                color={getRarityColor(card.rarity)}
+                sx={{ mt: 1 }}
+              />
+            )}
+            {card.hp && (
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                HP: {card.hp}
+              </Typography>
+            )}
+            {card.artist && viewMode === 'list' && (
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
+                Artist: {card.artist}
+              </Typography>
+            )}
+          </CardContent>
+        </Box>
+      </Box>
+    </Card>
+  );
 
   if (loading) {
     return (
@@ -505,87 +590,46 @@ const PokemonTCGBrowser = () => {
           </Box>
         ) : (
           <>
-            <Grid container spacing={viewMode === 'grid' ? 2 : 1}>
-              {filteredCards.map((card) => (
-                <Grid 
-                  item 
-                  xs={viewMode === 'grid' ? 6 : 12} 
-                  sm={viewMode === 'grid' ? 4 : 12} 
-                  md={viewMode === 'grid' ? 3 : 12} 
-                  lg={viewMode === 'grid' ? 2 : 12} 
-                  key={card.id}
-                >
-                  <Card sx={{ 
-                    height: '100%',
-                    transition: 'all 0.2s',
-                    '&:hover': {
-                      transform: viewMode === 'grid' ? 'scale(1.05)' : 'translateX(4px)',
-                      boxShadow: 4
-                    }
-                  }}>
-                    <Box sx={{ display: viewMode === 'list' ? 'flex' : 'block' }}>
-                      <CardMedia
-                        component="img"
-                        image={card.images.small}
-                        alt={card.name}
-                        sx={{ 
-                          width: viewMode === 'list' ? 150 : '100%',
-                          height: viewMode === 'list' ? 150 : 'auto',
-                          objectFit: 'contain',
-                          p: 1,
-                          bgcolor: '#f9f9f9'
-                        }}
-                      />
-                      <Box sx={{ flex: 1 }}>
-                        <CardContent sx={{ pb: 1 }}>
-                          <Typography variant={viewMode === 'grid' ? 'subtitle2' : 'h6'} gutterBottom noWrap title={card.name}>
-                            {card.name}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary" display="block">
-                            #{card.number} • {card.supertype}
-                          </Typography>
-                          {card.types && (
-                            <Box sx={{ mt: 1, display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                              {card.types.map(type => (
-                                <Chip
-                                  key={type}
-                                  label={type}
-                                  size="small"
-                                  sx={{
-                                    bgcolor: getTypeColor(type),
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                    fontSize: '0.7rem'
-                                  }}
-                                />
-                              ))}
-                            </Box>
-                          )}
-                          {card.rarity && (
-                            <Chip
-                              label={card.rarity}
-                              size="small"
-                              color={getRarityColor(card.rarity)}
-                              sx={{ mt: 1 }}
-                            />
-                          )}
-                          {card.hp && (
-                            <Typography variant="body2" sx={{ mt: 1 }}>
-                              HP: {card.hp}
-                            </Typography>
-                          )}
-                          {card.artist && viewMode === 'list' && (
-                            <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
-                              Artist: {card.artist}
-                            </Typography>
-                          )}
-                        </CardContent>
-                      </Box>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+            {viewMode === 'grid' ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 2,
+                  overflowX: 'auto',
+                  pb: 2,
+                  scrollSnapType: 'x mandatory',
+                  WebkitOverflowScrolling: 'touch',
+                  '&::-webkit-scrollbar': {
+                    height: 8
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    background: 'rgba(0,0,0,0.2)',
+                    borderRadius: 4
+                  }
+                }}
+              >
+                {filteredCards.map((card) => (
+                  <Box
+                    key={card.id}
+                    sx={{
+                      flex: '0 0 auto',
+                      width: { xs: 180, sm: 220, md: 240, lg: 260 },
+                      scrollSnapAlign: 'start'
+                    }}
+                  >
+                    {renderCard(card)}
+                  </Box>
+                ))}
+              </Box>
+            ) : (
+              <Grid container spacing={1}>
+                {filteredCards.map((card) => (
+                  <Grid item xs={12} key={card.id}>
+                    {renderCard(card)}
+                  </Grid>
+                ))}
+              </Grid>
+            )}
             
             {filteredCards.length === 0 && (
               <Paper sx={{ p: 4, textAlign: 'center', mt: 4 }}>

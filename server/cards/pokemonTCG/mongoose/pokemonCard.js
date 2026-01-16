@@ -86,7 +86,14 @@ const cardSchema = new mongoose.Schema({
   timestamps: true // adds createdAt and updatedAt automatically
 });
 
-// Create the model
+// Indexes for better query performance
+cardSchema.index({ apiId: 1 }, { unique: true, sparse: true }); // Already defined in field, but explicit here
+cardSchema.index({ 'set.id': 1 }); // For querying cards by set
+cardSchema.index({ name: 1 }); // For text search
+cardSchema.index({ supertype: 1, 'set.id': 1 }); // Compound index for common queries
+cardSchema.index({ rarity: 1 }); // For filtering by rarity
+cardSchema.index({ types: 1 }); // For filtering by type
 
+// Create the model
 const PokemonCard = mongoose.model("pokemoncard", cardSchema);
 module.exports = PokemonCard;
