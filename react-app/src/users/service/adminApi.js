@@ -74,6 +74,24 @@ export const adminDeleteUser = async (userId) => {
 };
 
 /**
+ * Clear user's card-related data (cart + decks)
+ */
+export const adminClearUserCards = async (userId) => {
+  try {
+    const { data } = await axios.post(
+      `${apiUrl}/users/admin/users/${userId}/clear-cards`
+    );
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || error.message;
+      return Promise.reject(errorMessage);
+    }
+    return Promise.reject("An unexpected error occurred!");
+  }
+};
+
+/**
  * Manually verify a user's email
  */
 export const adminVerifyUserEmail = async (userId) => {

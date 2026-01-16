@@ -147,6 +147,17 @@ const UsersManagment = () => {
       case "delete":
         setDeleteDialogOpen(true);
         break;
+      case "clearCards":
+        setConfirmAction({
+          title: "Clear User Cards",
+          message: `Remove all cards, decks, and cart items for ${targetUser.name.first} ${targetUser.name.last}? This cannot be undone.`,
+          action: async () => {
+            await adminActions.handleClearUserCards(targetUser._id);
+            await refreshUsers();
+          },
+        });
+        setConfirmDialogOpen(true);
+        break;
       case "verifyEmail":
         setConfirmAction({
           title: "Verify User Email",

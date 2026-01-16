@@ -22,6 +22,7 @@ const {
   adminSuspendUser,
   adminActivateUser,
   adminDeleteUser,
+  adminClearUserCards,
   adminManualVerifyEmail,
   adminUnverifyEmail,
   adminResetUserPassword,
@@ -51,6 +52,7 @@ router.get("/admin/users/detailed", auth, verifyAdmin, adminGetAllUsersDetailed)
 router.put("/admin/users/:userId/suspend", auth, verifyAdmin, adminSuspendUser);
 router.put("/admin/users/:userId/activate", auth, verifyAdmin, adminActivateUser);
 router.delete("/admin/users/:userId", auth, verifyAdmin, adminDeleteUser);
+router.post("/admin/users/:userId/clear-cards", auth, verifyAdmin, adminClearUserCards);
 router.put("/admin/users/:userId/verify-email", auth, verifyAdmin, adminManualVerifyEmail);
 router.put("/admin/users/:userId/unverify-email", auth, verifyAdmin, adminUnverifyEmail);
 router.post("/admin/users/:userId/reset-password", auth, verifyAdmin, adminResetUserPassword);

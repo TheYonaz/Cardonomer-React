@@ -215,6 +215,58 @@ const adminDeleteUser = async (req, res) => {
 };
 
 /**
+ * Clear a user's card-related data (cart + decks)
+ */
+const adminClearUserCards = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const adminId = req.user._id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return handleError(res, 404, "User not found");
+    }
+
+    // Don't allow clearing admin users' data
+    if (user.isAdmin) {
+      return handleError(res, 403, "Cannot clear cards for admin users");
+    }
+
+    const previousCounts = {
+      cart: user.cart?.length || 0,
+      pokemonDecks: user.pokemonDecks?.length || 0,
+      yugiohDecks: user.yugiohDecks?.length || 0,
+    };
+
+    user.cart = [];
+    user.pokemonDecks = [];
+    user.yugiohDecks = [];
+    await user.save();
+
+    await logAdminAction(
+      adminId,
+      "clear_user_cards",
+      userId,
+      { previousCounts },
+      req
+    );
+
+    return res.send({
+      message: "User card data cleared successfully",
+      cleared: previousCounts,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("adminClearUserCards error:", error.message);
+    return handleError(res, 500, "Error clearing user cards");
+  }
+};
+
+/**
  * Manually verify a user's email
  */
 const adminManualVerifyEmail = async (req, res) => {
@@ -462,6 +514,7 @@ module.exports = {
   adminSuspendUser,
   adminActivateUser,
   adminDeleteUser,
+  adminClearUserCards,
   adminManualVerifyEmail,
   adminUnverifyEmail,
   adminResetUserPassword,

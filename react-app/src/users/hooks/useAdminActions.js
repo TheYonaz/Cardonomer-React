@@ -5,6 +5,7 @@ import {
   adminSuspendUser,
   adminActivateUser,
   adminDeleteUser,
+  adminClearUserCards,
   adminVerifyUserEmail,
   adminUnverifyUserEmail,
   adminResetUserPassword,
@@ -84,6 +85,27 @@ const useAdminActions = () => {
         return result;
       } catch (err) {
         const errorMessage = typeof err === "string" ? err : "Error deleting user";
+        setError(errorMessage);
+        snack("error", errorMessage);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [snack]
+  );
+
+  const handleClearUserCards = useCallback(
+    async (userId) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const result = await adminClearUserCards(userId);
+        snack("success", "User cards cleared successfully");
+        return result;
+      } catch (err) {
+        const errorMessage =
+          typeof err === "string" ? err : "Error clearing user cards";
         setError(errorMessage);
         snack("error", errorMessage);
         throw err;
@@ -221,6 +243,7 @@ const useAdminActions = () => {
     handleSuspendUser,
     handleActivateUser,
     handleDeleteUser,
+    handleClearUserCards,
     handleVerifyEmail,
     handleUnverifyEmail,
     handleResetPassword,

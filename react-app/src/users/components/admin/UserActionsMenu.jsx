@@ -16,6 +16,7 @@ import {
   VpnKey,
   Email,
   Delete,
+  DeleteSweep,
 } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
@@ -101,6 +102,14 @@ const UserActionsMenu = ({ user, onAction }) => {
         <Divider />
 
         {/* Destructive Actions */}
+        <MenuItem onClick={() => handleAction("clearCards")}>
+          <ListItemIcon>
+            <DeleteSweep fontSize="small" color="warning" />
+          </ListItemIcon>
+          <ListItemText sx={{ color: "warning.main" }}>
+            Clear User Cards
+          </ListItemText>
+        </MenuItem>
         <MenuItem onClick={() => handleAction("delete")}>
           <ListItemIcon>
             <Delete fontSize="small" color="error" />
