@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Container,
   Box,
@@ -77,6 +77,9 @@ const PokemonTCGBrowser = () => {
   const [selectedSetIndex, setSelectedSetIndex] = useState(0);
   const [cards, setCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
+  const [cardsBySet, setCardsBySet] = useState({});
+  const inFlightRequests = useRef({});
+  const cacheKey = 'tcg_cards_cache_v1';
   const [loading, setLoading] = useState(true);
   const [cardsLoading, setCardsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -159,37 +162,92 @@ const PokemonTCGBrowser = () => {
     }
   };
 
+  const loadCachedCards = (setId) => {
+    try {
+      const raw = sessionStorage.getItem(cacheKey);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return parsed[setId] || null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const saveCachedCards = (setId, cardsToCache) => {
+    try {
+      const raw = sessionStorage.getItem(cacheKey);
+      const parsed = raw ? JSON.parse(raw) : {};
+      parsed[setId] = cardsToCache;
+      sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
+    } catch (error) {
+      // Ignore cache write failures (quota, private mode, etc.)
+    }
+  };
+
   const fetchCardsForSet = async (setId) => {
+    if (cardsBySet[setId]) {
+      setCards(cardsBySet[setId]);
+      setFilteredCards(cardsBySet[setId]);
+      return;
+    }
+
+    const cached = loadCachedCards(setId);
+    if (cached) {
+      setCardsBySet((prev) => ({ ...prev, [setId]: cached }));
+      setCards(cached);
+      setFilteredCards(cached);
+      return;
+    }
+
     try {
       setCardsLoading(true);
       setCards([]);
       setFilteredCards([]);
 
-      const pageSize = 250;
-      let page = 1;
-      let hasMore = true;
-      let allCards = [];
-
-      while (hasMore) {
-        const response = await pokemonTcgAxios.get('/cards', {
-          params: {
-            q: `set.id:${setId}`,
-            page,
-            pageSize
-          }
-        });
-
-        const pageCards = response.data.data || [];
-        allCards = allCards.concat(pageCards);
-
-        hasMore = pageCards.length === pageSize;
-        page += 1;
+      if (inFlightRequests.current[setId]) {
+        const cachedResult = await inFlightRequests.current[setId];
+        setCards(cachedResult);
+        setFilteredCards(cachedResult);
+        setCardsLoading(false);
+        return;
       }
 
+      const requestPromise = (async () => {
+        const pageSize = 250;
+        let page = 1;
+        let hasMore = true;
+        let allCards = [];
+
+        while (hasMore) {
+          const response = await pokemonTcgAxios.get('/cards', {
+            params: {
+              q: `set.id:${setId}`,
+              page,
+              pageSize
+            }
+          });
+
+          const pageCards = response.data.data || [];
+          allCards = allCards.concat(pageCards);
+
+          hasMore = pageCards.length === pageSize;
+          page += 1;
+        }
+
+        return allCards;
+      })();
+
+      inFlightRequests.current[setId] = requestPromise;
+      const allCards = await requestPromise;
+      delete inFlightRequests.current[setId];
+
+      setCardsBySet((prev) => ({ ...prev, [setId]: allCards }));
+      saveCachedCards(setId, allCards);
       setCards(allCards);
       setFilteredCards(allCards);
       setCardsLoading(false);
     } catch (error) {
+      delete inFlightRequests.current[setId];
       console.error('Error fetching cards:', error);
       setCardsLoading(false);
     }
@@ -596,46 +654,20 @@ const PokemonTCGBrowser = () => {
           </Box>
         ) : (
           <>
-            {viewMode === 'grid' ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: 2,
-                  overflowX: 'auto',
-                  pb: 2,
-                  scrollSnapType: 'x mandatory',
-                  WebkitOverflowScrolling: 'touch',
-                  '&::-webkit-scrollbar': {
-                    height: 8
-                  },
-                  '&::-webkit-scrollbar-thumb': {
-                    background: 'rgba(0,0,0,0.2)',
-                    borderRadius: 4
-                  }
-                }}
-              >
-                {filteredCards.map((card) => (
-                  <Box
-                    key={card.id}
-                    sx={{
-                      flex: '0 0 auto',
-                      width: { xs: 180, sm: 220, md: 240, lg: 260 },
-                      scrollSnapAlign: 'start'
-                    }}
-                  >
-                    {renderCard(card)}
-                  </Box>
-                ))}
-              </Box>
-            ) : (
-              <Grid container spacing={1}>
-                {filteredCards.map((card) => (
-                  <Grid item xs={12} key={card.id}>
-                    {renderCard(card)}
-                  </Grid>
-                ))}
-              </Grid>
-            )}
+            <Grid container spacing={viewMode === 'grid' ? 2 : 1}>
+              {filteredCards.map((card) => (
+                <Grid
+                  item
+                  xs={viewMode === 'grid' ? 6 : 12}
+                  sm={viewMode === 'grid' ? 4 : 12}
+                  md={viewMode === 'grid' ? 3 : 12}
+                  lg={viewMode === 'grid' ? 2 : 12}
+                  key={card.id}
+                >
+                  {renderCard(card)}
+                </Grid>
+              ))}
+            </Grid>
             
             {filteredCards.length === 0 && (
               <Paper sx={{ p: 4, textAlign: 'center', mt: 4 }}>
