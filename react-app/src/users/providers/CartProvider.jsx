@@ -8,12 +8,14 @@ import {
   addAllToCart,
 } from "../service/userApi";
 import { useUser } from "./UserProvider";
+import useAxios from "../../hooks/useAxios";
 
 // Create the context
 export const CartContext = React.createContext(null);
 
 export const CartProvider = ({ children }) => {
   const { user } = useUser();
+  useAxios();
 
   // Initialize cart from local storage for guests
   const initialCart = user

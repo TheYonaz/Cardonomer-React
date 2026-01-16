@@ -28,6 +28,7 @@ import SuspendUserDialog from "./admin/SuspendUserDialog";
 import DeleteUserConfirmation from "./admin/DeleteUserConfirmation";
 import ConfirmationDialog from "./admin/ConfirmationDialog";
 import useAdminActions from "../hooks/useAdminActions";
+import useAxios from "../../hooks/useAxios";
 
 const UsersManagment = () => {
   const [users, setUsers] = useState([]);
@@ -45,6 +46,7 @@ const UsersManagment = () => {
 
   const { user } = useUser();
   const adminActions = useAdminActions();
+  useAxios();
 
   // Fetch users
   useEffect(() => {

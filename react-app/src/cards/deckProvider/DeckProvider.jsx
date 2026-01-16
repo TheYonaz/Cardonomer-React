@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useUser } from "../../users/providers/UserProvider";
+import useAxios from "../../hooks/useAxios";
 import {
   deleteDeck,
   getUserPokemonDecks,
@@ -13,6 +14,7 @@ export const DeckProvider = ({ children }) => {
   const [decksFromDb, setDeck] = useState([]);
   const [error, setError] = useState([]);
   const { user } = useUser();
+  useAxios();
 
   const handleLoadDeck = useCallback(
     async (userId) => {
