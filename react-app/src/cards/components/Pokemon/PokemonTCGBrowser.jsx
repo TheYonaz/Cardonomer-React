@@ -42,11 +42,17 @@ import { useSwipeable } from 'react-swipeable';
 import { useUser } from '../../../users/providers/UserProvider';
 import PokemonTCGImporter from './PokemonTCGImporter';
 
+const pokemonTcgApiKey = process.env.REACT_APP_POKEMONTCG_KEY;
+if (!pokemonTcgApiKey) {
+  // Avoid failing silently in production; key is required for direct API calls.
+  console.warn('REACT_APP_POKEMONTCG_KEY is not set. Pokemon TCG requests may fail.');
+}
+
 // Create a separate axios instance for Pokemon TCG API (no auth token)
 const pokemonTcgAxios = axios.create({
   baseURL: 'https://api.pokemontcg.io/v2',
   headers: {
-    'X-Api-Key': process.env.REACT_APP_POKEMONTCG_KEY || '3485fea1-443a-4f5d-9082-4889d05b238e'
+    'X-Api-Key': pokemonTcgApiKey || ''
   }
 });
 

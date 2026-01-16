@@ -6,8 +6,8 @@
 
 // Base API URL - using our proxy to avoid CORS issues
 const API_BASE_URL = 'http://localhost:8000/api/pokemon-tcg';
-// Default API key - hardcoded for local development
-const DEFAULT_API_KEY = '3485fea1-443a-4f5d-9082-4889d05b238e';
+// Optional API key (avoid hardcoding secrets in client)
+const DEFAULT_API_KEY = process.env.REACT_APP_POKEMONTCG_KEY || '';
 
 // Cache to store API responses and reduce API calls
 const apiCache = {

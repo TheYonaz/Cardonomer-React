@@ -5,7 +5,7 @@
 
 import axios from 'axios';
 
-const API_KEY = process.env.REACT_APP_POKEMONTCG_KEY || '3485fea1-443a-4f5d-9082-4889d05b238e';
+const API_KEY = process.env.REACT_APP_POKEMONTCG_KEY;
 const API_BASE = 'https://api.pokemontcg.io/v2';
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -15,6 +15,9 @@ const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
  */
 export const fetchAllSets = async () => {
   try {
+    if (!API_KEY) {
+      throw new Error('REACT_APP_POKEMONTCG_KEY is not set. Cannot call Pokemon TCG API.');
+    }
     const response = await axios.get(`${API_BASE}/sets`, {
       headers: {
         'X-Api-Key': API_KEY

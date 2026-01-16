@@ -11,21 +11,33 @@ const mongoose = require('mongoose');
 const config = require('config');
 const chalk = require('chalk');
 
-const username = config.get("DB_NAME") || "vannucci3";
-const password = config.get("DB_PASSWORD") || "13121312Aa";
+const mongoUri =
+  process.env.MONGO_URI ||
+  (config.get("MONGO_URI") ? config.get("MONGO_URI") : null);
+const username = process.env.DB_NAME || config.get("DB_NAME");
+const password = process.env.DB_PASSWORD || config.get("DB_PASSWORD");
 
 async function removePokemonCardNameIndex() {
   try {
     console.log(chalk.blue('🔧 Starting migration: Remove name unique index from pokemoncards...'));
     
     // Connect to MongoDB
-    await mongoose.connect(
-      `mongodb+srv://${username}:${password}@cluster0.5op4ilu.mongodb.net/Cardonomer_yon_vannucci?retryWrites=true&w=majority`,
-      {
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
-      }
-    );
+    const connectionString =
+      mongoUri ||
+      (username && password
+        ? `mongodb+srv://${username}:${password}@cluster0.5op4ilu.mongodb.net/Cardonomer_yon_vannucci?retryWrites=true&w=majority`
+        : null);
+
+    if (!connectionString) {
+      throw new Error(
+        "Missing MongoDB credentials. Set MONGO_URI or DB_NAME/DB_PASSWORD."
+      );
+    }
+
+    await mongoose.connect(connectionString, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
     
     console.log(chalk.green('✅ Connected to MongoDB Atlas'));
     
