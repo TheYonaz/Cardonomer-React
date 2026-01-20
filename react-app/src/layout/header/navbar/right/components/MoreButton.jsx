@@ -8,7 +8,15 @@ const MoreButton = () => {
   const setOpen = useMenu();
 
   return (
-    <Box sx={{ display: { xs: "inline-flex", md: "none" } }}>
+    <Box
+      sx={{
+        display: { xs: "inline-flex", md: "none" },
+        position: "fixed",
+        bottom: 88,
+        right: 16,
+        zIndex: 1400,
+      }}
+    >
       <IconButton
         size="large"
         aria-label="menu"

@@ -14,7 +14,7 @@ const PostFeedback = ({
   onDelete,
   onCommentPublished,
 }) => {
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <Spinner cute message="Pikachu and Eevee are gathering posts for you! ⚡💖" />;
   if (error) return <Error errorMessage={error} />;
   if (posts && posts.length)
     return (

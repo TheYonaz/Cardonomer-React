@@ -12,7 +12,7 @@ const MainGraph = () => {
     fetchPokemonTcgData();
   }, [fetchPokemonTcgData]);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <Spinner cute message="Eevee is calculating your card stats! 📊✨" />;
 
   if (error) return <Error errorMessage={error} />;
 

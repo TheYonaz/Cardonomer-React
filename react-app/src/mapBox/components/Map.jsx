@@ -101,10 +101,10 @@ const MapGame = () => {
     );
   if (!viewport)
     return (
-      <>
-        <Typography variant="h5">please consent access to location</Typography>
-        <Spinner />
-      </>
+      <Box sx={{ textAlign: "center", p: 3 }}>
+        <Typography variant="h5" gutterBottom>Please consent access to location</Typography>
+        <Spinner cute message="Pikachu needs to know where you are! 📍⚡" />
+      </Box>
     );
   return (
     <ReactMapGL

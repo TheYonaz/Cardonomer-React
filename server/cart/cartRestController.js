@@ -8,8 +8,12 @@ const PokemonCard = require("../cards/pokemonTCG/mongoose/pokemonCard");
 
 const getCart = async (req, res) => {
   try {
-    const { _id } = req.user;
-    const user = await User.findById(_id).populate({
+    const { _id, isAdmin } = req.user;
+    const { userID } = req.params;
+    if (_id !== userID && !isAdmin) {
+      return handleError(res, 403, "Not authorized to view this cart.");
+    }
+    const user = await User.findById(userID).populate({
       path: "cart._id",
       model: "pokemoncard",
     });
@@ -116,7 +120,9 @@ const addDiscount = async (req, res) => {
     const { _id, isAdmin } = req.user;
     const { userID } = req.params;
     if (_id !== userID && !isAdmin) {
-      throw new Error(
+      return handleError(
+        res,
+        403,
         "Authorization Error: You are not allowed to add a discount to this user's cart."
       );
     }
@@ -136,7 +142,9 @@ const getPrizes = async (req, res) => {
     const { _id, isAdmin } = req.user;
     const { userID } = req.params;
     if (_id !== userID && !isAdmin) {
-      throw new Error(
+      return handleError(
+        res,
+        403,
         "Authorization Error: You are not allowed to view this user's prizes."
       );
     }

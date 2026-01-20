@@ -224,7 +224,10 @@ const userSchema = new mongoose.Schema({
   cart: {
     type: [
       {
-        item_id: card,
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "pokemoncard",
+        },
       },
     ],
     default: [],

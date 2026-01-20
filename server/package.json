@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node .",
     "test": "node test.js",
-    "dev": "cross-env NODE_ENV=development nodemon ."
+    "dev": "cross-env NODE_ENV=development nodemon .",
+    "import-cards": "cross-env NODE_ENV=production node scripts/importAllPokemonCards.js"
   },
   "author": "Yon Vannucci",
   "license": "ISC",

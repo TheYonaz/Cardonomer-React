@@ -79,7 +79,8 @@ const PokemonTCGBrowser = () => {
   const [filteredCards, setFilteredCards] = useState([]);
   const [cardsBySet, setCardsBySet] = useState({});
   const inFlightRequests = useRef({});
-  const cacheKey = 'tcg_cards_cache_v1';
+  const cacheKeyPrefix = 'tcg_cards_cache_v1';
+  const cacheTtlMs = 1000 * 60 * 60 * 24; // 24 hours
   const [loading, setLoading] = useState(true);
   const [cardsLoading, setCardsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -162,12 +163,16 @@ const PokemonTCGBrowser = () => {
     }
   };
 
+  const getCacheKey = (setId) => `${cacheKeyPrefix}:${setId}`;
+
   const loadCachedCards = (setId) => {
     try {
-      const raw = sessionStorage.getItem(cacheKey);
+      const raw = sessionStorage.getItem(getCacheKey(setId));
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      return parsed[setId] || null;
+      if (!parsed?.timestamp || !Array.isArray(parsed?.cards)) return null;
+      if (Date.now() - parsed.timestamp > cacheTtlMs) return null;
+      return parsed.cards;
     } catch (error) {
       return null;
     }
@@ -175,10 +180,11 @@ const PokemonTCGBrowser = () => {
 
   const saveCachedCards = (setId, cardsToCache) => {
     try {
-      const raw = sessionStorage.getItem(cacheKey);
-      const parsed = raw ? JSON.parse(raw) : {};
-      parsed[setId] = cardsToCache;
-      sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
+      const payload = {
+        timestamp: Date.now(),
+        cards: cardsToCache,
+      };
+      sessionStorage.setItem(getCacheKey(setId), JSON.stringify(payload));
     } catch (error) {
       // Ignore cache write failures (quota, private mode, etc.)
     }

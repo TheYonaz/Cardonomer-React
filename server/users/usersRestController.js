@@ -211,8 +211,12 @@ const getAllUsers = async (req, res) => {
 
 const getFriends = async (req, res) => {
   try {
-    const { _id } = req.user;
-    const user = await User.findById(_id);
+    const { _id, isAdmin } = req.user;
+    const { userID } = req.params;
+    if (_id !== userID && !isAdmin) {
+      return handleError(res, 403, "Not authorized to view this user's friends.");
+    }
+    const user = await User.findById(userID);
     if (!user) {
       throw new Error("User not found in the database");
     }

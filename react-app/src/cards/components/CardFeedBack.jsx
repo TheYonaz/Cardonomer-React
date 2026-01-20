@@ -52,7 +52,7 @@ const CardFeedBack = ({
     setDialog((prev) => !prev);
   };
 
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <Spinner cute message="Pikachu is searching for the perfect cards! ⚡🎴" />;
   if (error) return <Error errorMessage={error} />;
   if (cards && cards.length)
     return (
